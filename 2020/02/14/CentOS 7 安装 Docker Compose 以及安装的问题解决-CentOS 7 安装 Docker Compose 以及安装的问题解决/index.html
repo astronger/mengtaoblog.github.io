@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        CentOS 7 安装 Docker Compose 以及安装的问题解决｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/02/14/CentOS 7 安装 Docker Compose 以及安装的问题解决-CentOS 7 安装 Docker Compose 以及安装的问题解决/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>CentOS 7 安装 Docker Compose 以及安装的问题解决</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-02-14
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#CentOS  | Docker"
+                           title="CentOS  | Docker">CentOS  | Docker</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            CentOS 7 安装 Docker Compose 以及安装的问题解决
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=https://github.com/docker/compose">Docker Compose</a> 是 docker 提供的一个命令行工具，用来定义和运行由多个容器组成的应用。使用 compose，我们可以通过 YAML 文件声明式的定义应用程序的各个服务，并由单个命令完成应用的创建和启动。</p>
+<h3 id="一、centos7-安装最新版的docker"><a href="#一、centos7-安装最新版的docker" class="headerlink" title="一、centos7 安装最新版的docker"></a>一、centos7 安装最新版的docker</h3><ol>
+<li>查看系统要求</li>
+</ol>
+<p>Docker 要求 CentOS 系统的内核版本高于 3.10 ,查看CentOS的内核版本。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$  uname -a 或者 uname -r</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>使用该命令 rpm -qa|grep docker //查看已经安装的docker安装包,列出入校内容 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ rpm -qa|grep docker</span><br><span class="line">docker.x86_64 2:1.12.6-16.el7.centos @extras </span><br><span class="line">docker-client.x86_64 2:1.12.6-16.el7.centos @extras </span><br><span class="line">docker-common.x86_64 2:1.12.6-16.el7.centos @extra</span><br></pre></td></tr></table></figure></li>
+<li>1分别删除 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ yum -y remove docker.x86_64</span><br><span class="line">$ yum -y remove docker-client.x86_64</span><br><span class="line">$ yum -y remove docker-common.x86_64</span><br></pre></td></tr></table></figure></li>
+<li>2删除原始docker镜像<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ rm -rf /var/lib/docker </span><br></pre></td></tr></table></figure></li>
+<li>安装需要的软件包 </li>
+</ol>
+<p>yum-util 提供yum-config-manager功能，另外两个是devicemapper驱动依赖的 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ yum install -y yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+<p>4.设置Docker yum源 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+<p>5.查看所有仓库中所有docker版本</p>
+<p>可以查看所有仓库中所有docker版本,并选择特定的版本安装。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ yum list docker-ce --showduplicates | sort -r</span><br></pre></td></tr></table></figure>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-c382340399ed4858abb95236a7fd524b.png" alt="image.png"><br> <br>6.安装docker</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ yum install docker-ce</span><br></pre></td></tr></table></figure>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-9830a8d82264452394dd4a6dd2d91c23.png" alt="image.png"></p>
+<p>由于repo中默认只开启stable仓库，故这里安装的是最新稳19.03.5-3.el7。 如果要安装特定版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ yum install docker18.03.1.ce-1.el7.centos </span><br></pre></td></tr></table></figure>
+<p>7.启动 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">设置为开机启动</span><br><span class="line">systemctl enable docker</span><br><span class="line">启动</span><br><span class="line">systemctl start docker</span><br><span class="line">查看启动状态</span><br><span class="line">systemctl status docker</span><br><span class="line">查看版本</span><br><span class="line">docker version</span><br></pre></td></tr></table></figure>
+<p> <img src="https://www.itmengtao.cn/upload/2020/12/image-975a06e5d74b4b529904379854383531.png" alt="image.png"></p>
+<h3 id="二、安装docker-compose"><a href="#二、安装docker-compose" class="headerlink" title="二、安装docker-compose"></a>二、安装docker-compose</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line">docker-compose --version</span><br></pre></td></tr></table></figure>
+<p> 安装完成后发现如下问题：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-e3b1dcf4d81e4cf1b39e2d0c8db0408e.png" alt="image.png"></p>
+<p>原因：</p>
+<p>使用官方文档中所描述的方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">curl -L https://github.com/docker/compose/releases/download/1.14.0-rc2/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose</span><br><span class="line">chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+<p>安装时，curl下载下来的文件是<strong>不完整</strong>的，而且没有给出任何错误信息。</p>
+<p>可以看到通过curl下载的文件比使用浏览器下载后又上传到服务器上的文件大小要小，所以重新下载文件即可。</p>
+<h4 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h4><p>进入下面的网址下载目前的最新版：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/docker/compose/releases/tag/1.14.0-rc2">https://github.com/docker/compose/releases/tag/1.14.0-rc2</a></p>
+<p>网页拉到最下面，下载：</p>
+<p>docker-compose-Linux-x86_64</p>
+<p>然后将文件上传到 /usr/local/bin/ 文件夹下，然后将其重命名为docker-compose，修改此文件的权限，</p>
+<p>增加可执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">chmod +x /usr/local/bin/docker-compose</span><br></pre></td></tr></table></figure>
+<p>然后再运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker-compose version</span><br></pre></td></tr></table></figure>
+<p>如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-5c6e5128aa424da9ae298d5e82b17321.png" alt="image.png"></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/02/22/MyBatis 中配置主键回填-MyBatis 中配置主键回填/" data-toggle="tooltip" data-placement="top"
+                           title="MyBatis 中配置主键回填">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/01/05/去除 Spire.pdf 生成时出现警告语 Evaluation Warning-去除 Spire.pdf 生成时出现警告语 Evaluation Warning/" data-toggle="tooltip" data-placement="top"
+                           title="去除 Spire.pdf 生成时出现警告语 Evaluation Warning">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81centos7-%E5%AE%89%E8%A3%85%E6%9C%80%E6%96%B0%E7%89%88%E7%9A%84docker"><span class="toc-text">一、centos7 安装最新版的docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%89%E8%A3%85docker-compose"><span class="toc-text">二、安装docker-compose</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%EF%BC%9A"><span class="toc-text">解决办法：</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#CentOS  | Docker"
+                           title="CentOS  | Docker">CentOS  | Docker</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

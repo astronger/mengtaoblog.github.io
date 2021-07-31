@@ -159,19 +159,22 @@
 
 <div class="post-preview "
      style="background-image: url('post-default.jpg')">
-    <a href="/2019/04/01/Spring Boot入门-Spring Boot入门/">
+    <a href="/2019/12/30/docker解决删除镜像时出错 image is referenced in multiple repositories-docker解决删除镜像时出错 image is referenced in multiple repositories/">
         <h2 class="post-title">
-            Spring Boot入门
+            docker解决删除镜像时出错 image is referenced in multiple repositories
         </h2>
         <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-01
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-30
         </p>
         
         <div class="post-content-preview">
             <p>
-                最近在看江南一点雨的教程以及视频，以下总结的笔记资料等将会参考他的为主，声明：仅供自己学习参考使用。
-总结一下Spring Boot的主要优点：
-为所有Spring开发者更快的入门开箱即用，提供各种默认配置来简化项目配置内嵌式容器简化Web项目没有冗余代码生成和XML配置的要求Spring Bo..
+                1、查看镜像 docker images ，删除镜像，会报错
+
+ 2、仔细观察，发现9e64176cd8a2这个镜像id指向了两个repository，因此无法删除。所以我们可以用repository和tag的方式来删除
+
+ 再次查看镜像，删除成功了。
+
             </p>
         </div>
     </a>
@@ -184,18 +187,173 @@
 
 <div class="post-preview "
      style="background-image: url('post-default.jpg')">
-    <a href="/2019/02/25/为什么要写博客？-为什么要写博客/">
+    <a href="/2019/12/29/Git 取消远程分支关联，并关联到新的远程分支，将代码推上去-Git 取消远程分支关联，并关联到新的远程分支，将代码推上去/">
         <h2 class="post-title">
-            为什么要写博客？
+            Git 取消远程分支关联，并关联到新的远程分支，将代码推上去
         </h2>
         <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-02-25
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-29
         </p>
         
         <div class="post-content-preview">
             <p>
-                在这之前，有什么问题都是直接Google、百度，过后也就不了了之，直到最近看到许多大神写的文章，大家都用文字去记录工作以及生活中的点点滴滴，现在觉得是一件非常值得做的事情，不仅是对自己的总结，而且也是一个很好的技术积累与沉淀的过程。
-为什么要写博客？写博客有的东西可能一时半会在工作中用不到，大家..
+                在工作中，经常需要将同一份代码传到不同的git仓库中去如果本地同样一份代码，已经关联了一个与远程分支，那么怎么才能解除原程分支，并关联到一个新的分支将代码提交到新的分支上去呢？ 
+
+如果你已经在远程创建了一个分支，远程分支地址：https://xxxxxxx/xxxx/xxxx.git 
+从命令..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/12/28/Redis字符串(STRING)的操作命令-Redis字符串(STRING)的操作命令/">
+        <h2 class="post-title">
+            Redis字符串(STRING)的操作命令
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-28
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                APPEND使用APPEND命令时，如果key已经存在，则会直接在value后追加值，如果key不存在，则会先创建一个value为空字符串的key，然后再追加：
+
+DECRDECR命令可以实现对value的减1操作，如果key不存在，则key对应的初始值会被置为0，如果key的value不为数字..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/12/27/Redis字符串(STRING)中BIT相关命令-Redis字符串(STRING)中BIT相关命令/">
+        <h2 class="post-title">
+            Redis字符串(STRING)中BIT相关命令
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-27
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                BIT相关的命令是指BITCOUNT/BITFIELD/BITOP/BITPOS/SETBIT/GETBIT 几个命令，灵活使用这几个命令，可以给我们的项目带来很多惊喜。
+在学习这几个命令之前，我们得先了解下redis中字符串的存储方式，redis中的字符串都是以二进制的方式进行存储的，比如说我..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/12/16/Redis中的五种数据类型以及Key的相关命令简介-Redis中的五种数据类型以及Key的相关命令简介/">
+        <h2 class="post-title">
+            Redis中的五种数据类型以及Key的相关命令简介
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-16
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                上篇文章我们介绍了如何在 Linux(CentOS 7.x)中安装Redis，本文我们来了解下Redis中的五种数据类型。
+五大数据类型介绍redis中的数据都是以key / value的形式存储的，五大数据类型主要是指value的数据类型，包含如下五种：
+1.STRINGSTRING是redi..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/11/25/在Adobe Acrobat DC中设置PDF单页连续-在Adobe Acrobat DC中设置PDF单页连续/">
+        <h2 class="post-title">
+            在Adobe Acrobat DC中设置PDF单页连续
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-11-25
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                点击 编辑——&gt;首选项——&gt;辅助工具——&gt;选择总是使用页面布局样式——&gt;单页连续，如下图所示。
+
+然后点击 文档——&gt;打开设置，去掉“重新打开文档时恢复上次视图设置”选项。
+
+
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/11/13/IDEA解决 Could not Autowired,No Beans of 'Mapper' type found 报错-IDEA解决 Could not Autowired,No Beans of 'Mapper' type found 报错/">
+        <h2 class="post-title">
+            IDEA解决 Could not Autowired,No Beans of 'Mapper' type found 报错
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-11-13
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                错误如下，网上大多数的说法都是要求我们把这个提示功能关闭，解决如下：
+
+在mapper文件上加 @Repository 注解，这是从spring2.0新增的一个注解，用于简化 Spring 的开发，实现数据访问
+
+在mapper文件上加 @Component 注解，把普通pojo实例化到spri..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/11/10/解决在WebStorm中使用Vue组件的v-xxx等指令报错-解决在WebStorm中使用Vue组件的v-xxx等指令报错/">
+        <h2 class="post-title">
+            解决在WebStorm中使用Vue组件的v-xxx等指令报错
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-11-10
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                错误如下，这个报错并不会影响代码执行，但强迫症受不了：
+解决方法:点击File——&gt;Settings——&gt;直接搜索 Unbound XML namespace prefix ，直接把后面的勾去掉，保存即可。保存后如下，错误消失。
+
             </p>
         </div>
     </a>
@@ -211,6 +369,10 @@
 
 <ul class="pager">
     
+    
+    <li class="next">
+        <a href="/archives/2019/page/2/">Older Posts &rarr;</a>
+    </li>
     
 </ul>
 
@@ -269,13 +431,123 @@
                 <div class="tags">
                     
                     
+                    <a href="/tags/#CentOS" title="CentOS"
+                       rel="5">CentOS</a>
+                    
+                    
+                    
+                    <a href="/tags/#CentOS  | Docker" title="CentOS  | Docker"
+                       rel="2">CentOS  | Docker</a>
+                    
+                    
+                    
+                    <a href="/tags/#Redis | CentOS" title="Redis | CentOS"
+                       rel="1">Redis | CentOS</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Cloud" title="Spring Cloud"
+                       rel="21">Spring Cloud</a>
+                    
+                    
+                    
+                    <a href="/tags/#Docker" title="Docker"
+                       rel="6">Docker</a>
+                    
+                    
+                    
+                    <a href="/tags/#Docker | RabbitMQ" title="Docker | RabbitMQ"
+                       rel="2">Docker | RabbitMQ</a>
+                    
+                    
+                    
+                    <a href="/tags/#Docker | MySQL" title="Docker | MySQL"
+                       rel="1">Docker | MySQL</a>
+                    
+                    
+                    
+                    <a href="/tags/#Github" title="Github"
+                       rel="1">Github</a>
+                    
+                    
+                    
+                    <a href="/tags/#Git" title="Git"
+                       rel="5">Git</a>
+                    
+                    
+                    
+                    <a href="/tags/#IDEA" title="IDEA"
+                       rel="2">IDEA</a>
+                    
+                    
+                    
                     <a href="/tags/#Spring Boot" title="Spring Boot"
-                       rel="1">Spring Boot</a>
+                       rel="22">Spring Boot</a>
+                    
+                    
+                    
+                    <a href="/tags/#Jsp" title="Jsp"
+                       rel="1">Jsp</a>
+                    
+                    
+                    
+                    <a href="/tags/#MySQL" title="MySQL"
+                       rel="2">MySQL</a>
+                    
+                    
+                    
+                    <a href="/tags/#Nginx" title="Nginx"
+                       rel="1">Nginx</a>
+                    
+                    
+                    
+                    <a href="/tags/#RabbitMQ" title="RabbitMQ"
+                       rel="1">RabbitMQ</a>
+                    
+                    
+                    
+                    <a href="/tags/#Redis" title="Redis"
+                       rel="11">Redis</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Boot | Nginx" title="Spring Boot | Nginx"
+                       rel="1">Spring Boot | Nginx</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Boot | Redis" title="Spring Boot | Redis"
+                       rel="1">Spring Boot | Redis</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Boot | Swagger2" title="Spring Boot | Swagger2"
+                       rel="1">Spring Boot | Swagger2</a>
+                    
+                    
+                    
+                    <a href="/tags/#CentOS  | Linux" title="CentOS  | Linux"
+                       rel="2">CentOS  | Linux</a>
+                    
+                    
+                    
+                    <a href="/tags/#WebStorm" title="WebStorm"
+                       rel="2">WebStorm</a>
+                    
+                    
+                    
+                    <a href="/tags/#CentOS  | MySQL | Linux" title="CentOS  | MySQL | Linux"
+                       rel="1">CentOS  | MySQL | Linux</a>
                     
                     
                     
                     <a href="/tags/#工作生活" title="工作生活"
-                       rel="1">工作生活</a>
+                       rel="2">工作生活</a>
+                    
+                    
+                    
+                    <a href="/tags/#halo个人博客" title="halo个人博客"
+                       rel="1">halo个人博客</a>
                     
                     
                 </div>

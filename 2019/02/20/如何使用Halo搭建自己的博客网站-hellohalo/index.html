@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        如何使用Halo搭建自己的博客网站｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/02/20/如何使用Halo搭建自己的博客网站-hellohalo/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>如何使用Halo搭建自己的博客网站</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-02-20
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#halo个人博客"
+                           title="halo个人博客">halo个人博客</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            如何使用Halo搭建自己的博客网站
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>工作需要学习，学习需要积累。网上有很多好的博客系统。我们可以去”CSDN”，”博客园”等这种大厂提供的博客空间，也可以自己搭建高逼格的独立博客。例如，适合github的hexo，大众的wordpress，OneBlog，Tale等。对比了一波，我选择halo这款博客系统。对于我它有以下几个优点：<br>（1）java语言实现，适合java程序员。<br>（2）动态的主题切换（特别炫支持移动端，响应式页面）<br>（3）完善的后台管理功能操作方便。<br>（4）部署超级简单，五分钟完成搭建。<br>（5）站点迁移方便，复制文件一键迁移。</p>
+<p>下面讲讲如何搭建Halo，在这之前，购买自己的云服务器，备案自己的域名。这是搭建自己站点，拉取流量的基础；我这里是阿里云，域名备案也直接在阿里云备案：</p>
+<h1 id="使用-Docker-部署-Halo"><a href="#使用-Docker-部署-Halo" class="headerlink" title="使用 Docker 部署 Halo"></a><strong>使用 Docker 部署 Halo</strong></h1><p>使用 Docker 部署 Halo 的指南，假设你已经<a href="%E5%AE%89%E8%A3%85Docker">安装Docker</a> 并了解它的基本使用。本篇教程以 CentOS 7.x 为例，其他系统大同小异。</p>
+<h2 id="1-环境要求"><a href="#1-环境要求" class="headerlink" title="1. 环境要求"></a>1. <strong>环境要求</strong></h2><p>为了在使用过程中不出现意外的事故，给出下列推荐的配置<br>CentOS 7.x<br>1G 以上内存</p>
+<h2 id="2-服务器配置，配置-Docker-运行环境"><a href="#2-服务器配置，配置-Docker-运行环境" class="headerlink" title="2. 服务器配置，配置 Docker 运行环境"></a>2. <strong>服务器配置，配置 Docker 运行环境</strong></h2><ul>
+<li>请确保服务器的软件包已经是最新的。<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo yum update -y</span><br></pre></td></tr></table></figure></li>
+<li>启动 Docker 后台服务</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+<h2 id="3-安装-Halo"><a href="#3-安装-Halo" class="headerlink" title="3. 安装 Halo"></a>3. 安装 Halo</h2><h3 id="1-自定义配置文件"><a href="#1-自定义配置文件" class="headerlink" title="1. 自定义配置文件"></a>1. 自定义配置文件</h3><p>考虑到部分用户的需要，可能需要自定义比如端口等设置项，我们提供了公共的配置文件，并且该配置文件是完全独立于安装包的。当然，你也可以使用安装包内的默认配置文件，但是安装包内的配置文件是不可修改的。请注意：配置文件的路径为 ~/.halo/application.yaml。</p>
+<figure class="highlight plaintext"><figcaption><span>下载配置文件到 ~/.halo 目录</span></figcaption><table><tr><td class="code"><pre><span class="line">curl -o ~/.halo/application.yaml --create-dirs http://halo.ryanc.cc/config/application-template.yaml</span><br></pre></td></tr></table></figure>
+<h3 id="2-修改配置文件"><a href="#2-修改配置文件" class="headerlink" title="2. 修改配置文件"></a>2. 修改配置文件</h3><p>完成上一步操作，我们就可以自己配置 Halo 的运行端口，以及数据库相关的配置了。</p>
+<figure class="highlight plaintext"><figcaption><span>使用 Vim 工具修改配置文件</span></figcaption><table><tr><td class="code"><pre><span class="line">vim ~/.halo/application.yaml</span><br></pre></td></tr></table></figure>
+<p>打开之后我们可以看到：</p>
+<p><strong>H2 配置如下：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  port: 8090</span><br><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    type: com.zaxxer.hikari.HikariDataSource</span><br><span class="line"></span><br><span class="line">    # H2 Database 配置</span><br><span class="line">    driver-class-name: org.h2.Driver</span><br><span class="line">    url: jdbc:h2:file:~/.halo/db/halo</span><br><span class="line">    username: admin</span><br><span class="line">    password: openadmin</span><br><span class="line">  h2:</span><br><span class="line">    console:</span><br><span class="line">      settings:</span><br><span class="line">        web-allow-others: false</span><br><span class="line">      path: /h2-console</span><br><span class="line">      enabled: false</span><br></pre></td></tr></table></figure>
+<p>MySQL 配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  port: 8090</span><br><span class="line">spring:</span><br><span class="line">  datasource:</span><br><span class="line">    # MySQL 配置</span><br><span class="line">    driver-class-name: com.mysql.cj.jdbc.Driver</span><br><span class="line">    url: jdbc:mysql://127.0.0.1:3306/halodb?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai</span><br><span class="line">    username: root</span><br><span class="line">    password: openroot</span><br></pre></td></tr></table></figure>
+<ol>
+<li>如果需要自定义端口，修改 server 节点下的 port 即可。</li>
+<li>默认使用的是 H2 Database 数据库，这是一种嵌入式的数据库，使用起来非常方便。需要注意的是，默认的用户名和密码为 admin 和 123456，这个是自定义的，最好将其修改，并妥善保存。</li>
+<li>如果需要使用 MySQL 数据库，需要将 H2 Database 的所有相关配置都注释掉，并取消 MySQL 的相关配置。另外，MySQL 的默认数据库名为 halodb，请<strong>自行配置 MySQL</strong> 并创建数据库，以及修改配置文件中的用户名和密码。</li>
+<li>h2 节点为 H2 Database 的控制台配置，默认是关闭的，如需使用请将 h2.console.settings.web-allow-others 和 h2.console.enabled 设置为 true。控制台地址即为 域名/h2-console。注意：非紧急情况，不建议开启该配置。</li>
+</ol>
+<h3 id="3-拉取最新-Halo-镜像"><a href="#3-拉取最新-Halo-镜像" class="headerlink" title="3. 拉取最新 Halo 镜像"></a>3. 拉取最新 Halo 镜像</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo docker pull ruibaby/halo</span><br></pre></td></tr></table></figure>
+<h3 id="4-创建容器并运行"><a href="#4-创建容器并运行" class="headerlink" title="4. 创建容器并运行"></a>4. 创建容器并运行</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run --name halo -d -p 8090:8090  -v ~/.halo:/root/.halo ruibaby/halo</span><br></pre></td></tr></table></figure>
+<p>完成以上操作即可通过 ip:端口 访问了。端口默认是8090可以在配置文件或者启动时添加参数修改。虽然可以访问，但是端口暴露很不安全，后续<strong>第5步</strong>是如何配置域名访问。</p>
+<h4 id="4-1-打开博客进行博客的初始化操作。初始化完成进入admin管理页面。"><a href="#4-1-打开博客进行博客的初始化操作。初始化完成进入admin管理页面。" class="headerlink" title="4.1 打开博客进行博客的初始化操作。初始化完成进入admin管理页面。"></a>4.1 打开博客进行博客的初始化操作。初始化完成进入admin管理页面。</h4><p><img src="https://www.itmengtao.cn/upload/2019/12/image-656356d91e394763b8b14869ea4b4938.png" alt="image.png"><br>点击右上角头像位置最左边的按钮，跳转到博客首页。设置主题!</p>
+<h4 id="4-2-创建数据库，不需要创建表结构，初始化应用的时候自动生成。"><a href="#4-2-创建数据库，不需要创建表结构，初始化应用的时候自动生成。" class="headerlink" title="4.2 创建数据库，不需要创建表结构，初始化应用的时候自动生成。"></a>4.2 创建数据库，不需要创建表结构，初始化应用的时候自动生成。</h4><p>重启服务，打开地址，我们再一次初始化博客。打开数据库，可以看到表和数据已经初始化好了：<br><img src="https://www.itmengtao.cn/upload/2019/12/image-6cd8dbe349264b068ecc9b7215788bcb.png" alt="image.png"></p>
+<p>服务搭建完成，解释一下后台配置，特别是主题配置</p>
+<h4 id="4-3-菜单分为仪表盘，文章，页面，附件，评论，外观，用户，系统这几个，重点解释一下外观。外观菜单可以设置博客的主题显示效果。打开菜单如下："><a href="#4-3-菜单分为仪表盘，文章，页面，附件，评论，外观，用户，系统这几个，重点解释一下外观。外观菜单可以设置博客的主题显示效果。打开菜单如下：" class="headerlink" title="4.3 菜单分为仪表盘，文章，页面，附件，评论，外观，用户，系统这几个，重点解释一下外观。外观菜单可以设置博客的主题显示效果。打开菜单如下："></a>4.3 菜单分为仪表盘，文章，页面，附件，评论，外观，用户，系统这几个，重点解释一下外观。外观菜单可以设置博客的主题显示效果。打开菜单如下：</h4><p><img src="http://47.98.208.34:8090/upload/2019/12/t_1_5-e9833b0569a8441b90a1b868fa21758f-8ea23be7e9834bbdb75cbb972af8b990.png" alt="t_1_5e9833b0569a8441b90a1b868fa21758f.png"></p>
+<h4 id="4-4-如何修改主题打开编辑主题页面："><a href="#4-4-如何修改主题打开编辑主题页面：" class="headerlink" title="4.4 如何修改主题打开编辑主题页面："></a>4.4 如何修改主题打开编辑主题页面：</h4><p><img src="http://47.98.208.34:8090/upload/2019/12/t_1_6-85b6b5a581c94f738627536dd7f7b8b0-0dfd57e773fc4c02a6fe5d3cf589a7a0.png" alt="t_1_685b6b5a581c94f738627536dd7f7b8b0.png"><br>可以根据自己的喜好设置自己的页面效果，可以自定义友情链接，社交网点等。</p>
+<h3 id="5-配置域名访问"><a href="#5-配置域名访问" class="headerlink" title="5.配置域名访问"></a>5.配置域名访问</h3><p>使用 Caddy 进行反向代理。Caddy 是一款使用 Go 语言开发的 Web 服务器。其配置更为简洁，并可以自动申请及配置 SSL 证书（这里推荐使用）。</p>
+<p>5.1 安装 Caddy</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 安装 Caddy 软件包</span><br><span class="line">yum install caddy -y</span><br></pre></td></tr></table></figure>
+<p>5.2 配置 Caddy</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 下载 Halo 官方的 Caddy 配置模板</span><br><span class="line">curl -o /etc/caddy/conf.d/Caddyfile.conf --create-dirs http://halo.ryanc.cc/config/Caddyfile</span><br></pre></td></tr></table></figure>
+
+<p>5.3 下载完成之后，我们还需要对其进行修改。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 使用 vim 编辑 Caddyfile</span><br><span class="line">vim /etc/caddy/conf.d/Caddyfile.conf</span><br></pre></td></tr></table></figure>
+
+<p>5.4 打开之后我们可以看到</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://www.simple.com &#123;</span><br><span class="line"> gzip</span><br><span class="line"> tls xxxx@xxx.xx</span><br><span class="line"> proxy / localhost:port &#123;</span><br><span class="line">  transparent</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(1)请把 <a target="_blank" rel="noopener" href="https://www.simple.com/">https://www.simple.com</a> 改为自己的域名。<br>(2)tls 后面的 <a href="mailto:&#x78;&#120;&#x78;&#120;&#x40;&#x78;&#120;&#120;&#46;&#120;&#x78;">&#x78;&#120;&#x78;&#120;&#x40;&#x78;&#120;&#120;&#46;&#120;&#x78;</a> 改为自己的邮箱地址，这是用于自动申请 SSL 证书用的。需要注意的是，不需要你自己配置 SSL 证书，而且会自动帮你续签。<br>(3)localhost:port 请将 port 修改为 Halo 的运行端口，默认为 8090。</p>
+<p>5.5 修改完成之后启动 Caddy 服务即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 开启自启 Caddy 服务</span><br><span class="line">systemctl enable caddy</span><br><span class="line"></span><br><span class="line"># 启动 Caddy</span><br><span class="line">service caddy start</span><br><span class="line"></span><br><span class="line"># 停止运行 Caddy</span><br><span class="line">service caddy stop</span><br><span class="line"></span><br><span class="line"># 重启 Caddy</span><br><span class="line">service caddy restart</span><br><span class="line"></span><br><span class="line"># 查看 Caddy 运行状态</span><br><span class="line">service caddy status</span><br></pre></td></tr></table></figure>
+<p>++注意:<br>如果 Caddy 启动出现诸如 [/usr/lib/systemd/system/caddy.service:23] Unknown lvalue ‘AmbientCapabilities’ in section ‘Service’ 这样的问题，请使用 yum update -y 更新系统。然后再使用 service caddy restart 重启，已知 CentOS 7.3 会出现该问题。++</p>
+<h3 id="6-进阶设置"><a href="#6-进阶设置" class="headerlink" title="6.进阶设置"></a>6.进阶设置</h3><p>多网址重定向到主网址，比如访问 simple.com 跳转到 <a target="_blank" rel="noopener" href="http://www.simple.com/">www.simple.com</a> 应该怎么做呢？</p>
+<p>使用 vim 编辑 Caddyfile</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim /etc/caddy/conf.d/Caddyfile.conf</span><br></pre></td></tr></table></figure>
+<p>打开之后我们在原有的基础上添加以下配置:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://simple.com &#123;</span><br><span class="line">  redir https://www.simple.com&#123;url&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将 <a target="_blank" rel="noopener" href="https://simple.com/">https://simple.com</a> 和 <a target="_blank" rel="noopener" href="https://www.simple.com{url}/">https://www.simple.com{url}</a> 修改为自己需要的网址就行了，比如我要求访问 ryanc.cc 跳转到 <a href="http://www.ryanc.cc，完整的配置如下：">www.ryanc.cc，完整的配置如下：</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">http://ryanc.cc &#123;</span><br><span class="line">  redir https://www.ryanc.cc&#123;url&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">https://www.ryanc.cc &#123;</span><br><span class="line">  gzip</span><br><span class="line">  tls i@ryanc.cc</span><br><span class="line">  proxy / localhost:8090 &#123;</span><br><span class="line">    transparent</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后我们(service caddy restart)重启 Caddy 即可。</p>
+<p>到这里，关于 Caddy 反向代理的配置也就完成了，现在你可以访问一下自己的域名，并进行 Halo 的初始化了。</p>
+<p>++注意:<br>在设置了反向代理之后，请一定记得去 halo 的管理端设置一下正确的博客地址，否则会造成资源获取不成功。++</p>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://ailijie.top/archives/hello-halo">https://ailijie.top/archives/hello-halo</a></p>
+<p><a target="_blank" rel="noopener" href="https://halo.run/guide/install/reverse-proxy.html#%E6%88%96%E8%80%85%E4%BD%BF%E7%94%A8-caddy-%E8%BF%9B%E8%A1%8C%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86">https://halo.run/guide/install/reverse-proxy.html#%E6%88%96%E8%80%85%E4%BD%BF%E7%94%A8-caddy-%E8%BF%9B%E8%A1%8C%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/02/25/为什么要写博客？-为什么要写博客/" data-toggle="tooltip" data-placement="top"
+                           title="为什么要写博客？">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Docker-%E9%83%A8%E7%BD%B2-Halo"><span class="toc-text">使用 Docker 部署 Halo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83%E8%A6%81%E6%B1%82"><span class="toc-text">1. 环境要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%EF%BC%8C%E9%85%8D%E7%BD%AE-Docker-%E8%BF%90%E8%A1%8C%E7%8E%AF%E5%A2%83"><span class="toc-text">2. 服务器配置，配置 Docker 运行环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-Halo"><span class="toc-text">3. 安装 Halo</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">1. 自定义配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">2. 修改配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8B%89%E5%8F%96%E6%9C%80%E6%96%B0-Halo-%E9%95%9C%E5%83%8F"><span class="toc-text">3. 拉取最新 Halo 镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8%E5%B9%B6%E8%BF%90%E8%A1%8C"><span class="toc-text">4. 创建容器并运行</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E6%89%93%E5%BC%80%E5%8D%9A%E5%AE%A2%E8%BF%9B%E8%A1%8C%E5%8D%9A%E5%AE%A2%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E6%93%8D%E4%BD%9C%E3%80%82%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AE%8C%E6%88%90%E8%BF%9B%E5%85%A5admin%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2%E3%80%82"><span class="toc-text">4.1 打开博客进行博客的初始化操作。初始化完成进入admin管理页面。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E4%B8%8D%E9%9C%80%E8%A6%81%E5%88%9B%E5%BB%BA%E8%A1%A8%E7%BB%93%E6%9E%84%EF%BC%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E5%BA%94%E7%94%A8%E7%9A%84%E6%97%B6%E5%80%99%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E3%80%82"><span class="toc-text">4.2 创建数据库，不需要创建表结构，初始化应用的时候自动生成。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-%E8%8F%9C%E5%8D%95%E5%88%86%E4%B8%BA%E4%BB%AA%E8%A1%A8%E7%9B%98%EF%BC%8C%E6%96%87%E7%AB%A0%EF%BC%8C%E9%A1%B5%E9%9D%A2%EF%BC%8C%E9%99%84%E4%BB%B6%EF%BC%8C%E8%AF%84%E8%AE%BA%EF%BC%8C%E5%A4%96%E8%A7%82%EF%BC%8C%E7%94%A8%E6%88%B7%EF%BC%8C%E7%B3%BB%E7%BB%9F%E8%BF%99%E5%87%A0%E4%B8%AA%EF%BC%8C%E9%87%8D%E7%82%B9%E8%A7%A3%E9%87%8A%E4%B8%80%E4%B8%8B%E5%A4%96%E8%A7%82%E3%80%82%E5%A4%96%E8%A7%82%E8%8F%9C%E5%8D%95%E5%8F%AF%E4%BB%A5%E8%AE%BE%E7%BD%AE%E5%8D%9A%E5%AE%A2%E7%9A%84%E4%B8%BB%E9%A2%98%E6%98%BE%E7%A4%BA%E6%95%88%E6%9E%9C%E3%80%82%E6%89%93%E5%BC%80%E8%8F%9C%E5%8D%95%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-text">4.3 菜单分为仪表盘，文章，页面，附件，评论，外观，用户，系统这几个，重点解释一下外观。外观菜单可以设置博客的主题显示效果。打开菜单如下：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E4%B8%BB%E9%A2%98%E6%89%93%E5%BC%80%E7%BC%96%E8%BE%91%E4%B8%BB%E9%A2%98%E9%A1%B5%E9%9D%A2%EF%BC%9A"><span class="toc-text">4.4 如何修改主题打开编辑主题页面：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%85%8D%E7%BD%AE%E5%9F%9F%E5%90%8D%E8%AE%BF%E9%97%AE"><span class="toc-text">5.配置域名访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E8%BF%9B%E9%98%B6%E8%AE%BE%E7%BD%AE"><span class="toc-text">6.进阶设置</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#halo个人博客"
+                           title="halo个人博客">halo个人博客</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

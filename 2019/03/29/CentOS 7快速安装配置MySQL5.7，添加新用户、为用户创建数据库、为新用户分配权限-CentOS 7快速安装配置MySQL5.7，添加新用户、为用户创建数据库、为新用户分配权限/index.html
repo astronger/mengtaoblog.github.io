@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        CentOS 7快速安装配置MySQL5.7，添加新用户、为用户创建数据库、为新用户分配权限｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/03/29/CentOS 7快速安装配置MySQL5.7，添加新用户、为用户创建数据库、为新用户分配权限-CentOS 7快速安装配置MySQL5.7，添加新用户、为用户创建数据库、为新用户分配权限/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>CentOS 7快速安装配置MySQL5.7，添加新用户、为用户创建数据库、为新用户分配权限</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-03-29
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#CentOS"
+                           title="CentOS">CentOS</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            CentOS 7快速安装配置MySQL5.7，添加新用户、为用户创建数据库、为新用户分配权限
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="1-安装MySQL"><a href="#1-安装MySQL" class="headerlink" title="1.安装MySQL"></a>1.安装MySQL</h2><p>运行以下命令更新yum源。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">rpm -Uvh  http://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>2.运行以下命令安装MySQL。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">yum -y install mysql-community-server</span><br></pre></td></tr></table></figure>
+<p>3.运行以下命令查看MySQL版本号。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -V</span><br></pre></td></tr></table></figure>
+<p>4.返回结果如下，表示MySQL安装成功。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql  Ver 14.14 Distrib 5.7.25, for Linux (x86_64) using  EditLine wrapper</span><br></pre></td></tr></table></figure>
+<h2 id="2-配置MySQL"><a href="#2-配置MySQL" class="headerlink" title="2.配置MySQL"></a>2.配置MySQL</h2><p>1.运行以下命令启动MySQL服务。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl start mysqld</span><br></pre></td></tr></table></figure>
+<p>2.运行以下命令设置MySQL服务开机自启动。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">systemctl enable mysqld</span><br></pre></td></tr></table></figure>
+<p>3.运行以下命令查看/var/log/mysqld.log文件，获取并记录root用户的初始密码。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># grep &#x27;temporary password&#x27; /var/log/mysqld.log</span><br><span class="line">2019-08-08T09:07:47.535748Z 1 [Note] A temporary password is generated for root@localhost: p0/G28g&gt;lsHD</span><br></pre></td></tr></table></figure>
+<p>说明：下一步重置root用户密码时，会使用该初始密码。</p>
+<p>4.运行下列命令配置MySQL的安全性。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql_secure_installation</span><br></pre></td></tr></table></figure>
+<p>安全性的配置包含以下五个方面：<br>1.重置root账号密码。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Enter password for user root: #输入上一步获取的root用户初始密码</span><br><span class="line">The &#x27;validate_password&#x27; plugin is installed on the server.</span><br><span class="line">The subsequent steps will run with the existing configuration of the plugin.</span><br><span class="line">Using existing password for root.</span><br><span class="line">Estimated strength of the password: 100 </span><br><span class="line">Change the password for root ? ((Press y|Y for Yes, any other key for No) : Y #是否更改root用户密码，输入Y</span><br><span class="line">New password: #输入新密码，长度为8至30个字符，必须同时包含大小写英文字母、数字和特殊符号。特殊符号可以是()` ~!@#$%^&amp;*-+=|&#123;&#125;[]:;‘&lt;&gt;,.?/</span><br><span class="line">Re-enter new password: #再次输入新密码</span><br><span class="line">Estimated strength of the password: 100 </span><br><span class="line">Do you wish to continue with the password provided?(Press y|Y for Yes, any other key for No) : Y</span><br></pre></td></tr></table></figure>
+<p>2.输入Y删除匿名用户账号。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">By default, a MySQL installation has an anonymous user, allowing anyone to log into MySQL without having to have a user account created for them. This is intended only for testing, and to make the installation go a bit smoother. You should remove them before moving into a production environment.</span><br><span class="line">Remove anonymous users? (Press y|Y for Yes, any other key for No) : Y  </span><br><span class="line">#是否删除匿名用户，输入Y</span><br><span class="line">Success.</span><br></pre></td></tr></table></figure>
+<p>3.输入Y禁止root账号远程登录。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Disallow root login remotely? (Press y|Y for Yes, any other key for No) : Y #禁止root远程登录，输入Y</span><br><span class="line">Success.</span><br></pre></td></tr></table></figure>
+<p>4.输入Y删除test库以及对test库的访问权限。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Remove test database and access to it? (Press y|Y for Yes, any other key for No) : Y #是否删除test库和对它的访问权限，输入Y</span><br><span class="line">- Dropping test database...</span><br><span class="line">Success.</span><br><span class="line">```linux</span><br><span class="line">5.输入Y重新加载授权表。</span><br><span class="line">```linux</span><br><span class="line">Reload privilege tables now? (Press y|Y for Yes, any other key for No) : Y #是否重新加载授权表，输入Y</span><br><span class="line">Success.</span><br><span class="line">All done!</span><br></pre></td></tr></table></figure>
+<p>更多详情，请参见<a href="%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3">官方文档</a>。</p>
+<ol start="5">
+<li><p>使用root用户连接mysql。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure></li>
+<li><p>查看用户信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select host,user,plugin,authentication_string from mysql.user;</span><br></pre></td></tr></table></figure>
+<p><img src="/1" alt="image.png"></p>
+</li>
+<li><p>1 修改root用户密码。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ALTER USER &#x27;root&#x27;@&#x27;%&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;newpassword&#x27;; #更新一下用户的密码 root用户密码为newpassword</span><br></pre></td></tr></table></figure></li>
+<li><p>2 添加新用户，参考地址点这里。</p>
+</li>
+</ol>
+<p>允许本地 IP 访问 localhost, 127.0.0.1：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create user &#x27;test&#x27;@&#x27;localhost&#x27; identified by &#x27;123456&#x27;;</span><br></pre></td></tr></table></figure>
+<p>允许外网 IP 访问：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create user &#x27;test&#x27;@&#x27;%&#x27; identified by &#x27;123456&#x27;;</span><br></pre></td></tr></table></figure>
+<p>刷新授权 ：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<p> 6.3  为用户创建数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">create database test DEFAULT CHARSET utf8 COLLATE utf8_general_ci;</span><br></pre></td></tr></table></figure>
+<p> 6.4  为新用户分配权限</p>
+<p>授予用户通过外网IP对于该数据库的全部权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grant all privileges on `testdb`.* to &#x27;test&#x27;@&#x27;%&#x27; identified by &#x27;123456&#x27;;</span><br></pre></td></tr></table></figure>
+<p>授予用户在本地服务器对该数据库的全部权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">grant all privileges on `testdb`.* to &#x27;test&#x27;@&#x27;localhost&#x27; identified by &#x27;123456&#x27;;</span><br></pre></td></tr></table></figure>
+<p>刷新权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<p>退出 root 重新登录：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+<p> 用新帐号 test 重新登录，由于使用的是 % 任意IP连接，所以需要指定外部访问IP</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql -u test -h 192.168.1.11 -p</span><br></pre></td></tr></table></figure>
+<p>另：在Ubuntu服务器下，MySQL默认是只允许本地登录，因此需要修改配置文件将地址绑定给注释掉： </p>
+<p>不然会报如下错误：</p>
+<p>ERROR 2003 (HY000): Can’t connect to MySQL server on ‘host’ (111)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Instead of skip-networking the default is now to listen only on</span><br><span class="line"># localhost which is more compatible and is not less secure.</span><br><span class="line"># bind-address = 127.0.0.1		#注释掉这一行就可以远程登录了</span><br></pre></td></tr></table></figure>
+<p>7.使用navicat连接远程mysql。</p>
+<p>输入下列命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mysql&gt; grant ALL PRIVILEGES ON *.* to root@&quot;%&quot; identified by &quot;xxxx&quot; WITH GRANT OPTION;</span><br></pre></td></tr></table></figure>
+<p>（其中 第一个<em>表示数据库名；第二个</em>表示该数据库的表名；如果像上面那样 *.*的话表示所有到数据库下到所有表都允许访问，当然你也可以根据自己的情况修改；%：表示允许访问到mysql的ip地址，当然你也可以配置为具体到ip名称，%表示所有ip均可以访问；后面到‘xxxx为root 用户的password；）   //CentOS 7下亲测 </p>
+<p>配置成功后连接测试如下图：</p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/8/image-1c84d3c5aecb452b9841bc2001b5e906.png" alt="image.png"></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/04/01/Spring Boot入门-Spring Boot入门/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Boot入门">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/03/27/HashMap的两种取出方式-HashMap的两种取出方式/" data-toggle="tooltip" data-placement="top"
+                           title="HashMap的两种取出方式">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85MySQL"><span class="toc-text">1.安装MySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AEMySQL"><span class="toc-text">2.配置MySQL</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#CentOS"
+                           title="CentOS">CentOS</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

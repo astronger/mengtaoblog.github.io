@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Git 基本操作｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/09/24/Git 基本操作-Git 基本操作/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Git 基本操作</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-09-24
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Git"
+                           title="Git">Git</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Git 基本操作
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="Git概念"><a href="#Git概念" class="headerlink" title="Git概念"></a>Git概念</h2><p><img src="https://www.itmengtao.cn/upload/2020/11/image-a3a614ccf7c74a60a3a79626189be4dd.png" alt="image.png"></p>
+<p>Git 是一个开源的分布式版本控制系统，用于敏捷高效地处理任何或小或大的项目。</p>
+<p>Git 是 Linus Torvalds 为了帮助管理 Linux 内核开发而开发的一个开放源码的版本控制软件。</p>
+<p>Git 与常用的版本控制工具 CVS, Subversion 等不同，它采用了分布式版本库的方式，不必服务器端软件支持。</p>
+<h2 id="Git-与-SVN-区别"><a href="#Git-与-SVN-区别" class="headerlink" title="Git 与 SVN 区别"></a>Git 与 SVN 区别</h2><p>Git 不仅仅是个版本控制系统，它也是个内容管理系统(CMS)，工作管理系统等。</p>
+<p>如果你是一个具有使用 SVN 背景的人，你需要做一定的思想转换，来适应 Git 提供的一些概念和特征。</p>
+<h3 id="Git-与-SVN-区别点："><a href="#Git-与-SVN-区别点：" class="headerlink" title="Git 与 SVN 区别点："></a>Git 与 SVN 区别点：</h3><ol>
+<li><p>Git 是分布式的，SVN 不是：这是 Git 和其它非分布式的版本控制系统，例如 SVN，CVS 等，最核心的区别。</p>
+</li>
+<li><p>Git 把内容按元数据方式存储，而 SVN 是按文件：所有的资源控制系统都是把文件的元信息隐藏在一个类似 .svn、.cvs 等的文件夹里。</p>
+</li>
+<li><p>Git 分支和 SVN 的分支不同：分支在 SVN 中一点都不特别，其实它就是版本库中的另外一个目录。</p>
+</li>
+<li><p>Git 没有一个全局的版本号，而 SVN 有：目前为止这是跟 SVN 相比 Git 缺少的最大的一个特征。</p>
+</li>
+</ol>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-15e75943c93342708efd03822b4befbc.png" alt="image.png"></p>
+<h2 id="工作区和暂存区"><a href="#工作区和暂存区" class="headerlink" title="工作区和暂存区"></a>工作区和暂存区</h2><ol>
+<li>工作区就是我们能看到的工作目录，就是本地的文件夹。</li>
+<li>这些本地的文件夹我们要通过git add命令先将他们添加到暂存区中。</li>
+<li>git commit命令则可以将暂存区中的文件提交到本地仓库中去。 </li>
+</ol>
+<h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><h2 id="初始化仓库"><a href="#初始化仓库" class="headerlink" title="初始化仓库"></a>初始化仓库</h2><p>仓库的初始化有两种方式：一种是直接从远程仓库克隆，另一种则是直接从当前目录初始化，这里我们主要介绍当前目录初始化，远程仓库克隆我们在后面的文章中会说到。从当前目录初始化的方式很简单，直接执行如下命令:</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ git init</span><br></pre></td></tr></table></figure>
+<p>执行完成后当前目录下会多出一个.git的隐藏文件夹，所有git需要的数据和资源都存放在该目录中。</p>
+<h2 id="查看仓库状态"><a href="#查看仓库状态" class="headerlink" title="查看仓库状态"></a>查看仓库状态</h2><p>git status 命令来查看仓库中文件的状态，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-160e4d0b7597426abb49cee9b7cbe927.png" alt="image.png"></p>
+<p>结果显示我们当前处于master分支下，然后显示暂时没有东西可以提交，因为当前仓库中还没有记录任何文件的任何状态。此时，我在当前目录下创建一个名为test.txt的文件，然后再执行 git status ，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-844a8304fd3547869200d5be19230f80.png" alt="image.png"></p>
+<p>此时结果中显示有一个文件就是我刚刚添加的test.txt，这个表示该文件目前并未被git仓库所管理，所以接下来我们要将这个文件添加到暂存区。 </p>
+<h2 id="添加文件到暂存区"><a href="#添加文件到暂存区" class="headerlink" title="添加文件到暂存区"></a>添加文件到暂存区</h2><p>使用git add 可以将一个文件添加到暂存区。添加完后，再执行 git status查看结果，文件已经提交到了暂存区。如下：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-8accbfed9c2d4a0c88bdaf03a35553ce.png" alt="image.png"></p>
+<h2 id="提交到本地仓库"><a href="#提交到本地仓库" class="headerlink" title="提交到本地仓库"></a>提交到本地仓库</h2><p> 当文件提交到暂存区之后，此时我们可以使用 git commit 命令将当前暂存区的文件提交到本地仓库，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-113fbae4dcc9487cb8222c02f2273eca.png" alt="image.png"></p>
+<p>-m参数是添加的备注，提交成功之后，我们再执行git status命令，结果如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-28ab044017d145fbb0f297e596219cb2.png" alt="image.png"></p>
+<p>结果显示没有需要add的东西，也没有需要commit的东西。 </p>
+<h2 id="查看提交日志"><a href="#查看提交日志" class="headerlink" title="查看提交日志"></a>查看提交日志</h2><p>git log 查看以往仓库中提交的日志，比如提交的版本号、提交者、提交者邮箱、提交时间、提交备注等信息。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br><span class="line"> </span><br><span class="line">$ git <span class="built_in">log</span> --pretty=short  <span class="comment">#显示简略的信息</span></span><br><span class="line"> </span><br><span class="line">$ git <span class="built_in">log</span> test.txt   <span class="comment">#如果只想查看某一个文件的提交日志，在git log后面加上文件名即可。</span></span><br><span class="line"> </span><br><span class="line">$ git <span class="built_in">log</span> -p test.txt  <span class="comment">#如果我还想查看提交时文件的变化，加上-p参数即可(绿色的+表示新增的行，红色的-表示删除的行)</span></span><br><span class="line">$ git reflog    <span class="comment"># 用户重返回来,查看确定的版本，查看命令记录,以及对应的版本号</span></span><br></pre></td></tr></table></figure>
+<h2 id="查看更改前后的差异"><a href="#查看更改前后的差异" class="headerlink" title="查看更改前后的差异"></a>查看更改前后的差异</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git diff</span><br></pre></td></tr></table></figure>
+<p>git diff 命令显示已写入缓存与已修改但尚未写入缓存的改动的区别。git diff 有两个主要的应用场景。</p>
+<ul>
+<li>尚未缓存的改动：git diff</li>
+<li>查看已缓存的改动： git diff –cached</li>
+<li>查看已缓存的与未缓存的所有改动：git diff HEAD</li>
+<li>显示摘要而非整个 diff：git diff –stat</li>
+</ul>
+<p>继续看例子，执行 git diff 命令我们可以查看工作区和暂存区的区别以及工作区和最新提交的差别，在 test.txt 文件中再添加一行hello，此时执行git diff 命令，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-809728264adb4362b6ee1189e5371146.png" alt="image.png"></p>
+<p>此时我再执行git add命令，将文件提交到暂存区，然后再执行git diff，如下： </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-730aae124ddf4752984db544c0d5966c.png" alt="image.png"></p>
+<p>此时工作区的内容和暂存区的内容已经保持一致了。但是此时工作区和本地仓库中最新提交的内容还是不一致，我们可以通过</p>
+<p>git diff HEAD 来查看，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-2353d2ae75604e6782503918af3ed75a.png" alt="image.png"></p>
+<p>此时我们需要执行git commit命令将暂存区中的文件提交，提交成功之后，就无区别。<br><img src="https://www.itmengtao.cn/upload/2020/11/image-cc4eb8cb3e8249c7af5e00a1ae08e3bb.png" alt="image.png"></p>
+<h2 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="variable">$git</span> rm [文件名]     <span class="comment"># 从缓存区删除文件（add中没有了）</span></span><br><span class="line"> </span><br><span class="line"><span class="variable">$git</span> rm [文件]     <span class="comment"># 删除文件，直接rm 文件,那么你还需要add到缓存区再进行提交。这个命令,执行了删除后.直接提交就是了.不用add</span></span><br></pre></td></tr></table></figure>
+<p>先说这么多吧…… </p>
+<p>其它文章：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101033323">Git 分支管理</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101106544">git stash工作区储藏</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101059246">Git 关联远程仓库GitHub</a><br>参考：<a target="_blank" rel="noopener" href="https://git-scm.com/docs">https://git-scm.com/docs</a></p>
+<p>   <a target="_blank" rel="noopener" href="https://www.runoob.com/git/git-basic-operations.html">https://www.runoob.com/git/git-basic-operations.html</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/09/26/CentOS 8 官方正式发布了！-CentOS 8 官方正式发布了！/" data-toggle="tooltip" data-placement="top"
+                           title="CentOS 8 官方正式发布了！">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/09/22/Spring Boot——YAML快速入门-Spring Boot——YAML快速入门/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Boot——YAML快速入门">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Git%E6%A6%82%E5%BF%B5"><span class="toc-text">Git概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git-%E4%B8%8E-SVN-%E5%8C%BA%E5%88%AB"><span class="toc-text">Git 与 SVN 区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Git-%E4%B8%8E-SVN-%E5%8C%BA%E5%88%AB%E7%82%B9%EF%BC%9A"><span class="toc-text">Git 与 SVN 区别点：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8C%E6%9A%82%E5%AD%98%E5%8C%BA"><span class="toc-text">工作区和暂存区</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BB%93%E5%BA%93"><span class="toc-text">初始化仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%BB%93%E5%BA%93%E7%8A%B6%E6%80%81"><span class="toc-text">查看仓库状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%96%87%E4%BB%B6%E5%88%B0%E6%9A%82%E5%AD%98%E5%8C%BA"><span class="toc-text">添加文件到暂存区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4%E5%88%B0%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="toc-text">提交到本地仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%8F%90%E4%BA%A4%E6%97%A5%E5%BF%97"><span class="toc-text">查看提交日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9B%B4%E6%94%B9%E5%89%8D%E5%90%8E%E7%9A%84%E5%B7%AE%E5%BC%82"><span class="toc-text">查看更改前后的差异</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6"><span class="toc-text">删除文件</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Git"
+                           title="Git">Git</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Zuul  笔记补充｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/08/13/Zuul  笔记补充-zuul笔记补充/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Zuul  笔记补充</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-08-13
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Zuul  笔记补充
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>@[TOC](Zuul 笔记补充)</p>
+<h1 id="1-服务网关"><a href="#1-服务网关" class="headerlink" title="1. 服务网关"></a>1. 服务网关</h1><p>由于每个微服务的地址都有可能发生变化，无法直接对外公布这些服务地址，基于安全以及高内聚低耦合等设计，我们有必要将内部系统与外部系统做一个切割。<br>一个专门用来处理外部请求的组件就是服务网关。</p>
+<ul>
+<li>好处：</li>
+<li>客户端调用更加简单</li>
+<li>权限问题统一处理</li>
+<li>数据分割和拼接</li>
+<li>不同客户端可提供不同的网关支持</li>
+</ul>
+<p>Spring Cloud 中，常见的网关：</p>
+<ul>
+<li>Zuul</li>
+<li>Spring Cloud Gateway</li>
+</ul>
+<h1 id="2-Zuul-简介"><a href="#2-Zuul-简介" class="headerlink" title="2. Zuul 简介"></a>2. Zuul 简介</h1><p> Zuul 的<strong>功能</strong>：</p>
+<ul>
+<li> 监控</li>
+<li>权限控制(认证和授权)</li>
+<li>动态路由</li>
+<li>负载均衡</li>
+<li>静态资源处理</li>
+</ul>
+<p>Zuul 中的功能基本上都是基于过滤器实现，它的过滤器有几种不同的类型：</p>
+<ol>
+<li>PRE (前置过滤器，比如要做声明校验)</li>
+<li>ROUTING (过滤器将请求路由到微服务上面)</li>
+<li>POST  (请求的微服务执行完之后，这个过滤器才执行)</li>
+<li>ERROR  (过滤器执行出错时进入error)<blockquote>
+<p>执行顺序: pre –&gt; routing –&gt; post(任何一个过滤器异常 都会进入error)</p>
+</blockquote>
+<h2 id="2-1-初识-Zuul"><a href="#2-1-初识-Zuul" class="headerlink" title="2.1 初识 Zuul"></a>2.1 初识 Zuul</h2>首选创建项目，添加依赖：<br><img src="https://img-blog.csdnimg.cn/20201118104315578.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>创建成功后，将项目注册到Eureka上：</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.application.name=zuul</span><br><span class="line">server.port=2020</span><br><span class="line">eureka.client.service-defaultZone=http://localhost:1111/eureka</span><br></pre></td></tr></table></figure>
+<p>然后在启动类上开启路由代理：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="comment">// 开启网关代理</span></span><br><span class="line"><span class="meta">@EnableZuulProxy</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZuulApplication</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ZuulApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置完成后，重启 Eureka 、Provider、Zuul ，接下来在浏览器中，通过 Zuul 的代理就可以访问到 provider 了。访问：<a target="_blank" rel="noopener" href="http://localhost:2020/provider/hello">http://localhost:2020/provider/hello</a>  与直接访问 <a target="_blank" rel="noopener" href="http://localhost:1113/hello">http://localhost:1113/hello</a><br>的结果是一样的。在这个访问中， provider 就是要访问的服务名称，/hello 则是要访问的服务接口。<br>以上是一个简单的例子，Zuul 中的路由规则也可以自己配置。如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">zuul.routes.javaboy-a.path=/javaboy-a/**</span><br><span class="line">zuul.routes.javaboy-a.service-id=provider</span><br></pre></td></tr></table></figure>
+<p>此时。重启服务后，直接访问 <a target="_blank" rel="noopener" href="http://localhost:2020/javaboy-a/hello">http://localhost:2020/javaboy-a/hello</a> 即可。与上述访问结果一致。<br>对于上面的配置也可以进行简化：</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">zuul.routes.provider</span>=<span class="string">/javaboy-a/**</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-2-zuul过滤"><a href="#2-2-zuul过滤" class="headerlink" title="2.2 zuul过滤"></a>2.2 zuul过滤</h2><p>对于来自客户端的请求，可以在 Zuul 中进行预处理，例如权限判断等。<br>定义一个简单的权限过滤器：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParmPermissFilter</span> <span class="keyword">extends</span> <span class="title">ZuulFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 过滤器类型 权限判断一般是pre</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">filterType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;pre&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 过滤器优先级</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">filterOrder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 是否过滤 修改一下(true --&gt; 是)</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldFilter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断逻辑</span></span><br><span class="line">    <span class="comment">// 在源码已经说过了 该返回值忽略它 无所谓返回了</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">run</span><span class="params">()</span> <span class="keyword">throws</span> ZuulException </span>&#123;</span><br><span class="line">        RequestContext context = RequestContext.getCurrentContext();</span><br><span class="line">        HttpServletRequest request = context.getRequest();</span><br><span class="line">        String name = request.getParameter(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (!<span class="string">&quot;烤肉&quot;</span>.equals(name)) &#123;</span><br><span class="line">            <span class="comment">// 设置响应返回</span></span><br><span class="line">            <span class="comment">// 设置响应头(乱码)</span></span><br><span class="line">            context.addZuulResponseHeader(<span class="string">&quot;content-type&quot;</span>,<span class="string">&quot;text/html;charset=utf-8&quot;</span>);</span><br><span class="line">            <span class="comment">// 响应码</span></span><br><span class="line">            context.setResponseStatusCode(<span class="number">401</span>);</span><br><span class="line">            context.setResponseBody(<span class="string">&quot;请求拦截&quot;</span>);</span><br><span class="line">            context.setSendZuulResponse(<span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>重启 Zuul ，然后访问请求必须带上 name 参数，否则请求不通过。如下：<br><a target="_blank" rel="noopener" href="http://127.0.0.1:2020/javaboy-a/hello?name=%E7%83%A4%E8%82%89">http://127.0.0.1:2020/javaboy-a/hello?name=烤肉</a></p>
+<p>访问：<a target="_blank" rel="noopener" href="http://127.0.0.1:2020/javaboy-a/hello">http://127.0.0.1:2020/javaboy-a/hello</a>  会被拦截。如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201118114815219.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="2-3-Zuul-中的其他配置"><a href="#2-3-Zuul-中的其他配置" class="headerlink" title="2.3 Zuul 中的其他配置"></a>2.3 Zuul 中的其他配置</h2><h4 id="2-3-1-匹配规则"><a href="#2-3-1-匹配规则" class="headerlink" title="2.3.1 匹配规则"></a>2.3.1 匹配规则</h4><p>例如有两个服务，一个叫 consumer ，另一个叫 consumer-hello ,在做路由规则设置时，假如出现了如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">zuul.routes.consumer=/consumer/**</span><br><span class="line">zuul.routes.consumer-hello=/consumer/hello/**</span><br></pre></td></tr></table></figure>
+<p>此时如果访问 <a target="_blank" rel="noopener" href="http://localhost:2020/consumer/hello/123">http://localhost:2020/consumer/hello/123</a> ，会出现冲突。这时，只需将配置文件改为 yml 格式就可以了（yml 是有优先级的，只要调换它们位置即可。properties文件是无序的）。</p>
+<h4 id="2-3-2-忽略路径"><a href="#2-3-2-忽略路径" class="headerlink" title="2.3.2 忽略路径"></a>2.3.2 忽略路径</h4><p>默认情况下，zuul 注册到 eureka 上之后， eureka 上的所有注册服务都会被代理。如果不想给某一个服务做代理，可忽略该服务，配置如下：</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 表示忽略 provider 服务，此时就不会自动代理</span></span><br><span class="line"><span class="meta">zuul.ignored-services</span>=<span class="string">provider</span></span><br></pre></td></tr></table></figure>
+<p>也可以忽略某一类地址：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 表示请求路径中如果包含 hello ,则不做代理</span><br><span class="line">zuul.ignored-patterns=/**/hello/**</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-3-前缀"><a href="#2-3-3-前缀" class="headerlink" title="2.3.3 前缀"></a>2.3.3 前缀</h4><p>也可以给路由加前缀。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">zuul.prefix=/javaboy</span><br></pre></td></tr></table></figure>
+<p>这样所有的请求地址自动多了前缀： /javaboy</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/astronger/springcloud-simple-samples">https://github.com/astronger/springcloud-simple-samples</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/08/14/Spring Cloud Gateway 笔记补充-springcloudgateway笔记补充/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Gateway 笔记补充">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/08/12/服务监控-服务监控/" data-toggle="tooltip" data-placement="top"
+                           title="服务监控">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E6%9C%8D%E5%8A%A1%E7%BD%91%E5%85%B3"><span class="toc-text">1. 服务网关</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Zuul-%E7%AE%80%E4%BB%8B"><span class="toc-text">2. Zuul 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%88%9D%E8%AF%86-Zuul"><span class="toc-text">2.1 初识 Zuul</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-zuul%E8%BF%87%E6%BB%A4"><span class="toc-text">2.2 zuul过滤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Zuul-%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E9%85%8D%E7%BD%AE"><span class="toc-text">2.3 Zuul 中的其他配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-%E5%8C%B9%E9%85%8D%E8%A7%84%E5%88%99"><span class="toc-text">2.3.1 匹配规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-%E5%BF%BD%E7%95%A5%E8%B7%AF%E5%BE%84"><span class="toc-text">2.3.2 忽略路径</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-3-%E5%89%8D%E7%BC%80"><span class="toc-text">2.3.3 前缀</span></a></li></ol></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

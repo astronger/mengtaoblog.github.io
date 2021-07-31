@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        CentOS 7 MySQL自动备份shell脚本｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/03/05/CentOS 7 MySQL自动备份shell脚本-CentOS 7 MySQL自动备份shell脚本/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>CentOS 7 MySQL自动备份shell脚本</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-03-05
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#CentOS"
+                           title="CentOS">CentOS</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            CentOS 7 MySQL自动备份shell脚本
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p><img src="https://www.itmengtao.cn/upload/2020/8/%E5%9B%BE%E7%89%87-12d3f60175cd4b2781b0c11d6b34e160.png" alt="图片.png"><br>　　在数据库的日常维护工作中，除了保证业务的正常运行以外，就是要对数据库进行备份，以免造成数据库的丢失，从而给企业带来重大经济损失。<br>　　通常备份可以按照备份时数据库状态分为热备和冷备，按照备份数据库文件的大小分为增量备份、差异备份和全量备份。<br>　　这里，我们讲解一种全量备份的方法，来实现定时备份数据到mysql脚本文件，并且支持过期删除。</p>
+<p>系统环境：<br>CentOS7 64位 Minimal版（VMware）<br>MySQL5.7</p>
+<p>原理与工具：<br>shell脚本<br>mysqldump程序<br>crontab命令</p>
+<p>1、新建shell脚本<br>vi /opt/mysqlBackup.sh<br>#!/bin/bash</p>
+<h1 id="以下配置信息请自己修改"><a href="#以下配置信息请自己修改" class="headerlink" title="以下配置信息请自己修改"></a>以下配置信息请自己修改</h1><p>mysql_user=”USER” #MySQL备份用户<br>mysql_password=”PASSWORD” #MySQL备份用户的密码<br>mysql_host=”localhost”<br>mysql_port=”3306”<br>mysql_charset=”utf8” #MySQL编码<br>backup_db_arr=(“db1” “db2”) #要备份的数据库名称，多个用空格分开隔开 如(“db1” “db2” “db3”)<br>backup_location=/opt/mysql  #备份数据存放位置，末尾请不要带”/“,此项可以保持默认，程序会自动创建文件夹<br>expire_backup_delete=”ON” #是否开启过期备份删除 ON为开启 OFF为关闭<br>expire_days=3 #过期时间天数 默认为三天，此项只有在expire_backup_delete开启时有效</p>
+<h1 id="本行开始以下不需要修改"><a href="#本行开始以下不需要修改" class="headerlink" title="本行开始以下不需要修改"></a>本行开始以下不需要修改</h1><p>backup_time=<code>date +%Y%m%d%H%M</code>  #定义备份详细时间<br>backup_Ymd=<code>date +%Y-%m-%d</code> #定义备份目录中的年月日时间<br>backup_3ago=<code>date -d &#39;3 days ago&#39; +%Y-%m-%d</code> #3天之前的日期<br>backup_dir=$backup_location/$backup_Ymd  #备份文件夹全路径<br>welcome_msg=”Welcome to use MySQL backup tools!” #欢迎语</p>
+<h1 id="判断MYSQL是否启动-mysql没有启动则备份退出"><a href="#判断MYSQL是否启动-mysql没有启动则备份退出" class="headerlink" title="判断MYSQL是否启动,mysql没有启动则备份退出"></a>判断MYSQL是否启动,mysql没有启动则备份退出</h1><p>mysql_ps=<code>ps -ef |grep mysql |wc -l</code><br>mysql_listen=<code>netstat -an |grep LISTEN |grep $mysql_port|wc -l</code><br>if [ [$mysql_ps == 0] -o [$mysql_listen == 0] ]; then<br>        echo “ERROR:MySQL is not running! backup stop!”<br>        exit<br>else<br>        echo $welcome_msg<br>fi</p>
+<h1 id="连接到mysql数据库，无法连接则备份退出"><a href="#连接到mysql数据库，无法连接则备份退出" class="headerlink" title="连接到mysql数据库，无法连接则备份退出"></a>连接到mysql数据库，无法连接则备份退出</h1><p>mysql -h$mysql_host -P$mysql_port -u$mysql_user -p$mysql_password &lt;&lt;end<br>use mysql;<br>select host,user from user where user=’root’ and host=’localhost’;<br>exit<br>end</p>
+<p>flag=<code>echo $?</code><br>if [ $flag != “0” ]; then<br>        echo “ERROR:Can’t connect mysql server! backup stop!”<br>        exit<br>else<br>        echo “MySQL connect ok! Please wait……”<br>        # 判断有没有定义备份的数据库，如果定义则开始备份，否则退出备份<br>        if [ “$backup_db_arr” != “” ];then<br>                #dbnames=$(cut -d ‘,’ -f1-5 $backup_database)<br>                #echo “arr is (${backup_db_arr[@]})”<br>                for dbname in ${backup_db_arr[@]}<br>                do<br>                        echo “database $dbname backup start…”<br>                        <code>mkdir -p $backup_dir</code><br>                        <code>mysqldump -h$mysql_host -P$mysql_port -u$mysql_user -p$mysql_password $dbname --default-character-set=$mysql_charset | gzip &gt; $backup_dir/$dbname-$backup_time.sql.gz</code><br>                        flag=<code>echo $?</code><br>                        if [ $flag == “0” ];then<br>                                echo “database $dbname success backup to $backup_dir/$dbname-$backup_time.sql.gz”<br>                        else<br>                                echo “database $dbname backup fail!”<br>                        fi</p>
+<pre><code>            done
+    else
+            echo &quot;ERROR:No database to backup! backup stop&quot;
+            exit
+    fi
+    # 如果开启了删除过期备份，则进行删除操作
+    if [ &quot;$expire_backup_delete&quot; == &quot;ON&quot; -a  &quot;$backup_location&quot; != &quot;&quot; ];then
+             #`find $backup_location/ -type d -o -type f -ctime +$expire_days -exec rm -rf &#123;&#125; \;`
+             `find $backup_location/ -type d -mtime +$expire_days | xargs rm -rf`
+             echo &quot;Expired backup data delete complete!&quot;
+    fi
+    echo &quot;All database backup success! Thank you!&quot;
+    exit
+</code></pre>
+<p>fi<br>注意：如果这个sh文件是在win下编辑的，需要用编辑器转换为unix格式，否则sh会执行不成功，如图：</p>
+<p>2、修改shell脚本属性，赋予执行权限<br>chmod 600 /opt/mysqlBackup.sh<br>chmod +x /opt/mysqlBackup.sh<br>3、定时执行脚本<br>方式一：<br>执行crontab -e命令，创建当前用户级别的定时任务</p>
+<p>crontab -e<br>输入以下内容，设置每天凌晨3:00定时自动备份</p>
+<p>00 03 * * * /opt/mysqlBackup.sh<br>生成的配置文件位于/var/spool/cron/root</p>
+<p>日志记录在/var/spool/mail/root中，可查看日志记录</p>
+<p>vi /var/spool/mail/root</p>
+<p>crontab文件概要：<br>用户所建立的crontab文件中，每一行都代表一项任务，每行的每个字段代表一项设置，它的格式共分为六个字段，前五段是时间设定段，第六段是要执行的命令段，格式如下：<br>minute　hour　day　month　week　command<br>　分　　时　　日　　月　　　周　　　命令<br>其中：<br>minute： 表示分钟，可以是从0到59之间的任何整数。（每分钟可用<em>或者</em>/1表示）<br>hour：表示小时，可以是从0到23之间的任何整数。（0表示0点）<br>day：表示日期，可以是从1到31之间的任何整数。<br>month：表示月份，可以是从1到12之间的任何整数。<br>week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。<br>command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。<br>在以上各个字段中，还可以使用以下特殊字符：<br>星号（<em>）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。<br>逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”<br>中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”<br>正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如</em>/10，如果用在minute字段，表示每十分钟执行一次。</p>
+<p>方式二：<br>配置全局定时任务文件</p>
+<p>vi /etc/crontab<br>在etc中加入如下内容，让其每天凌晨3:00自动执行任务。</p>
+<p>00 03 * * * root /opt/mysqlBackup.sh<br>全局定时任务配置相比于用户级别的任务配置多了一项执行用户user-name</p>
+<p>日志记录在/var/log/cron中</p>
+<p>4、MySQL恢复<br>mysql -u username -p databse &lt; backup.sql</p>
+<p>摘自:  <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/746db5ceec02">https://www.jianshu.com/p/746db5ceec02</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/03/06/Mysql高性能优化规范建议-Mysql高性能优化规范建议/" data-toggle="tooltip" data-placement="top"
+                           title="Mysql高性能优化规范建议">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/03/03/MySQL 连接查询汇总（极简）-MySQL 连接查询汇总（极简）/" data-toggle="tooltip" data-placement="top"
+                           title="MySQL 连接查询汇总（极简）">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A5%E4%B8%8B%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF%E8%AF%B7%E8%87%AA%E5%B7%B1%E4%BF%AE%E6%94%B9"><span class="toc-text">以下配置信息请自己修改</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E8%A1%8C%E5%BC%80%E5%A7%8B%E4%BB%A5%E4%B8%8B%E4%B8%8D%E9%9C%80%E8%A6%81%E4%BF%AE%E6%94%B9"><span class="toc-text">本行开始以下不需要修改</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%A4%E6%96%ADMYSQL%E6%98%AF%E5%90%A6%E5%90%AF%E5%8A%A8-mysql%E6%B2%A1%E6%9C%89%E5%90%AF%E5%8A%A8%E5%88%99%E5%A4%87%E4%BB%BD%E9%80%80%E5%87%BA"><span class="toc-text">判断MYSQL是否启动,mysql没有启动则备份退出</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E5%88%B0mysql%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8C%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5%E5%88%99%E5%A4%87%E4%BB%BD%E9%80%80%E5%87%BA"><span class="toc-text">连接到mysql数据库，无法连接则备份退出</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#CentOS"
+                           title="CentOS">CentOS</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

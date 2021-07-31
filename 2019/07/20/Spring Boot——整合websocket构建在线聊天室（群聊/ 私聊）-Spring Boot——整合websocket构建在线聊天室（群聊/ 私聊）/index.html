@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Boot——整合websocket构建在线聊天室（群聊 / 私聊）｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/07/20/Spring Boot——整合websocket构建在线聊天室（群聊/ 私聊）-Spring Boot——整合websocket构建在线聊天室（群聊/ 私聊）/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Boot——整合websocket构建在线聊天室（群聊 / 私聊）</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-07-20
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Boot——整合websocket构建在线聊天室（群聊 / 私聊）
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="1-引入依赖"><a href="#1-引入依赖" class="headerlink" title="1.引入依赖"></a>1.引入依赖</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-websocket<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-注入对象ServerEndpointExporter"><a href="#2-注入对象ServerEndpointExporter" class="headerlink" title="2.注入对象ServerEndpointExporter"></a>2.注入对象ServerEndpointExporter</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *编写一个WebSocketConfig配置类，注入对象ServerEndpointExporter，</span></span><br><span class="line"><span class="comment"> *      这个bean会自动注册使用了@ServerEndpoint注解声明的Websocket endpoint</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebSocketConfig</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ServerEndpointExporter <span class="title">serverEndpointExporter</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ServerEndpointExporter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-WebSocket-具体实现类"><a href="#3-WebSocket-具体实现类" class="headerlink" title="3.WebSocket 具体实现类"></a>3.WebSocket 具体实现类</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.springbootwebsocket.mysocket;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.core.JsonParseException;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.JsonMappingException;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> javax.websocket.OnClose;</span><br><span class="line"><span class="keyword">import</span> javax.websocket.OnMessage;</span><br><span class="line"><span class="keyword">import</span> javax.websocket.OnOpen;</span><br><span class="line"><span class="keyword">import</span> javax.websocket.Session;</span><br><span class="line"><span class="keyword">import</span> javax.websocket.server.PathParam;</span><br><span class="line"><span class="keyword">import</span> javax.websocket.server.ServerEndpoint;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.CopyOnWriteArraySet;</span><br><span class="line"> </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  </span></span><br><span class="line"><span class="comment"> * 虽然<span class="doctag">@Component</span>默认是单例模式的，但是spring boot 还是会为每个websocket连接初始化一个bean,所以这里使用一个静态的set保存spring boot</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 创建的bean--MyWebSocket.</span></span><br><span class="line"><span class="comment"> **/</span></span><br><span class="line"><span class="meta">@ServerEndpoint(value=&quot;/websocket/&#123;nickname&#125;&quot;)</span><span class="comment">// websocket连接点映射.</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyWebSocket</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//用来存储每个客户端对应的MyWebSocket对象.</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> CopyOnWriteArraySet&lt;MyWebSocket&gt; webSocketSet = <span class="keyword">new</span> CopyOnWriteArraySet&lt;MyWebSocket&gt;();</span><br><span class="line">	<span class="comment">//用来记录sessionId和该session之间的绑定关系.</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String,Session&gt; map = <span class="keyword">new</span> HashMap&lt;String,Session&gt;();</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> Session session;<span class="comment">//当前会话的session.</span></span><br><span class="line">	<span class="keyword">private</span> String nickname;<span class="comment">//昵称.</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 成功建立连接调用的方法.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@OnOpen</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onOpen</span><span class="params">(Session session,<span class="meta">@PathParam(&quot;nickname&quot;)</span> String nickname)</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.session = session;</span><br><span class="line">		<span class="keyword">this</span>.nickname = nickname;</span><br><span class="line">		map.put(session.getId(), session);</span><br><span class="line">		webSocketSet.add(<span class="keyword">this</span>);<span class="comment">//加入set中.</span></span><br><span class="line">		<span class="keyword">this</span>.session.getAsyncRemote().sendText(nickname+<span class="string">&quot;上线了,（我的id号是&quot;</span>+session.getId()+<span class="string">&quot;）&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 连接关闭调用的方法.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@OnClose</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClose</span><span class="params">(Session session)</span></span>&#123;</span><br><span class="line">		webSocketSet.remove(<span class="keyword">this</span>);<span class="comment">//从set中移除.</span></span><br><span class="line">		map.remove(session.getId());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 收到客户端消息后调用的方法.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@OnMessage</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMessage</span><span class="params">(String message,Session session,<span class="meta">@PathParam(&quot;nickname&quot;)</span> String nickname)</span></span>&#123;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//message 不是普通的string ，而是我们定义的SocketMsg json字符串.</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			SocketMsg socketMsg = <span class="keyword">new</span> ObjectMapper().readValue(message, SocketMsg.class);</span><br><span class="line">			</span><br><span class="line"> </span><br><span class="line">			<span class="comment">//单聊.</span></span><br><span class="line">			<span class="keyword">if</span>(socketMsg.getType() == <span class="number">1</span>)&#123;</span><br><span class="line">				</span><br><span class="line">				<span class="comment">//单聊：需要找到发送者和接受者即可.</span></span><br><span class="line">				socketMsg.setFromUser(session.getId());<span class="comment">//发送者.</span></span><br><span class="line">				<span class="comment">//socketMsg.setToUser(toUser);//这个是由客户端进行设置.</span></span><br><span class="line">				Session fromSession = map.get(socketMsg.getFromUser());</span><br><span class="line">				Session toSession = map.get(socketMsg.getToUser());</span><br><span class="line">				<span class="keyword">if</span>(toSession != <span class="keyword">null</span>)&#123;</span><br><span class="line">					<span class="comment">//发送消息.</span></span><br><span class="line">					fromSession.getAsyncRemote().sendText(nickname+<span class="string">&quot;：&quot;</span>+socketMsg.getMsg());</span><br><span class="line">					toSession.getAsyncRemote().sendText(nickname+<span class="string">&quot;：&quot;</span>+socketMsg.getMsg());</span><br><span class="line">				&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">					fromSession.getAsyncRemote().sendText(<span class="string">&quot;系统消息：对方不在线或者您输入的id号有误&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="comment">//群发给每个客户端.</span></span><br><span class="line">				broadcast(socketMsg,nickname);</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">		&#125; <span class="keyword">catch</span> (JsonParseException e) &#123;</span><br><span class="line">			<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (JsonMappingException e) &#123;</span><br><span class="line">			<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 发生错误时调用.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Session session,Throwable error)</span></span>&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;发生错误&quot;</span>);</span><br><span class="line">		error.printStackTrace();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 群发的方法.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> </span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">broadcast</span><span class="params">(SocketMsg socketMsg ,String nickname)</span></span>&#123;</span><br><span class="line">		<span class="keyword">for</span>(MyWebSocket item:webSocketSet)&#123;</span><br><span class="line">			<span class="comment">//发送消息.</span></span><br><span class="line">			item.session.getAsyncRemote().sendText(nickname+<span class="string">&quot;：&quot;</span>+socketMsg.getMsg());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-创建消息对象SocketMsg"><a href="#4-创建消息对象SocketMsg" class="headerlink" title="4.创建消息对象SocketMsg"></a>4.创建消息对象SocketMsg</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.springbootwebsocket.mysocket;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SocketMsg</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> type;<span class="comment">//聊天类型，0：群聊；1：单聊;</span></span><br><span class="line">	<span class="keyword">private</span> String fromUser;<span class="comment">//发送者.</span></span><br><span class="line">	<span class="keyword">private</span> String toUser;<span class="comment">//接受者. session.getId();</span></span><br><span class="line">	<span class="keyword">private</span> String msg;<span class="comment">//消息.</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> type;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setType</span><span class="params">(<span class="keyword">int</span> type)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.type = type;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getFromUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> fromUser;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setFromUser</span><span class="params">(String fromUser)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.fromUser = fromUser;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getToUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> toUser;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setToUser</span><span class="params">(String toUser)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.toUser = toUser;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> msg;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.msg = msg;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-static目录下创建客户端-webSocketTest-html"><a href="#5-static目录下创建客户端-webSocketTest-html" class="headerlink" title="5.static目录下创建客户端 webSocketTest.html"></a>5.static目录下创建客户端 webSocketTest.html</h2><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>聊天室<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="css"></span></span><br><span class="line"><span class="css"> </span></span><br><span class="line"><span class="css">        <span class="selector-id">#message</span>&#123;</span></span><br><span class="line"><span class="css">            <span class="attribute">margin-top</span>:<span class="number">20px</span>;</span></span><br><span class="line"><span class="css">            <span class="attribute">border</span>:<span class="number">1px</span> solid gray;</span></span><br><span class="line"><span class="css">            <span class="attribute">padding</span>:<span class="number">20px</span>;</span></span><br><span class="line"><span class="css">        &#125;</span></span><br><span class="line"><span class="css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">昵称：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;nickname&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;conectWebSocket()&quot;</span>&gt;</span>连接服务器<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;closeWebSocket()&quot;</span>&gt;</span>断开连接<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">消息：<span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;text&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span>  /&gt;</span></span><br><span class="line">id号<span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;toUser&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">&quot;send()&quot;</span>&gt;</span>发送消息<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">&lt;!-- 存放接收到的消息. --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;message&quot;</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript"></span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">    <span class="comment">//连接对象.</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> websocket = <span class="literal">null</span>;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> nickname = <span class="literal">null</span>;</span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">conectWebSocket</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        nickname = <span class="built_in">document</span>.getElementById(<span class="string">&quot;nickname&quot;</span>).value;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(nickname == <span class="string">&#x27;&#x27;</span>)&#123;</span></span><br><span class="line"><span class="javascript">            alert(<span class="string">&quot;请输入昵称&quot;</span>);</span></span><br><span class="line"><span class="javascript">            <span class="keyword">return</span>;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//判断当前的浏览器是否支持websocket.</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(<span class="string">&quot;WebSocket&quot;</span> <span class="keyword">in</span> <span class="built_in">window</span>)&#123;</span></span><br><span class="line"><span class="javascript">            websocket = <span class="keyword">new</span> WebSocket(<span class="string">&quot;ws://localhost:8080/websocket/&quot;</span>+nickname);</span></span><br><span class="line"><span class="javascript">        &#125;<span class="keyword">else</span>&#123;</span></span><br><span class="line"><span class="javascript">            alert(<span class="string">&quot;Not support websocket&quot;</span>);</span></span><br><span class="line"><span class="javascript">            <span class="keyword">return</span> <span class="literal">false</span>;</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">        <span class="comment">//连接成功的方法.</span></span></span><br><span class="line"><span class="javascript">        websocket.onopen = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            setMessgeHtml(<span class="string">&quot;Loc MSG:连接成功&quot;</span>);</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">        <span class="comment">//连接关闭.</span></span></span><br><span class="line"><span class="javascript">        websocket.onclose = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            setMessgeHtml(<span class="string">&quot;Loc MSG:连接关闭&quot;</span>);</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">        <span class="comment">//连接异常.</span></span></span><br><span class="line"><span class="javascript">        websocket.onerror = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            setMessgeHtml(<span class="string">&quot;Loc MSG:连接异常&quot;</span>);</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">        websocket.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">            setMessgeHtml(event.data);</span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">setMessgeHtml</span>(<span class="params">msg</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> message = <span class="built_in">document</span>.getElementById(<span class="string">&quot;message&quot;</span>);</span></span><br><span class="line"><span class="javascript">        message.innerHTML += msg+<span class="string">&quot;&lt;br/&gt;&quot;</span>;</span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">    <span class="comment">/**</span></span></span><br><span class="line"><span class="comment"><span class="javascript">     发送消息.</span></span></span><br><span class="line"><span class="comment"><span class="javascript">     */</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">send</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> message = <span class="built_in">document</span>.getElementById(<span class="string">&quot;text&quot;</span>).value;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> toUser = <span class="built_in">document</span>.getElementById(<span class="string">&quot;toUser&quot;</span>).value;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> socketMsg = &#123;<span class="attr">msg</span>:message,<span class="attr">toUser</span>:toUser&#125;;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(toUser == <span class="string">&#x27;&#x27;</span>)&#123;</span></span><br><span class="line"><span class="javascript">            socketMsg.type =<span class="number">0</span>;<span class="comment">//群聊.</span></span></span><br><span class="line"><span class="javascript">        &#125;<span class="keyword">else</span>&#123;</span></span><br><span class="line"><span class="javascript">            socketMsg.type =<span class="number">1</span>;<span class="comment">//单聊.</span></span></span><br><span class="line"><span class="javascript">        &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript">        <span class="comment">//websocket.send(nickname+&quot;:&quot;+message);</span></span></span><br><span class="line"><span class="javascript">        websocket.send(<span class="built_in">JSON</span>.stringify(socketMsg));<span class="comment">//将json对象转换为json字符串.</span></span></span><br><span class="line"><span class="javascript">    &#125;</span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript"> </span></span><br><span class="line"><span class="javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>测试，打开多个登录窗口，输入<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/webSocketTest.html">http://127.0.0.1:8080/webSocketTest.html</a> ，输入昵称点击连接即可登录成功，群聊直接发送消息即可，私聊输入完消息后，选择对应那个人的id号码就行，快去试试吧：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-d04e9785d4e246049bd5b6d6caf0eff0.png" alt="image.png"></p>
+<p>总结：了解了websocket底层是怎么实现的，websocket协议稍微麻烦，其实我们完全可以用它的子协议STOMP来实现本文所有的功能，因已封装的很好，用起来非常简单，实例：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41603102/article/details/88351729">SpringBoot+STOMP 实现聊天室（单聊+多聊）及群发消息详解</a>。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.iteye.com/blog/412887952-qq-com-2405514">https://www.iteye.com/blog/412887952-qq-com-2405514</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/07/26/Docker 入门-Docker 入门/" data-toggle="tooltip" data-placement="top"
+                           title="Docker 入门">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/07/10/Spring Security 使用 JSON 登录-Spring Security 使用 JSON 登录/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Security 使用 JSON 登录">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5%E4%BE%9D%E8%B5%96"><span class="toc-text">1.引入依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%B3%A8%E5%85%A5%E5%AF%B9%E8%B1%A1ServerEndpointExporter"><span class="toc-text">2.注入对象ServerEndpointExporter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-WebSocket-%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="toc-text">3.WebSocket 具体实现类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%88%9B%E5%BB%BA%E6%B6%88%E6%81%AF%E5%AF%B9%E8%B1%A1SocketMsg"><span class="toc-text">4.创建消息对象SocketMsg</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-static%E7%9B%AE%E5%BD%95%E4%B8%8B%E5%88%9B%E5%BB%BA%E5%AE%A2%E6%88%B7%E7%AB%AF-webSocketTest-html"><span class="toc-text">5.static目录下创建客户端 webSocketTest.html</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

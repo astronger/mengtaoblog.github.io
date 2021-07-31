@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Cloud Gateway 笔记补充｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/08/14/Spring Cloud Gateway 笔记补充-springcloudgateway笔记补充/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Cloud Gateway 笔记补充</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-08-14
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Cloud Gateway 笔记补充
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>@[TOC](Spring Cloud Gateway)</p>
+<h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>SpringCloud Gateway 旨在为微服务架构提供一种简单有效的统一的 API 路由管理方式。<br>SpringCloud Gateway 作为 Spring Cloud 生态系统中的网关，目标是替代 Zuul，使用的是Spring Boot和Spring Webflux提供的<strong>Netty</strong>底层环境，不能和传统的Servlet容器一起使用，也不能打包成一个WAR包。</p>
+<p>SpringCloud官 对SpringCloud Gateway <strong>特征介绍</strong>如下：</p>
+<p>（1）基于 Spring Framework 5，Project Reactor 和 Spring Boot 2.0</p>
+<p>（2）集成 Hystrix 断路器</p>
+<p>（3）集成 Spring Cloud DiscoveryClient</p>
+<p>（4）Predicates 和 Filters 作用于特定路由，易于编写的 Predicates 和 Filters</p>
+<p>（5）具备一些网关的高级功能：动态路由、限流、路径重写</p>
+<p>从以上的特征来说，和Zuul的特征差别不大。SpringCloud Gateway和Zuul主要的区别，还是在底层的通信框架上。</p>
+<p>简单说明一下上文中的三个术语：</p>
+<p>（1）Filter（过滤器）：</p>
+<p>和Zuul的过滤器在概念上类似，可以使用它拦截和修改请求，并且对上游的响应，进行二次处理。过滤器为org.springframework.cloud.gateway.filter.GatewayFilter类的实例。</p>
+<p>（2）Route（路由）：</p>
+<p>网关配置的基本组成模块，和Zuul的路由配置模块类似。一个Route模块由一个 ID，一个目标 URI，一组断言和一组过滤器定义。如果断言为真，则路由匹配，目标URI会被访问。</p>
+<p>（3）Predicate（断言）：</p>
+<p>这是一个 Java 8 的 Predicate，可以使用它来匹配来自 HTTP 请求的任何内容，例如 headers 或参数。断言的输入类型是一个 ServerWebExchange。</p>
+<h1 id="2-基本用法"><a href="#2-基本用法" class="headerlink" title="2. 基本用法"></a>2. 基本用法</h1><p>SpringCloud Gateway 支持两种不同的用法：</p>
+<ul>
+<li>编码式</li>
+<li>yml 配置</li>
+</ul>
+<h3 id="2-1-首先来看编码式："><a href="#2-1-首先来看编码式：" class="headerlink" title="2.1 首先来看编码式："></a>2.1 首先来看编码式：</h3><p>创建  Spring Boot 项目，添加依赖：<br><img src="https://img-blog.csdnimg.cn/20201118154026799.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>项目创建成功后，直接配置一个 RouteLocator 这样一个Bean,就可以实现请求转发。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line">  <span class="function">RouteLocator <span class="title">routeLocator</span><span class="params">(RouteLocatorBuilder builder)</span></span>&#123;</span><br><span class="line">      <span class="comment">// 可以添加多个</span></span><br><span class="line">      <span class="keyword">return</span> builder.routes()</span><br><span class="line">              <span class="comment">// 访问网址 http://httpbin.org</span></span><br><span class="line">              <span class="comment">// 通过网关后访问 http://localhost:8080/get</span></span><br><span class="line">              .route(<span class="string">&quot;javaboy&quot;</span>, r -&gt; r.path(<span class="string">&quot;/get&quot;</span>).uri(<span class="string">&quot;http://httpbin.org&quot;</span>))</span><br><span class="line">              .build();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这里只需提供 RouteLocator 的Bean 就可实现请求转发，配置完成后，访问 <a target="_blank" rel="noopener" href="http://localhost:8080/get">http://localhost:8080/get</a> 就会转发至 <a target="_blank" rel="noopener" href="http://httpbin.org/">http://httpbin.org</a> 接口。</p>
+<h3 id="2-2-yml-配置"><a href="#2-2-yml-配置" class="headerlink" title="2.2 yml 配置"></a>2.2 yml 配置</h3><p>注释掉上面的Bean ，配置如下yml，重启服务与源来效果相同。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        - id: java</span><br><span class="line">          uri: http://httpbin.org</span><br><span class="line">          predicates:</span><br><span class="line">            - Path=/get</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-与微服务结合"><a href="#2-3-与微服务结合" class="headerlink" title="2.3 与微服务结合"></a>2.3 与微服务结合</h3><p>还是延用以前的eurek server和provider以及gateway。首先给 gateway 添加依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20201118170657355.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>然后配置yml ：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      discovery:</span><br><span class="line">        locator:</span><br><span class="line">          # 开启自动代理</span><br><span class="line">          enabled: true</span><br><span class="line">          # 服务id为true --&gt; 这样小写服务就可访问了</span><br><span class="line">          lower-case-service-id: true</span><br><span class="line">  application:</span><br><span class="line">    name: gateway</span><br><span class="line"></span><br><span class="line">eureka:</span><br><span class="line">  client:</span><br><span class="line">    service-url：</span><br><span class="line">      defaultZone: http://localhost:1111/eureka</span><br><span class="line"></span><br><span class="line">#日志</span><br><span class="line">logging:</span><br><span class="line">  level:</span><br><span class="line">    org.springframework.cloud.gateway: debug</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>接下来启动eurek server和provider以及gateway，就可以通过gateway (<a target="_blank" rel="noopener" href="http://localhost:8080/provider/hello">http://localhost:8080/provider/hello</a>)<br>访问到其他注册到Erueka上的服务了。访问方式和Zuul 类似。<br><strong>小结</strong>：gateway 注册到 eureka ，就可以自动代理注册中心的所有服务，简化路由配置的使用方式。</p>
+<h1 id="3-Predicate-断言"><a href="#3-Predicate-断言" class="headerlink" title="3. Predicate(断言)"></a>3. Predicate(断言)</h1><h4 id="3-1-时间断言"><a href="#3-1-时间断言" class="headerlink" title="3.1 时间断言"></a>3.1 时间断言</h4><ul>
+<li>Before –&gt; 请求时间在某个时间点之前 才会被路由</li>
+<li>After –&gt; 请求时间在某个时间点之后 才会被路由</li>
+<li>Between –&gt; 请求时间在2个时间点之间(两个时间点,分开)</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        - id: before_route</span><br><span class="line">          uri: http://www.baidu.com</span><br><span class="line">              # 时间断言</span><br><span class="line">          predicates:</span><br><span class="line">              - Before=2021-03-31T08:38:47+08:00</span><br></pre></td></tr></table></figure>
+<p>访问：  localhost:8080  如下：<br><img src="https://img-blog.csdnimg.cn/20201119100145470.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<blockquote>
+<p>如果改为 - Before=2020-03-31T08:38:47+08:00 重启访问后如下：</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/20201119100322920.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h4 id="3-2-请求方法-amp-请求路径断言"><a href="#3-2-请求方法-amp-请求路径断言" class="headerlink" title="3.2 请求方法&amp;请求路径断言"></a>3.2 请求方法&amp;请求路径断言</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        - id: java_route</span><br><span class="line">          uri: http://httpbin.org</span><br><span class="line">          predicates:</span><br><span class="line">               - Method=GET</span><br></pre></td></tr></table></figure>
+<p>上面这个配置表示只给 <strong>GET</strong>请求路由，访问 <a target="_blank" rel="noopener" href="http://localhost:8080/get">http://localhost:8080/get</a> 就成功。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        - id: java_route</span><br><span class="line">          uri: http://httpbin.org</span><br><span class="line">          predicates:</span><br><span class="line">              - Path=/2020/0912/&#123;segment&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面这个配置表示路径满足这个规则都会进行转发，例如：<a target="_blank" rel="noopener" href="http://www.xxx.com/2020/0912/">http://www.xxx.com/2020/0912/</a>** ，否则不转发。</p>
+<h4 id="3-3-Query-断言"><a href="#3-3-Query-断言" class="headerlink" title="3.3 Query 断言"></a>3.3 Query 断言</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        - id: java_route</span><br><span class="line">          uri: http://httpbin.org</span><br><span class="line">          predicates:</span><br><span class="line">               - Query=name</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>上面配置表示一定要有 name 参数才转发，否则不会转发。<br>也可以指定参数的值，例如参数的 key 为 name ，value 必须要以 java 开始。 如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        - id: java_route</span><br><span class="line">          uri: http://httpbin.org</span><br><span class="line">          predicates:</span><br><span class="line">               - Query=name,java.*</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="3-4-多种匹配方式"><a href="#3-4-多种匹配方式" class="headerlink" title="3.4 多种匹配方式"></a>3.4 多种匹配方式</h4><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        # 组合使用</span><br><span class="line">        - id: many_route</span><br><span class="line">          uri: http://httpbin.org</span><br><span class="line">          predicates:</span><br><span class="line">            # 可以指定参数和值 ?name=1开头的值</span><br><span class="line">            - Query=name,1.*</span><br><span class="line">            - Method=GET</span><br><span class="line">            - After=2020-03-01T08:38:47+08:00</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>满足以上条件即可转发。</p>
+<h4 id="3-5-自定义路由断言"><a href="#3-5-自定义路由断言" class="headerlink" title="3.5 自定义路由断言"></a>3.5 自定义路由断言</h4><p>配置自定义断言工厂：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 自定义路由断言工厂</span></span><br><span class="line"><span class="comment">// 命名需要以RoutePredicateFactory结尾 比aRoutePredicateFactory 那么yml在使用时a就是断言工厂的名字</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CheckAuthRoutePredicateFactory</span> <span class="keyword">extends</span> <span class="title">AbstractRoutePredicateFactory</span>&lt;<span class="title">CheckAuthRoutePredicateFactory</span>.<span class="title">User</span>&gt; </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CheckAuthRoutePredicateFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(User.class);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 自定义配置类</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Predicate&lt;ServerWebExchange&gt; <span class="title">apply</span><span class="params">(User config)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> exchange -&gt; &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;进入apply：&quot;</span> + config.getName());</span><br><span class="line">            <span class="keyword">if</span> (config.getName().equals(<span class="string">&quot;kitty&quot;</span>))&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line"> </span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> name;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>yml 配置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        # 自定义断言工厂 -name就是之前以xxxRoutePredicateFactory的xxxx为断言工厂名</span><br><span class="line">        - id: customer_route</span><br><span class="line">          uri: http://httpbin.org</span><br><span class="line">          predicates:</span><br><span class="line">          - name: CheckAuth</span><br><span class="line">            args:</span><br><span class="line">              name: kitty</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当参数name=kitty与自定义断言工厂的getName一致时：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201119104914857.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>当参数name=kitty与自定义断言工厂的getName不一致时</p>
+<p><img src="https://img-blog.csdnimg.cn/20201119104924143.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="4-Filter（过滤器）"><a href="#4-Filter（过滤器）" class="headerlink" title="4. Filter（过滤器）"></a>4. Filter（过滤器）</h1><p>gateway过滤器分类：</p>
+<ul>
+<li>GlobalFilter</li>
+<li>GatewayFilter<blockquote>
+<p>这里的过滤器就是在请求转发的时候，自动额外添加参数。</p>
+</blockquote>
+<h4 id="4-1-AddRequestParameter过滤器使用"><a href="#4-1-AddRequestParameter过滤器使用" class="headerlink" title="4.1 AddRequestParameter过滤器使用"></a>4.1 AddRequestParameter过滤器使用</h4></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    gateway:</span><br><span class="line">      routes:</span><br><span class="line">        - id: java_route</span><br><span class="line">          uri: lb://provider</span><br><span class="line">          filters:</span><br><span class="line">            - AddRequestParameter=name,javaboy</span><br><span class="line">          predicates:</span><br><span class="line">              - Method=GET</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20201119110829781.png#pic_center" alt="在这里插入图片描述"></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/08/14/Spring Cloud Config 笔记补充-springcloudconfig笔记补充/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Config 笔记补充">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/08/13/Zuul  笔记补充-zuul笔记补充/" data-toggle="tooltip" data-placement="top"
+                           title="Zuul  笔记补充">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="toc-text">1. 简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">2. 基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%A6%96%E5%85%88%E6%9D%A5%E7%9C%8B%E7%BC%96%E7%A0%81%E5%BC%8F%EF%BC%9A"><span class="toc-text">2.1 首先来看编码式：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-yml-%E9%85%8D%E7%BD%AE"><span class="toc-text">2.2 yml 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BB%93%E5%90%88"><span class="toc-text">2.3 与微服务结合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Predicate-%E6%96%AD%E8%A8%80"><span class="toc-text">3. Predicate(断言)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E6%97%B6%E9%97%B4%E6%96%AD%E8%A8%80"><span class="toc-text">3.1 时间断言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95-amp-%E8%AF%B7%E6%B1%82%E8%B7%AF%E5%BE%84%E6%96%AD%E8%A8%80"><span class="toc-text">3.2 请求方法&amp;请求路径断言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-Query-%E6%96%AD%E8%A8%80"><span class="toc-text">3.3 Query 断言</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E5%A4%9A%E7%A7%8D%E5%8C%B9%E9%85%8D%E6%96%B9%E5%BC%8F"><span class="toc-text">3.4 多种匹配方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%B7%AF%E7%94%B1%E6%96%AD%E8%A8%80"><span class="toc-text">3.5 自定义路由断言</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Filter%EF%BC%88%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%89"><span class="toc-text">4. Filter（过滤器）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-AddRequestParameter%E8%BF%87%E6%BB%A4%E5%99%A8%E4%BD%BF%E7%94%A8"><span class="toc-text">4.1 AddRequestParameter过滤器使用</span></a></li></ol></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

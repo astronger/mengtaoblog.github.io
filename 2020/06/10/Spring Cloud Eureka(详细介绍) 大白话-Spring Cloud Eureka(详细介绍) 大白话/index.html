@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Cloud Eureka(详细介绍) 大白话｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/06/10/Spring Cloud Eureka(详细介绍) 大白话-Spring Cloud Eureka(详细介绍) 大白话/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Cloud Eureka(详细介绍) 大白话</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-06-10
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Cloud Eureka(详细介绍) 大白话
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h3 id="笔记补录："><a href="#笔记补录：" class="headerlink" title="笔记补录："></a>笔记补录：</h3><h4 id="1-Eureka-介绍"><a href="#1-Eureka-介绍" class="headerlink" title="1.Eureka 介绍"></a>1.Eureka 介绍</h4><p>Spring Cloud Eureka 是 Spring Cloud Netflix 微服务套件的一部分，基于 Netflix Eureka 做了二次封装，主要负责实现微服务架构中的服务治理功能。</p>
+<p>服务治理是微服务架构中必不可少的一部分，阿里开源的 Dubbo 框架就是针对服务治理的。服务治理必须要有一个注册中心，除了用 Eureka 作为注册中心外，我们还可以使用 Consul、Etcd、Zookeeper 等来作为服务的注册中心。</p>
+<p>Eureka 由两部分组成：服务端和客户端，服务端就是注册中心，用来接收其它的服务注册，客户端是一个java客户端，用来注册，并可以实现负载均衡等功能。 Eureka 的搭建和集群请点击查看这篇文章。</p>
+<p>Eureka图解如下：</p>
+<p>从图中可以看出Eureka有三个角色：</p>
+<p>Eureka Server : 注册中心<br>Eureka Provider: 服务提供者<br>Eureka Consumer : 服务消费者<br>注册中心就是管理所有服务的信息和状态，12306 就好比一个注册中心，顾客就好比调用的客户端，当他们需要坐火车时，就会在 12306 网站上查询余票，有票就可以购买，然后获取火车的车次、时间等，最后出发。程序也是一样，当你需要调用某一个服务的时候，你会先去 Eureka 中去拉取服务列表，查看你调用的服务在不在其中，在的话就拿到服务地址、端口等信息，然后调用。</p>
+<p>注册中心带来的好处就是，不需要知道有多少提供方，你只需要关注注册中心即可，就像顾客不必关心有多少火车在开行，只需要去 12306 网站上看有没有票就可以了。</p>
+<p>为什么 Eureka 比 Zookeeper 更适合作为注册中心呢？主要是因为 Eureka 是基于 AP 原则构建的，而 ZooKeeper 是基于 CP 原则构建的。在分布式系统领域有个著名的 CAP 定理，即 C 为数据一致性；A 为服务可用性；P 为服务对网络分区故障的容错性。这三个特性在任何分布式系统中都不能同时满足，最多同时满足两个。Zookeeper 有一个 Leader，而且在这个 Leader 无法使用的时候通过 Paxos（ZAB）算法选举出一个新的 Leader。这个 Leader 的任务就是保证写数据的时候只向这个 Leader 写入，Leader 会同步信息到其他节点。通过这个操作就可以保证数据的一致性。</p>
+<p>想要保证 AP 就要用 Eureka，想要保证 CP 就要用 Zookeeper。</p>
+<p>Dubbo 中大部分都是基于 Zookeeper 作为注册中心的。Spring Cloud 中当然首选 Eureka。</p>
+<h4 id="2-Eureka-的工作细节"><a href="#2-Eureka-的工作细节" class="headerlink" title="2. Eureka 的工作细节"></a>2. Eureka 的工作细节</h4><p>2.1 Eureka Server<br>     Eureka Server主要对外提供了三个功能：</p>
+<p>服务注册，所有的服务都注册到Eureka Server上面来<br>提供注册表，注册表就是所有注册上来服务的一个列表，Eureka Client在调用服务时，需要获取这个注册表，一般来说，这个注册表会缓存下来，如果缓存失效，则直接获取最新的注册表<br>同步状态，Eureka Client 通过注册、心跳等机制，和Eureka Server同步当前客户端的状态<br>2.2 Eureka Client<br>     Eureka Client 主要是来简化每一个服务和Eureka Server 之间的交互。Eureka Client 会自动拉取、更新以及缓存Eureka Server 中的信息，这样，即便Eureka Server 所有节点都宕机，Eureka Client 依然能够获取到想要调服务的地址（但是地址可能不准确）。</p>
+<p>2.2.1 服务注册</p>
+<p> 服务提供者将自己注册到服务注册中心(Eureka Server)，需要注意，所渭的服务提供者，只是一个业务上的划分，本质上他就是一个 Eureka Client 。当 Eureka Client 向 Eureka Server 注册时，他需要提供自身的一些元数据信息，例如IP地址、端囗、名称、运行状态等等。</p>
+<p>2.2.2 服务续约</p>
+<p>Eureka Client 注册到 Eureka Server 上之后，事情还没有结束，刚刚开始而已。注册成功后，默认情况下，Eureka Client 每隔30秒就要向 Eureka Server 发送一条心跳消息，来告诉Eureka Server 我还在运行。如果 Eureka Server 连续90秒有沿有收到Eureka Client 的续约消息（连续三次没发送），它会认为Eureka Client已经线了，会将掉线的Eureka Client从当前的服务注册列表中剔除。</p>
+<p>服务续约，有两个相关的属性（一般不建议修改）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 表示服务的续约时间，默认是30秒</span><br><span class="line">eureka.instance.lease-renewal-intetval-in-seconds=30 </span><br><span class="line"># 服务失效时间，默认是90秒</span><br><span class="line">eureka.instance.lease-expiration-duration-in-seconds=90</span><br></pre></td></tr></table></figure>
+<p>2.2.3 服务下线</p>
+<p>当 Eureka Client 下线时，它会主动发送一条消息，告诉Eureka Server，我下线了。</p>
+<p>2.2.4 获取注册表信息</p>
+<p>Eureka Client 从Eureka Server 上获取服务的注册信息，将其缓存在本地。本地客户端在需要调用远程服务时，会从该信息中查找远程服务所对应的IP地址、端囗等信息。Eureka Client 上缓存的服务注册信息会定期更新（30秒)，如果 Eureka Server 返回的注册表信息与本地缓存的注册表信息不同的话，Eureka Client 会自动处理。</p>
+<p>这里，也涉及至两个属性，一个是是否允许获取注册表信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">eureka.client.fetch-registry=true</span><br></pre></td></tr></table></figure>
+<p>Eureka Client 上缓存的服务注册信息，定期更新的时间间隔，默认30秒：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">eureka.client.registry-fetch-interval-seconds=30</span><br></pre></td></tr></table></figure>
+<p> 以上。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/06/18/解决 CentOS 没有字体导致 pdf 转图片乱码问题-解决 Centos 没有字体导致 pdf 转图片乱码问题/" data-toggle="tooltip" data-placement="top"
+                           title="解决 CentOS 没有字体导致 pdf 转图片乱码问题">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/06/05/解决 Consul 启动后 Service Check 报红叉的错误-解决 Consul 启动后 Service Check 报红叉的错误/" data-toggle="tooltip" data-placement="top"
+                           title="解决 Consul 启动后 Service Check 报红叉的错误">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%94%E8%AE%B0%E8%A1%A5%E5%BD%95%EF%BC%9A"><span class="toc-text">笔记补录：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Eureka-%E4%BB%8B%E7%BB%8D"><span class="toc-text">1.Eureka 介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Eureka-%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%BB%86%E8%8A%82"><span class="toc-text">2. Eureka 的工作细节</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

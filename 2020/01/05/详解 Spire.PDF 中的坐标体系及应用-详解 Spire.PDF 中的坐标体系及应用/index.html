@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        详解 Spire.PDF 中的坐标体系及应用｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/01/05/详解 Spire.PDF 中的坐标体系及应用-详解 Spire.PDF 中的坐标体系及应用/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>详解 Spire.PDF 中的坐标体系及应用</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-01-05
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            详解 Spire.PDF 中的坐标体系及应用
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>Spire.PDF 是一款专业的基于.NET 平台的 PDF 组件。它能够让开发人员在不使用 Adobe Acrobat 和其他外部控件的情况下，运用.NET 应用程序创建，阅读，编写和操纵 PDF 文档。文本将详细为大家介绍 Spire.PDF 中坐标体系及其应用。</p>
+<h2 id="坐标系定义"><a href="#坐标系定义" class="headerlink" title="坐标系定义"></a>坐标系定义</h2><p>坐标系是 PDF 中一项十分重要的体系，PDF 的中任何元素，例如文本、图片、表格等，都必须建立在坐标体系上。有了坐标系，我们才能在指定的位置添加（绘制）这些内容。Adobe 公司的 PDF 文档规范中将坐标系的原点定在了页面的左下角，这样的坐标系其实不方便我们自上而下书写内容。Spire.PDF 的坐标系有如下规定：</p>
+<ul>
+<li>原点位于 PDF 页面的左上角定点</li>
+<li>X 正半轴是原点开始向右延伸的轴，Y 正半轴是原点开始向下延伸的轴</li>
+<li>以磅作为单位，如果 PDF 页面大小为 A4，那么页面右下角定点坐标为（595,842）</li>
+</ul>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-99d720d3be49499a9204bcaaaefdf422.png" alt="image.png"></p>
+<p>从以上规定中，我们很容易看出，Spire.PDF 中的坐标体系很方便程序员自上而下在 PDF 页面上添加页面元素。除了以上设定以外，Spire.PDF 的新建 PDF 页面内还有边缘（PdfMargins）的设定，边缘是为了方便程序员在除边缘以外的地方添加内容，这跟 Word 中的边缘设定比较类似。由于边缘的出现，在新建页面中，坐标原点的位置是除边缘以外的区域的左上角定点。这样的设定，方便程序员在 PDF 页面上添加内容时不再需要人为地留出空白。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-651d8b9412b7474390382d160d505cb7.png" alt="image.png"></p>
+<p>上面一直强调新建页面，在现成的 PDF 页面中是没有边缘的概念的。实际上，Adobe PDF 文档规范也没有边缘的概念。对于一个现成的 PDF 页面，坐标系维持原先的规定不变。现在对新建页面中的坐标体系做出总结：</p>
+<ul>
+<li>新建页面中，坐标系原点开始于除边缘外的左上角定点</li>
+<li>边缘区域内有坐标，但是边缘区域不能显示任何内容</li>
+<li>如果想在边缘区域绘制内容，在创建页面时必须将边缘设置为 0，此时坐标系原点回到页面左上角定点</li>
+</ul>
+<h2 id="坐标系转换"><a href="#坐标系转换" class="headerlink" title="坐标系转换"></a>坐标系转换</h2><p>在 PDF 中添加内容时，为了让内容呈现某种的效果，例如将文字和图片旋转一定角度，我们需要借助坐标系转换来是实现这些效果。Spire.PDF 中坐标系转换包括下如图 3 所示的四种方式，它们对应的方法分别是 TranslateTrsanform, ScaleTransform, RotateTransform 和 SkewTransform。下面举例说明它们的用法：  </p>
+<p>TranslateTransform (5,5) 表示坐标系向右、向下分别平移 5 个单位<br>ScaleTransform (2,2) 表示 X、Y 轴上的单位长度放大 2 倍<br>RotateTansform (-45) 表示坐标系逆时针旋转 45 度<br>SkewTransform (10,10) 表示 X 轴向下倾斜 10 度，Y 轴向右倾斜 10 度</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-f80a0f826516467fba68311bd34519f2.png" alt="image.png"></p>
+<h2 id="坐标系的应用"><a href="#坐标系的应用" class="headerlink" title="坐标系的应用"></a>坐标系的应用</h2><h3 id="1-在指定位置绘制文本、图片等"><a href="#1-在指定位置绘制文本、图片等" class="headerlink" title="1. 在指定位置绘制文本、图片等"></a>1. 在指定位置绘制文本、图片等</h3><p>整个 PDF 页面实际上一块大的画布，我们需要通过 Canvas.DrawString 方法和 Canvas.DrawImage 方法绘制文本和图片，参考代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建PdfDocument对象</span></span><br><span class="line">PdfDocument doc = <span class="keyword">new</span> PdfDocument();</span><br><span class="line"> </span><br><span class="line"><span class="comment">/*添加页面，指定页面大小和边缘大小</span></span><br><span class="line"><span class="comment"> *   该方法还有以下重载方法，无参的方法默认含有40磅的边距</span></span><br><span class="line"><span class="comment"> *   Add(); </span></span><br><span class="line"><span class="comment"> *   Add(SizeF size); </span></span><br><span class="line"><span class="comment"> *   Add(SizeF size, PdfMargins margins);</span></span><br><span class="line"><span class="comment"> *   Add(SizeF size, PdfMargins margins, PdfPageRotateAngle rotation);</span></span><br><span class="line"><span class="comment"> *   Add(SizeF size, PdfMargins margins, PdfPageRotateAngle rotation, PdfPageOrientation orientation);</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">doc.Pages.Add(PdfPageSize.A4, <span class="keyword">new</span> PdfMargins(<span class="number">0</span>));</span><br><span class="line"> </span><br><span class="line"><span class="comment">//创建TrueType字体</span></span><br><span class="line">PdfTrueTypeFont font= <span class="keyword">new</span> PdfTrueTypeFont(<span class="keyword">new</span> Font(<span class="string">&quot;宋体&quot;</span>,<span class="number">10</span>),<span class="keyword">true</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//在PDF页面中的指定位置绘制文字</span></span><br><span class="line">doc.Pages[<span class="number">0</span>].Canvas.DrawString(<span class="string">&quot;你好&quot;</span>, font, PdfPens.Black, <span class="keyword">new</span> PointF(<span class="number">50</span>, <span class="number">50</span>));</span><br><span class="line"> </span><br><span class="line"><span class="comment">//加载图片到PdfImage对象</span></span><br><span class="line">PdfImage image= PdfImage.FromFile(@<span class="string">&quot;C:\Users\Administrator\Desktop\flag.png&quot;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//在PDF页面中的指定位置绘制图片</span></span><br><span class="line">doc.Pages[<span class="number">0</span>].Canvas.DrawImage(image, <span class="number">50</span>, <span class="number">70</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//保存文档</span></span><br><span class="line">doc.SaveToFile(<span class="string">&quot;output.pdf&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-获取文字、图片坐标"><a href="#2-获取文字、图片坐标" class="headerlink" title="2. 获取文字、图片坐标"></a>2. 获取文字、图片坐标</h3><p>有了坐标体系，我们也可以获取现有 PDF 文档中文字或图片的位置（X,Y 坐标），代码参考如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建PdfDocument对象</span></span><br><span class="line">PdfDocument doc = <span class="keyword">new</span> PdfDocument();</span><br><span class="line"> </span><br><span class="line"><span class="comment">//加载一个现有的PDF文档</span></span><br><span class="line">doc.LoadFromFile(@<span class="string">&quot;C:\Users\Administrator\Desktop\test.pdf&quot;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//查找第一页中所有的“Germany”</span></span><br><span class="line">PdfTextFind[] text = doc.Pages[<span class="number">0</span>].FindText(<span class="string">&quot;Germany&quot;</span>).Finds;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//获取第一个“Germany”出现的位置</span></span><br><span class="line">PointF p = text[<span class="number">0</span>].Position;</span><br><span class="line">Console.WriteLine(<span class="string">&quot;第一个Germany出现的位置：(&#123;0&#125;,&#123;1&#125;)&quot;</span>, p.X, p.Y);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//获取第一页中所有的图片信息</span></span><br><span class="line">PdfImageInfo[] imageInfo = doc.Pages[<span class="number">0</span>].ImagesInfo;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//获取第一张图片的位置信息</span></span><br><span class="line">RectangleF rect = imageInfo[<span class="number">0</span>].Bounds;</span><br><span class="line">Console.WriteLine(<span class="string">&quot;第一张图片的位置：(&#123;0&#125;,&#123;1&#125;)&quot;</span>, rect.X, rect.Y);</span><br><span class="line">Console.ReadLine();</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-利用坐标系转换创建居中呈-45-度的文字效果"><a href="#3-利用坐标系转换创建居中呈-45-度的文字效果" class="headerlink" title="3. 利用坐标系转换创建居中呈 45 度的文字效果"></a>3. 利用坐标系转换创建居中呈 45 度的文字效果</h3><p>这里我们将借助坐标的转换方法，在一个文档正中间添加一行斜向上的文字，形成一种 “水印文字” 的感觉。代码中涉及到了一些坐标平移的位置计算，这里不做太详细的介绍。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//创建PdfDocument对象</span></span><br><span class="line">PdfDocument pdf = <span class="keyword">new</span> PdfDocument();</span><br><span class="line"> </span><br><span class="line"><span class="comment">//加载现有PDF文档</span></span><br><span class="line">pdf.LoadFromFile(@<span class="string">&quot;F:\Documents\PDF\系统测试.pdf&quot;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//创建字体</span></span><br><span class="line">PdfTrueTypeFont font = <span class="keyword">new</span> PdfTrueTypeFont(<span class="keyword">new</span> Font(<span class="string">&quot;宋体&quot;</span>, <span class="number">40f</span>), <span class="keyword">true</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//要写的文字</span></span><br><span class="line">string text = <span class="string">&quot;版权所有，侵权必究&quot;</span>;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//测量文字所占的位置大小，即高宽</span></span><br><span class="line">SizeF fontSize = font.MeasureString(text);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//计算两个偏移量</span></span><br><span class="line"><span class="keyword">float</span> offset1 = (<span class="keyword">float</span>)(fontSize.Width * System.Math.Sqrt(<span class="number">2</span>) / <span class="number">4</span>);</span><br><span class="line"><span class="keyword">float</span> offset2 = (<span class="keyword">float</span>)(fontSize.Height * System.Math.Sqrt(<span class="number">2</span>) / <span class="number">4</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//遍历文档每一页</span></span><br><span class="line">foreach (PdfPageBase page in pdf.Pages)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//设置页面透明度</span></span><br><span class="line">    page.Canvas.SetTransparency(<span class="number">0.8f</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//将页面中坐标系向右下平移</span></span><br><span class="line">    page.Canvas.TranslateTransform(page.Canvas.Size.Width / <span class="number">2</span> - offset1 - offset2, page.Canvas.Size.Height / <span class="number">2</span> + offset1 - offset2);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//将坐标系逆时针旋转45度</span></span><br><span class="line">    page.Canvas.RotateTransform(-<span class="number">45</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//在页面上绘制文本</span></span><br><span class="line">    page.Canvas.DrawString(text, font, PdfBrushes.DarkGray, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//保存文档</span></span><br><span class="line">pdf.SaveToFile(<span class="string">&quot;output.pdf&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-d43005cb006e48099aa178d8edc9451c.png" alt="image.png"></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/01/05/去除 Spire.pdf 生成时出现警告语 Evaluation Warning-去除 Spire.pdf 生成时出现警告语 Evaluation Warning/" data-toggle="tooltip" data-placement="top"
+                           title="去除 Spire.pdf 生成时出现警告语 Evaluation Warning">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/01/05/java 利用 spire.pdf 将图片添加到 pdf-java 利用 spire.pdf 将图片添加到 pdf中/" data-toggle="tooltip" data-placement="top"
+                           title="java 利用 spire.pdf 将图片添加到 pdf">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%90%E6%A0%87%E7%B3%BB%E5%AE%9A%E4%B9%89"><span class="toc-text">坐标系定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%90%E6%A0%87%E7%B3%BB%E8%BD%AC%E6%8D%A2"><span class="toc-text">坐标系转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9D%90%E6%A0%87%E7%B3%BB%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-text">坐标系的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9C%A8%E6%8C%87%E5%AE%9A%E4%BD%8D%E7%BD%AE%E7%BB%98%E5%88%B6%E6%96%87%E6%9C%AC%E3%80%81%E5%9B%BE%E7%89%87%E7%AD%89"><span class="toc-text">1. 在指定位置绘制文本、图片等</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%8E%B7%E5%8F%96%E6%96%87%E5%AD%97%E3%80%81%E5%9B%BE%E7%89%87%E5%9D%90%E6%A0%87"><span class="toc-text">2. 获取文字、图片坐标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E8%BD%AC%E6%8D%A2%E5%88%9B%E5%BB%BA%E5%B1%85%E4%B8%AD%E5%91%88-45-%E5%BA%A6%E7%9A%84%E6%96%87%E5%AD%97%E6%95%88%E6%9E%9C"><span class="toc-text">3. 利用坐标系转换创建居中呈 45 度的文字效果</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

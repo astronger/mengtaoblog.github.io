@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Resilience4j 从入门到放弃｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/08/11/Resilience4j 从入门到放弃-resilience4j从入门到放弃/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Resilience4j 从入门到放弃</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-08-11
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Resilience4j 从入门到放弃
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>@<a href="Resilience4j">TOC</a></p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Resilience4j 是 Spring Cloud Greenwich 版推荐的容错解决方案，相比 Hystrix ，Resilience4j 专为 <strong>Java8</strong> 以及函数编程而设计。在 Resilience4j 中你用什么可直接添加什么以来就行。<br>Resilience4j 主要有以下功能：</p>
+<ol>
+<li>CircuitBreaker(熔断器)</li>
+<li>RateLimiter(限流)</li>
+<li> Retry(请求重试)</li>
+<li> 限时</li>
+<li> 缓存</li>
+<li> 信号量的隔离</li>
+</ol>
+<h1 id="1-基本用法"><a href="#1-基本用法" class="headerlink" title="1.基本用法"></a>1.基本用法</h1><p>首先搭建一个测试环境。新建maven子模，导入pom</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="1-1熔断器"><a href="#1-1熔断器" class="headerlink" title="1.1熔断器"></a>1.1熔断器</h2><p>添加断路器依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-circuitbreaker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.13.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-1-1-首先看一个正常的断路器："><a href="#1-1-1-首先看一个正常的断路器：" class="headerlink" title="1.1.1 首先看一个正常的断路器："></a>1.1.1 首先看一个正常的断路器：</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//获取一个CircuitBreakerRegistry实例，可以调用ofDefaults获取一个CircuitBreakerRegistry实例，也可以自定义属性。</span></span><br><span class="line">    CircuitBreakerRegistry registry = CircuitBreakerRegistry.ofDefaults();</span><br><span class="line">    CircuitBreakerConfig config = CircuitBreakerConfig.custom()</span><br><span class="line">            <span class="comment">//故障率阈值百分比(百分之50)，超过这个阈值，断路器就会打开</span></span><br><span class="line">            .failureRateThreshold(<span class="number">50</span>)</span><br><span class="line">            <span class="comment">//断路器保持打开的时间，在到达设置的时间之后，断路器会进入到 half open 状态</span></span><br><span class="line">            .waitDurationInOpenState(Duration.ofMillis(<span class="number">1000</span>))</span><br><span class="line">            <span class="comment">//当断路器处于half open 状态时，环形缓冲区的大小</span></span><br><span class="line">            .ringBufferSizeInHalfOpenState(<span class="number">2</span>)</span><br><span class="line">            .ringBufferSizeInClosedState(<span class="number">2</span>)</span><br><span class="line">            .build();</span><br><span class="line">    CircuitBreakerRegistry r1 = CircuitBreakerRegistry.of(config);</span><br><span class="line">    CircuitBreaker cb1 = r1.circuitBreaker(<span class="string">&quot;javaboy&quot;</span>);<span class="comment">//创建断路器</span></span><br><span class="line">    CircuitBreaker cb2 = r1.circuitBreaker(<span class="string">&quot;javaboy2&quot;</span>, config);</span><br><span class="line">    CheckedFunction0&lt;String&gt; supplier = CircuitBreaker.decorateCheckedSupplier(cb1, () -&gt; <span class="string">&quot;hello resilience4j&quot;</span>);</span><br><span class="line">    Try&lt;String&gt; result = Try.of(supplier)</span><br><span class="line">            .map(v -&gt; v + <span class="string">&quot; hello world&quot;</span>);</span><br><span class="line">    System.out.println(result.isSuccess());</span><br><span class="line">    System.out.println(result.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/2020110516574647.png#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="1-1-2-一个异常的断路器："><a href="#1-1-2-一个异常的断路器：" class="headerlink" title="1.1.2 一个异常的断路器："></a>1.1.2 一个异常的断路器：</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        CircuitBreakerConfig config = CircuitBreakerConfig.custom()</span><br><span class="line">                <span class="comment">//故障率阈值百分比，超过这个阈值，断路器就会打开</span></span><br><span class="line">                .failureRateThreshold(<span class="number">50</span>)</span><br><span class="line">                <span class="comment">//断路器保持打开的时间，在到达设置的时间之后，断路器会进入到 half open 状态</span></span><br><span class="line">                .waitDurationInOpenState(Duration.ofMillis(<span class="number">1000</span>))</span><br><span class="line">                <span class="comment">//当断路器处于half open 状态时，环形缓冲区的大小</span></span><br><span class="line">                .ringBufferSizeInClosedState(<span class="number">2</span>)</span><br><span class="line">                .build();</span><br><span class="line">        CircuitBreakerRegistry r1 = CircuitBreakerRegistry.of(config);</span><br><span class="line">        CircuitBreaker cb1 = r1.circuitBreaker(<span class="string">&quot;javaboy&quot;</span>);</span><br><span class="line">        System.out.println(cb1.getState());<span class="comment">//获取断路器的一个状态</span></span><br><span class="line">        cb1.onError(<span class="number">0</span>, <span class="keyword">new</span> RuntimeException());</span><br><span class="line">        System.out.println(cb1.getState());<span class="comment">//获取断路器的一个状态</span></span><br><span class="line">        cb1.onError(<span class="number">0</span>, <span class="keyword">new</span> RuntimeException());</span><br><span class="line">        System.out.println(cb1.getState());<span class="comment">//获取断路器的一个状态</span></span><br><span class="line">     </span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20201111154203970.png#pic_center" alt="在这里插入图片描述"><br>把这段代码添加到上面代码的后面，重新测试。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">...   </span><br><span class="line">CheckedFunction0&lt;String&gt; supplier = CircuitBreaker.decorateCheckedSupplier(cb1, () -&gt; <span class="string">&quot;hello resilience4j&quot;</span>);</span><br><span class="line">        Try&lt;String&gt; result = Try.of(supplier)</span><br><span class="line">                .map(v -&gt; v + <span class="string">&quot; hello world&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;result.isSuccess()=&quot;</span>+result.isSuccess());</span><br><span class="line">        System.out.println(<span class="string">&quot;result.get()=&quot;</span>+result.get());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>如下(由于断路器已经打开了，就无法执行下面的代码了)：<br><img src="https://img-blog.csdnimg.cn/20201111155017406.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>注意</strong>：由于 ringBufferSizeInClosedState 的值为2，表示当有两条数据时才会去统计故障率，所以，下面的手动故障测试，至少调用两次 onError，断路器才会打开。</p>
+<h3 id="1-1-3-断路器重置"><a href="#1-1-3-断路器重置" class="headerlink" title="1.1.3 断路器重置"></a>1.1.3 断路器重置</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">circuitBreaker.reset();</span><br></pre></td></tr></table></figure>
+<h2 id="1-2-RateLimiter-限流"><a href="#1-2-RateLimiter-限流" class="headerlink" title="1.2 RateLimiter 限流"></a>1.2 RateLimiter 限流</h2><p>RateLimiter 本身和前面的断路器差不多。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 限流 和断路器类似</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@Test</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test3</span><span class="params">()</span></span>&#123;</span><br><span class="line">       RateLimiterConfig build = RateLimiterConfig.custom()</span><br><span class="line">               <span class="comment">// 阈值刷新的时间 1 秒</span></span><br><span class="line">               .limitRefreshPeriod(Duration.ofMillis(<span class="number">1000</span>))</span><br><span class="line">               <span class="comment">// 限制频次</span></span><br><span class="line">               .limitForPeriod(<span class="number">2</span>)</span><br><span class="line">               <span class="comment">// 限流之后的冷却时间 1秒</span></span><br><span class="line">               .timeoutDuration(Duration.ofMillis(<span class="number">1000</span>))</span><br><span class="line">               .build();</span><br><span class="line">       RateLimiter limiter = RateLimiter.of(<span class="string">&quot;learning&quot;</span>, build);</span><br><span class="line"></span><br><span class="line">       CheckedRunnable runnable = RateLimiter.decorateCheckedRunnable(limiter, () -&gt; &#123;</span><br><span class="line">           System.out.println(<span class="keyword">new</span> Date());</span><br><span class="line">       &#125;);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 执行4次</span></span><br><span class="line">       Try.run(runnable)</span><br><span class="line">               .andThenTry(runnable)</span><br><span class="line">               .andThenTry(runnable)</span><br><span class="line">               .andThenTry(runnable)</span><br><span class="line">               .onFailure(t -&gt; System.out.println(t.getMessage()));</span><br><span class="line">   &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20201112192406133.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="1-3-请求重试"><a href="#1-3-请求重试" class="headerlink" title="1.3 请求重试"></a>1.3 请求重试</h2><p>先引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-retry<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.13.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 请求重试</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test4</span><span class="params">()</span></span>&#123;</span><br><span class="line">    RetryConfig config = RetryConfig.custom()</span><br><span class="line">            <span class="comment">// 重试次数 【小于等于下面的count次数就抛出异常】</span></span><br><span class="line">            .maxAttempts(<span class="number">4</span>)</span><br><span class="line">            <span class="comment">// 重试间隔</span></span><br><span class="line">            .waitDuration(Duration.ofMillis(<span class="number">500</span>))</span><br><span class="line">            <span class="comment">// 重试异常</span></span><br><span class="line">            .retryExceptions(RuntimeException.class)</span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">    Retry retry = Retry.of(<span class="string">&quot;leaning1&quot;</span>, config);</span><br><span class="line">    Retry.decorateRunnable(retry, <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 重试功能开启后 执行run方法 若抛出异常 会自动触发重试功能</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (count++ &lt; <span class="number">4</span>)&#123;</span><br><span class="line">                System.out.println(count);</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;).run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20201112194235400.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="2-Resilience4j-结合微服务"><a href="#2-Resilience4j-结合微服务" class="headerlink" title="2. Resilience4j 结合微服务"></a>2. Resilience4j 结合微服务</h1><p>Retry、CircuitBreaker、RateLimiter</p>
+<h2 id="2-1-Retry-请求重试"><a href="#2-1-Retry-请求重试" class="headerlink" title="2.1 Retry 请求重试"></a>2.1 Retry 请求重试</h2><p>首先新建一个Spring boot 项目，创建时，添加如下依赖：<br><img src="https://img-blog.csdnimg.cn/20201113093954234.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>创建成功后再添加 Resilience4j 的依赖如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span></span></span><br><span class="line"><span class="tag">&lt;!<span class="attr">--resilience4j-spring-boot2</span>中包含了<span class="attr">resilience4j</span> 的所有功能，但是没有配置的功能无法使用，需要将之从依赖中剔除掉  <span class="attr">--</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-spring-boot2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-circuitbreaker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">         <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-ratelimiter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-bulkhead<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-timelimiter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>resilience4j-spring-boot2中包含了resilience4j 的所有功能，但是没有配置的功能无法使用，需要将之从依赖中剔除掉。<br>配置yml文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">resilience4j:</span><br><span class="line">  retry:</span><br><span class="line">    retry-aspect-order: 399 # 表示Retry优先级(级别高于比如ratelimiter bulkhead timelimiter) 值越小 优先级 越高</span><br><span class="line">    backends:</span><br><span class="line">      retryA: # 设置组名</span><br><span class="line">        maxRetryAttempts: 5 # 对比之前的案例 重试的次数</span><br><span class="line">        waitDuration: 500 # 重试等待 500毫秒</span><br><span class="line">        exponentialBackoffMultiplier: 1.1 # 间隔乘数(场景: 正好每次间隔为1的时候卡顿 它就有用了 间隔就变了 例如 1 1.1 1.21....)</span><br><span class="line">        retryExceptions:</span><br><span class="line">          - java.lang.RuntimeException</span><br><span class="line">spring:</span><br><span class="line">  application:</span><br><span class="line">    name: resilience4j</span><br><span class="line">server:</span><br><span class="line">  port: 5000</span><br><span class="line">eureka:</span><br><span class="line">  client:</span><br><span class="line">    service-url:</span><br><span class="line">      defaultZone: http://localhost:1111/eureka</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>最后创建RestTemplate和HelloService:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Resilience4j2Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Resilience4j2Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="meta">@Retry(name = &quot;retryA&quot;)</span><span class="comment">//表示要使用的重试策略</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">&quot;http://127.0.0.1:1113/hello&quot;</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    HelloService helloService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> helloService.hello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>浏览器访问: <a target="_blank" rel="noopener" href="http://127.0.0.1:5000/hello">http:/127.0.0.1:5000/hello</a> ，观看 provider 控制台，发现错误打印了5次，与yml中的配置一致。</p>
+<h2 id="2-2-CircuitBreaker-断路器"><a href="#2-2-CircuitBreaker-断路器" class="headerlink" title="2.2 CircuitBreaker 断路器"></a>2.2 CircuitBreaker 断路器</h2><p>首先去除掉circuitbreaker 的依赖。然后在yml 文件中配置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-spring-boot2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 没有配置的 先排除 不然会报错 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                &lt;exclusion&gt;--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                    &lt;groupId&gt;io.github.resilience4j&lt;/groupId&gt;--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                    &lt;artifactId&gt;resilience4j-circuitbreaker&lt;/artifactId&gt;--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                &lt;/exclusion&gt;--&gt;</span></span><br><span class="line"> </span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-ratelimiter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-bulkhead<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-timelimiter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">resilience4j:</span><br><span class="line">  retry:</span><br><span class="line">    retry-aspect-order: 399 # 表示Retry优先级(级别高于比如ratelimiter bulkhead timelimiter) 值越小 优先级 越高</span><br><span class="line">    backends:</span><br><span class="line">      retryA: # 设置组名</span><br><span class="line">        maxRetryAttempts: 5 # 对比之前的案例 重试的次数</span><br><span class="line">        waitDuration: 500 # 重试等待 500毫秒</span><br><span class="line">        exponentialBackoffMultiplier: 1.1 # 间隔乘数(场景: 正好每次间隔为1的时候卡顿 它就有用了 间隔就变了 例如 1 1.1 1.21....)</span><br><span class="line">        retryExceptions:</span><br><span class="line">          - java.lang.RuntimeException</span><br><span class="line">  circuitbreaker: # 和之前的maven类似</span><br><span class="line">    instances:</span><br><span class="line">      cba:</span><br><span class="line">        ringBufferSizeInHalfOpenState: 3</span><br><span class="line">        ringBufferSizeInClosedState:  5</span><br><span class="line">        waitInterval: 5000</span><br><span class="line">        recordExceptions:</span><br><span class="line">          - org.springframework.web.client.HttpServerErrorException</span><br><span class="line">    circuit-breaker-aspect-order: 398 # 表示 circuitbreaker 优先级，比上面的399小 (先执行当前断路器)</span><br><span class="line">spring:</span><br><span class="line">  application:</span><br><span class="line">    name: resilience4j</span><br><span class="line">server:</span><br><span class="line">  port: 5000</span><br><span class="line">eureka:</span><br><span class="line">  client:</span><br><span class="line">    service-url:</span><br><span class="line">      defaultZone: http://localhost:1111/eureka</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>配置完成后，用 @CircuitBreaker 注解标记相关方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="comment">//@Retry(name = &quot;retryA&quot;)//【Retry】表示要使用的重试策略</span></span><br><span class="line"><span class="meta">@CircuitBreaker(name = &quot;cba&quot; , fallbackMethod = &quot;error&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">&quot;http://127.0.0.1:1113/hello&quot;</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 服务降级方法中 不加参数Throwable 会报错提示缺少Throwable 要添加异常参数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">error</span><span class="params">(Throwable throwable)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;error&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@CircuitBreaker 注解中的 name 属性用来指定 circuitbreaker 配置 ， fallbackMethod 属性用来指定服务降级的方法，需要注意的是，服务降级方法中，要添加异常参数 (Throwable)。</p>
+<h2 id="2-3-RateLimiter-限流"><a href="#2-3-RateLimiter-限流" class="headerlink" title="2.3 RateLimiter 限流"></a>2.3 RateLimiter 限流</h2><p>RateLimiter 作为限流工具，主要在<strong>服务端</strong>使用，用来保护服务端的接口。<br>首先在 provider 中添加RateLimiter 依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-spring-boot2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--  没有配置的 先排除 不然会报错 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-circuitbreaker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">                <span class="comment">&lt;!--ratelimiter依赖移除--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                &lt;exclusion&gt;--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                    &lt;groupId&gt;io.github.resilience4j&lt;/groupId&gt;--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                    &lt;artifactId&gt;resilience4j-ratelimiter&lt;/artifactId&gt;--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                &lt;/exclusion&gt;--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-bulkhead<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.github.resilience4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>resilience4j-timelimiter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>接下来，在 provider 的 application.properties 配置文件中去配置 RateLimiter：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 这里配置每一秒处理一个请求，多个请求就排队</span><br><span class="line">resilience4j.ratelimiter.limiters.rlA.limit-for-period=1</span><br><span class="line">resilience4j.ratelimiter.limiters.rlA.limit-refresh-period=1s</span><br><span class="line">resilience4j.ratelimiter.limiters.rlA.timeout-duration=1s</span><br></pre></td></tr></table></figure>
+<p>配置 provider 的 Controller 层</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span></span><br><span class="line">    Integer port;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="meta">@RateLimiter(name = &quot;rltA&quot;)</span> <span class="comment">//通过@RateLimiter注解标记该接口限流</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="keyword">new</span> Date());</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello provider：&quot;</span> + port;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;    </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>接着在 resilience4j2 客户端模拟多个请求，启动 eureka、provider 、resilience4j 服务，访问 <a target="_blank" rel="noopener" href="http://127.0.0.1:5000/hello1">http://127.0.0.1:5000/hello1</a> 查看限流效果。如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    HelloService helloService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> helloService.hello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Servic</span></span><br><span class="line"><span class="meta">@CircuitBreaker(name = &quot;cba&quot; , fallbackMethod = &quot;error&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 限流配置 【模拟多次请求】</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">            restTemplate.getForObject(<span class="string">&quot;http://127.0.0.1:1113/hello&quot;</span>, String.class);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success ratA&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每秒处理一个请求。<br><img src="https://img-blog.csdnimg.cn/20201113164804885.png#pic_center" alt="在这里插入图片描述"></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/08/11/Linux 快速安装 Prometheus-linux快速安装prometheus/" data-toggle="tooltip" data-placement="top"
+                           title="Linux 快速安装 Prometheus">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/08/08/OpenFeign 从入门到放弃-openfeign从入门到放弃/" data-toggle="tooltip" data-placement="top"
+                           title="OpenFeign 从入门到放弃">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">1.基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1%E7%86%94%E6%96%AD%E5%99%A8"><span class="toc-text">1.1熔断器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-%E9%A6%96%E5%85%88%E7%9C%8B%E4%B8%80%E4%B8%AA%E6%AD%A3%E5%B8%B8%E7%9A%84%E6%96%AD%E8%B7%AF%E5%99%A8%EF%BC%9A"><span class="toc-text">1.1.1 首先看一个正常的断路器：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-%E4%B8%80%E4%B8%AA%E5%BC%82%E5%B8%B8%E7%9A%84%E6%96%AD%E8%B7%AF%E5%99%A8%EF%BC%9A"><span class="toc-text">1.1.2 一个异常的断路器：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-3-%E6%96%AD%E8%B7%AF%E5%99%A8%E9%87%8D%E7%BD%AE"><span class="toc-text">1.1.3 断路器重置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-RateLimiter-%E9%99%90%E6%B5%81"><span class="toc-text">1.2 RateLimiter 限流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-%E8%AF%B7%E6%B1%82%E9%87%8D%E8%AF%95"><span class="toc-text">1.3 请求重试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Resilience4j-%E7%BB%93%E5%90%88%E5%BE%AE%E6%9C%8D%E5%8A%A1"><span class="toc-text">2. Resilience4j 结合微服务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Retry-%E8%AF%B7%E6%B1%82%E9%87%8D%E8%AF%95"><span class="toc-text">2.1 Retry 请求重试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-CircuitBreaker-%E6%96%AD%E8%B7%AF%E5%99%A8"><span class="toc-text">2.2 CircuitBreaker 断路器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-RateLimiter-%E9%99%90%E6%B5%81"><span class="toc-text">2.3 RateLimiter 限流</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

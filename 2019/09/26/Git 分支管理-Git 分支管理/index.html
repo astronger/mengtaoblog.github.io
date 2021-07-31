@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Git 分支管理｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/09/26/Git 分支管理-Git 分支管理/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Git 分支管理</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-09-26
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Git"
+                           title="Git">Git</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Git 分支管理
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>我们在完成一个项目时，不可能是“单线程”开发的，很多时候任务是并行的，举个栗子：项目2.0版本上线了，现在要着手开发3.0版本，同时2.0版本可能还有一些bug需要修复，这些bug修复之后我们可能还会发2.1，2.2，2.3这些版本，我们不可能等所有bug都修复完了再去开发3.0版本，修复2.0的bug和开发3.0的新功能是两个并行的任务，这个时候我们3.0的功能开发直接在master分支上进行肯定不合适，我们要保证有一个稳定，可以随时发版本的分支存在（一般情况下这个角色由master分支来扮演），此时我们就可以灵活的使用Git中的分支管理功能：</p>
+<p>1.创建一个长期分支用来开发3.0功能，假设这个分支的名字就叫v3，我们在v3上添加新功能，并不断测试，当v3稳定后，将v3合并到master分支上。<br>2.创建一个特性分支用来修复2.0的bug，一旦bug修复成功，就将该分支合并到master上，一旦发现新bug，就立马再创建分支进行修复，修复成功之后再合并。</p>
+<p>以上两个步骤同步进行，这在Svn中简直是不可想象的，因为Svn的分支管理太low，而Git能够让我们做到随心所欲的创建、合并和删除分支。</p>
+<h2 id="查看分支"><a href="#查看分支" class="headerlink" title="查看分支"></a>查看分支</h2><p>我们可以通过 <strong>git branch</strong> 命令来查看当前仓库有哪些分支，而我们处于哪一个分支中，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-4c3cd948249a46e5b94bfc5d7e444c1c.png" alt="image.png"></p>
+<p>这里显示当前仓库只有一个master分支，这是git默认创建出来的，master前面的 * 表示我们当前处于这一个分支中。 </p>
+<h2 id="分支创建和切换"><a href="#分支创建和切换" class="headerlink" title="分支创建和切换"></a>分支创建和切换</h2><p>我们可以利用 <strong>git branch &lt;分支名&gt;</strong> 命令来创建一个分支，然后利用 <strong>git checkout &lt;分支名&gt;</strong> 来切换分支，如下：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-f0988ef9332f4f158b784ecc51d64569.png" alt="image.png"></p>
+<p>还可以通过 <strong>git checkout -b &lt;分支名&gt;</strong> 来一步到位，创建并切换分支，如下：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-5b7aa1d9b28b49edbf184c3a6e94d50f.png" alt="image.png"></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout -     <span class="comment"># 切换回上一个分支 </span></span><br></pre></td></tr></table></figure>
+<h2 id="分支合并"><a href="#分支合并" class="headerlink" title="分支合并"></a>分支合并</h2><p>首先切换到four分支中，由于four分支和three分支是从master分支中创建出来的，所以此时four分支、three分支的内容和master分支的内容是一致的，然后我在three分支中向test.txt文件添加一行内容并提交，最终可以看到 three分支中的test.txt和master分支中test.txt的内容就不相同了，具体操作如下：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-2aa96817841a4c3c9cbbd45faade324e.png" alt="image.png"></p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-f1014b8a0e994d768fa5f7b87ff3de6d.png" alt="image.png"></p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/11/image-b7c71eb4666a4152a395e261bbc6c3fa.png" alt="image.png"></p>
+<p>上图展示了此时master分支和 three 分支的不同，现在我通过 <strong>git merge –no-ff &lt;分支名&gt;</strong> 命令将 three 分支合并到master分支上。其中—no-ff 表示<strong>强行关闭fast-forward</strong>方式，fast-forward方式表示当条件允许时，git直接把HEAD指针指向合并分支的头，完成合并，这种方式合并速度快，但是在整个过程中没有创建commit，所以如果当我们删除掉这个分支时就再也找不回来了，因此在这里我们将之关闭。</p>
+<p>想要合并分支，我们先切换到master分支上，然后执行 <strong>git merge –no-ff three</strong> 命令即可完成分支合并，如下图：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-fd41383e78264c4b85a73300ff850e1f.png" alt="image.png"></p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-748ea82a11cb453fb54a2fa4c630afee.png" alt="image.png"></p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-5dbf61f27eb04f41b3b5c4b4c569d454.png" alt="image.png"></p>
+<p>合并成功后，我们看到master分支上的文件中已经有了three分支中更新的内容了。 </p>
+<p>git merge 合并分支时如果出现冲突还是先重新编辑冲突文件，编辑完成之后，再执行git add 和git commit即可。</p>
+<h2 id="以图表方式查看分支"><a href="#以图表方式查看分支" class="headerlink" title="以图表方式查看分支"></a>以图表方式查看分支</h2><p>通过 <strong>git log –graph</strong> 命令来直观的查看分支的创建和合并等操作，如下图：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-e727635879094d06ab8cc686df4431c6.png" alt="image.png"></p>
+<h2 id="解决冲突"><a href="#解决冲突" class="headerlink" title="解决冲突"></a>解决冲突</h2><p>大多数情况下我们都是要解决冲突的，解决之后继续提交。</p>
+<h2 id="rebase合并"><a href="#rebase合并" class="headerlink" title="rebase合并"></a>rebase合并</h2><p>（1）远程fetch的代码，本地没有修改，直接rebase即可；</p>
+<p>（2）若本地对文件修改，没有add，rebase时，会提示“Cannot rebase: You have unstaged changes.Please commit or stash them.”，add后没有commit，会提示“Cannot rebase: Your index contains uncommitted changes.Please commit or stash them.”。commit后，如果没有修改同一文件，rebase不会冲突。</p>
+<p>（3）若本地对同一个文件修改，commit后，rebase时，有2种情况：</p>
+<p>　　　　① 如果没有修改同一位置，则可以rebase，不会产生冲突；</p>
+<p>　　　　② 如果修改了同一处，则rebase时会出现冲突，也不用怕，此时git已经进行了合并，只是没有应用自己的提交，解决办法：修改冲突的文件，然后执行git add xxx和 git rebase –continue操作即可。如果不小心，执行完add后执行了commit，此时本地仓库HEAD处于游离态，如何解决，后续再补充。</p>
+<p> merge合并<br>merge合并也可能存在冲突，解决冲突与rebase相似，处理完冲突文件后，重新提交即可。</p>
+<h1 id="冲突总结"><a href="#冲突总结" class="headerlink" title="冲突总结"></a>冲突总结</h1><ul>
+<li>修改同文件不同处，rebase和merge合并不会冲突</li>
+<li>修改同文件同一处，合并会冲突，解决方式：rebase，解决冲突，执行add+rebase continue；merge，解决冲突，重新提交<h2 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h2>删除分支命令：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch -d &lt;分支名&gt;  <span class="comment">#没事别乱删 </span></span><br></pre></td></tr></table></figure>
+<h2 id="退回到之前的状态"><a href="#退回到之前的状态" class="headerlink" title="退回到之前的状态"></a>退回到之前的状态</h2>我们可以通过如下命令来回到之前的状态：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git rebase --abort</span><br></pre></td></tr></table></figure>
+其它文章：</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101028450">Git 基本操作</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101106544">git stash工作区储藏</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101059246">Git 关联远程仓库GitHub</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/09/26/git commit -m 与 git commit -am 的区别-git commit -m 与 git commit -am 的区别/" data-toggle="tooltip" data-placement="top"
+                           title="git commit -m 与 git commit -am 的区别">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/09/26/CentOS 8 官方正式发布了！-CentOS 8 官方正式发布了！/" data-toggle="tooltip" data-placement="top"
+                           title="CentOS 8 官方正式发布了！">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="toc-text">案例分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%88%86%E6%94%AF"><span class="toc-text">查看分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E5%88%9B%E5%BB%BA%E5%92%8C%E5%88%87%E6%8D%A2"><span class="toc-text">分支创建和切换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E5%90%88%E5%B9%B6"><span class="toc-text">分支合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A5%E5%9B%BE%E8%A1%A8%E6%96%B9%E5%BC%8F%E6%9F%A5%E7%9C%8B%E5%88%86%E6%94%AF"><span class="toc-text">以图表方式查看分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E5%86%B2%E7%AA%81"><span class="toc-text">解决冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rebase%E5%90%88%E5%B9%B6"><span class="toc-text">rebase合并</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%B2%E7%AA%81%E6%80%BB%E7%BB%93"><span class="toc-text">冲突总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%88%86%E6%94%AF"><span class="toc-text">删除分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%9B%9E%E5%88%B0%E4%B9%8B%E5%89%8D%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-text">退回到之前的状态</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Git"
+                           title="Git">Git</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

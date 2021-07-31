@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Eureka 服务注册与消费（超详细）｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/06/24/Eureka 服务注册与消费（超详细）-Eureka 服务注册与消费（超详细）/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Eureka 服务注册与消费（超详细）</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-06-24
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Eureka 服务注册与消费（超详细）
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h3 id="1-服务注册"><a href="#1-服务注册" class="headerlink" title="1. 服务注册"></a>1. 服务注册</h3><p>服务注册就是把一个微服务注册到 Eureka Server 上，当其它服务需要调用该服务时，只需从 Eureka Server 上查询该服务的信息即可。</p>
+<p>下面创建一个 provider，作为服务提供者，创建项目时，选择 Eureka Client 依赖，这样，当服务创建成功后，简单配置一下，就可以被注册到 Eureka Server 上了。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-359116fcf0004ccc8141c34bcd4c6899.png" alt="image.png"></p>
+<p>项目创建成功后，只需在 application.properties 中配置一下项目的注册地址即可。注册地址的配置，和 Eureka Server 集群的配置很像。配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring.application.name=provider</span><br><span class="line">server.port=1113</span><br><span class="line">eureka.client.service-url.defaultZone=http://127.0.0.1:1111/eureka</span><br></pre></td></tr></table></figure>
+<p> 然后启动 Eureka Server ，待服务注册中心启动后，再启动 provider。两者启动成功后，浏览器输入 <a href="http://localhost:1111，就可以看到">http://localhost:1111，就可以看到</a> provider 的注册信息，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-0660e5b4ec934a8889bdd432f1c1fc98.png" alt="image.png"></p>
+<h3 id="2-服务消费"><a href="#2-服务消费" class="headerlink" title="2. 服务消费"></a>2. 服务消费</h3><h4 id="2-1-基本用法"><a href="#2-1-基本用法" class="headerlink" title="2.1 基本用法"></a>2.1 基本用法</h4><p>首先提供者创建访问接口，然后创建消费者，消费这个访问接口 (在 provider 中提供一个 hello 接口)：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"><span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello 你好&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 然后，创建一个 consumer 项目，consumer 去消费 provider 提供的接口。consumer 想要获取到 provider 这个接口的地址，他就去 Eureka Server 中查询，如果直接在 consumer 中写死 provider 地址，意味着这两个服务之间的耦合度就太高了，我们要降低耦合度。先看一个写死的调用：</p>
+<p>创建一个 consumer 项目，添加 web 和 eureka client 依赖：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-5af7a2caec064d41855d4f944b005de3.png" alt="image.png"></p>
+<p> 创建成功后，在 application.properties 中配置一下项目的注册地址。配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring.application.name=consumer</span><br><span class="line">server.port=1115</span><br><span class="line">eureka.client.service-url.defaultZone=http://127.0.0.1:1111/eureka</span><br></pre></td></tr></table></figure>
+<p>配置完成后，假设我们在 consumer 中调用 provider 提供的服务，我们可以直接将调用写死，就是说，整个调用过程不会涉及到 Eureka Server。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** 测试死的地址访问</span></span><br><span class="line"><span class="comment">    * */</span></span><br><span class="line">   <span class="meta">@GetMapping(&quot;/hello1&quot;)</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">hello1</span><span class="params">()</span> <span class="keyword">throws</span> MalformedURLException </span>&#123;</span><br><span class="line">       HttpURLConnection con = <span class="keyword">null</span>;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           URL url = <span class="keyword">new</span> URL(<span class="string">&quot;http://127.0.0.1:1113/hello&quot;</span>);<span class="comment">//这里测试写死provider地址，耦合度太高</span></span><br><span class="line">           con = (HttpURLConnection) url.openConnection();</span><br><span class="line">           <span class="keyword">if</span>(con.getResponseCode() == <span class="number">200</span>)&#123;</span><br><span class="line">               BufferedReader bufferedReader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(con.getInputStream()));</span><br><span class="line">               String s = bufferedReader.readLine();</span><br><span class="line">               bufferedReader.close();</span><br><span class="line">               <span class="keyword">return</span> s;</span><br><span class="line"></span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">       &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">           e.printStackTrace();</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="string">&quot;error&quot;</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>浏览器访问如下，调用成功：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-ff0e184455944566ab07e60895354c0c.png" alt="image.png"></p>
+<p>这是一段利用了 HttpURLConnection 来发起的请求，请求中的 provider 地址写死了，意味着 provider 和 consumer 高度绑定在一起，耦合度太高。</p>
+<h4 id="2-2-消费的接口改造"><a href="#2-2-消费的接口改造" class="headerlink" title="2.2 消费的接口改造"></a>2.2 消费的接口改造</h4><p>要改造它，我们借助 Eureka Client 提供的 DiscoveryClient 工具，根据服务名从 Eureka Server 上查询到一个服务的详细地址，改造后的代码如下：</p>
+<pre><code>@Autowired
+DiscoveryClient discoveryClient;
+
+@GetMapping(&quot;/hello2&quot;)
+public String hello2()&#123;
+    List&lt;ServiceInstance&gt; list = discoveryClient.getInstances(&quot;provider&quot;);
+    ServiceInstance serviceInstance = list.get(0);
+    String host = serviceInstance.getHost();
+    int port = serviceInstance.getPort();
+    StringBuffer sb = new StringBuffer();
+    sb.append(&quot;http://&quot;)
+            .append(host)
+            .append(&quot;:&quot;)
+            .append(port)
+            .append(&quot;/hello&quot;);
+    HttpURLConnection connection = null;
+try &#123;
+            
+            URL url = new URL(sb.toString());
+            connection = (HttpURLConnection) url.openConnection();
+
+            if (200 == connection.getResponseCode()) &#123;
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                
+                String s = reader.readLine();
+                reader.close(); 
+                return s;
+            &#125;
+
+        &#125; catch (MalformedURLException e) &#123;
+            e.printStackTrace();
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125;
+
+    &#125;
+    return &quot;error&quot;;
+&#125;
+</code></pre>
+<p> 重新启动项目，浏览器访问如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/12/image-ba7ed87178e74a62acb3b8a92facc93b.png" alt="image.png"></p>
+<h4 id="2-3-集群化部署和简单的负载均衡"><a href="#2-3-集群化部署和简单的负载均衡" class="headerlink" title="2.3 集群化部署和简单的负载均衡"></a>2.3 集群化部署和简单的负载均衡</h4><p> DiscoveryClient 查询到的服务列表是一个集合，因为服务在部署的过程中，可能是集群部署，集合中的每一项就是一个实例。</p>
+<p>集群化部署：</p>
+<ol>
+<li>修改 provider 中的 hello 接口【因为要启动多个 provider 实例，多个实例端口则不同，用端口直接区分每个 provider 提供的服务】：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span></span><br><span class="line">    Integer port;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello 你好&quot;</span> + port;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+修改完成后，对 provider 进行打包，打包后在 IDEA 命令行启动两个 provider 实例 【集群】：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">java -jar provider-0.0.1-SNAPSHOT.jar --server.port=1113</span><br><span class="line">java -jar provider-0.0.1-SNAPSHOT.jar --server.port=1116</span><br></pre></td></tr></table></figure>
+启动完成后，访问注册中心看有没有注册上来。然后再去调用 provider ，DiscoveryClient 集合中，获取到的就不是一个实例了，而是两个实例。这里我们可以手动实现一个负载均衡：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"><span class="meta">@GetMapping(&quot;/hello3&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">hello3</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;ServiceInstance&gt; list = discoveryClient.getInstances(<span class="string">&quot;provider&quot;</span>);</span><br><span class="line">    ServiceInstance serviceInstance = list.get((count++) % list.size());</span><br><span class="line">    String host = serviceInstance.getHost();</span><br><span class="line">    <span class="keyword">int</span> port = serviceInstance.getPort();</span><br><span class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">    sb.append(<span class="string">&quot;http://&quot;</span>)</span><br><span class="line">            .append(host)</span><br><span class="line">            .append(<span class="string">&quot;:&quot;</span>)</span><br><span class="line">            .append(port)</span><br><span class="line">            .append(<span class="string">&quot;/hello&quot;</span>);</span><br><span class="line">    HttpURLConnection connection = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">            URL url = <span class="keyword">new</span> URL(sb.toString());</span><br><span class="line">            connection = (HttpURLConnection) url.openConnection();</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span> (<span class="number">200</span> == connection.getResponseCode()) &#123;</span><br><span class="line">                BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(connection.getInputStream()));</span><br><span class="line">                String s = reader.readLine();</span><br><span class="line">                reader.close(); </span><br><span class="line">                <span class="keyword">return</span> s;</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">        &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;error&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+在 target 文件上右键 open in terminal 分别输入 java -jar provider-0.0.1-SNAPSHOT.jar –server.port=1113 、</li>
+</ol>
+<p>java -jar provider-0.0.1-SNAPSHOT.jar –server.port=1116 启动两个 provider ，打开 Eureka Server 如下图：已经注册成功。</p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/12/image-b8bce99d2f3844d48a2b81e687d0869b.png" alt="image.png"></p>
+<p>接着访问 <a target="_blank" rel="noopener" href="http://localhost:1115/hello3%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%E3%80%90%E5%A4%9A%E6%AC%A1%E8%AE%BF%E9%97%AE%E7%AB%AF%E5%8F%A3%E5%B7%B2%E6%94%B9%E5%8F%98%E3%80%91%EF%BC%8C%E5%B7%B2%E5%AE%9E%E7%8E%B0**%E7%BA%BF%E6%80%A7%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1**%EF%BC%9A">http://localhost:1115/hello3，如下图【多次访问端口已改变】，已实现**线性负载均衡**：</a></p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/12/image-e007fdf45e2b4045bea4ebd2faab2b25.png" alt="image.png"></p>
+<h4 id="2-4-升级改造"><a href="#2-4-升级改造" class="headerlink" title="2.4 升级改造"></a>2.4 升级改造</h4><p> 主要从两方面动手:</p>
+<p><strong>http 调用：spring 提供 RestTemplate<br>负载均衡 ： Ribbon</strong></p>
+<p> 2.4.1 http 调用</p>
+<p> 用 spring 提供 RestTemplate 来实现，以下提供一个实例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerApplication</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ConsumerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">RestTemplate <span class="title">restTemplateOne</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 将 HttpURLConnection 以及下面的那一段用 RestTemplate 替换，一行代码实现 http 调用，如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">DiscoveryClient discoveryClient;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="meta">@Qualifier(&quot;restTemplateOne&quot;)</span></span><br><span class="line">RestTemplate restTemplateOne; </span><br><span class="line"> </span><br><span class="line"><span class="meta">@GetMapping(&quot;/hello2&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">hello2</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;ServiceInstance&gt; list = discoveryClient.getInstances(<span class="string">&quot;provider&quot;</span>);</span><br><span class="line">    ServiceInstance serviceInstance = list.get(<span class="number">0</span>);</span><br><span class="line">    String host = serviceInstance.getHost();</span><br><span class="line">    <span class="keyword">int</span> port = serviceInstance.getPort();</span><br><span class="line">    StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">    sb.append(<span class="string">&quot;http://&quot;</span>)</span><br><span class="line">            .append(host)</span><br><span class="line">            .append(<span class="string">&quot;:&quot;</span>)</span><br><span class="line">            .append(port)</span><br><span class="line">            .append(<span class="string">&quot;/hello&quot;</span>);</span><br><span class="line">    String s = restTemplateOne.getForObject(sb.toString(), String.class);</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.4.2 开启负载均衡 </p>
+<p> 使用 Ribbon 来快速实现负载均衡。只需要给 RestTemplate 实例添加一个 @LoadBalanced 注解，开启负载均衡：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@LoadBalanced</span> <span class="comment">//【客户端负载均衡】</span></span><br><span class="line"><span class="function">RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="meta">@Qualifier(&quot;restTemplate&quot;)</span></span><br><span class="line">RestTemplate restTemplate;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@GetMapping(&quot;/hello3&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">hello3</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//restTemplate有负载均衡功能，直接给服务名调用就行</span></span><br><span class="line">    <span class="keyword">return</span> restTemplate.getForObject(<span class="string">&quot;http://provider/hello&quot;</span>,String.class);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接着访问 <a target="_blank" rel="noopener" href="http://localhost:1115/hello3%EF%BC%8C%E5%A6%82%E4%B8%8B%E5%9B%BE%EF%BC%9A">http://localhost:1115/hello3，如下图：</a><br><img src="https://www.itmengtao.cn/upload/2020/12/image-036baf7d0e704066b5f68f279b3477f8.png" alt="image.png"><br> <img src="https://www.itmengtao.cn/upload/2020/12/image-a8c15361f1354e8bbb40de2c79b41c63.png" alt="image.png"></p>
+<p> <strong>给 RestTemplate 添加负载均衡的注解也可以理解为 RestTemplate = http 调用 + 负载均衡</strong>。</p>
+<p> 项目实例地址：<a target="_blank" rel="noopener" href="https://github.com/astronger/springcloud-simple-samples">https://github.com/astronger/springcloud-simple-samples</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/06/24/Spring Cloud Eureka 搭建 & 集群-Spring Cloud Eureka 搭建 & 集群/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Eureka 搭建 & 集群">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/06/18/解决 CentOS 没有字体导致 pdf 转图片乱码问题-解决 Centos 没有字体导致 pdf 转图片乱码问题/" data-toggle="tooltip" data-placement="top"
+                           title="解决 CentOS 没有字体导致 pdf 转图片乱码问题">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C"><span class="toc-text">1. 服务注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9C%8D%E5%8A%A1%E6%B6%88%E8%B4%B9"><span class="toc-text">2. 服务消费</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">2.1 基本用法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E6%B6%88%E8%B4%B9%E7%9A%84%E6%8E%A5%E5%8F%A3%E6%94%B9%E9%80%A0"><span class="toc-text">2.2 消费的接口改造</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-%E9%9B%86%E7%BE%A4%E5%8C%96%E9%83%A8%E7%BD%B2%E5%92%8C%E7%AE%80%E5%8D%95%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-text">2.3 集群化部署和简单的负载均衡</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-%E5%8D%87%E7%BA%A7%E6%94%B9%E9%80%A0"><span class="toc-text">2.4 升级改造</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

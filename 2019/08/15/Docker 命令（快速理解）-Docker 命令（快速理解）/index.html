@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Docker 命令（快速理解）｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/08/15/Docker 命令（快速理解）-Docker 命令（快速理解）/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Docker 命令（快速理解）</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-08-15
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Docker"
+                           title="Docker">Docker</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Docker 命令（快速理解）
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>最近在看docker，整理了部分命令出来，我都是用大白话写出来的，快速理解！言简意赅，后续继续补充。。。大家将就着看。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#service docker start  开启docker</span><br><span class="line">#service docker restart  重启docker</span><br></pre></td></tr></table></figure>
+<p>使用Docker 中国加速器：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">vi  /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">#添加后：</span><br><span class="line">&#123;</span><br><span class="line">    &quot;registry-mirrors&quot;: [&quot;https://registry.docker-cn.com&quot;],</span><br><span class="line">    &quot;live-restore&quot;: true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[root@localhost lemon]# docker ps -a   （查看所有容器）</span><br><span class="line">CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS                      PORTS                                                                                                                                                     NAMES</span><br><span class="line">e50ef9a67cab        rabbitmq:3-management   &quot;docker-entrypoint.s…&quot;   14 minutes ago      Up 14 minutes               0.0.0.0:32773-&gt;4369/tcp, 0.0.0.0:32772-&gt;5671/tcp, 0.0.0.0:32771-&gt;5672/tcp, 0.0.0.0:32770-&gt;15671/tcp, 0.0.0.0:32769-&gt;15672/tcp, 0.0.0.0:32768-&gt;25672/tcp   some-rabbit</span><br><span class="line">e15a786d3e8e        hello-world             &quot;/hello&quot;                 34 minutes ago      Exited (0) 34 minutes ago                                                                                                                                                             agitated_tharp</span><br><span class="line">9a989a595613        mysql:5.7               &quot;docker-entrypoint.s…&quot;   3 months ago        Exited (255) 3 months ago   0.0.0.0:3306-&gt;3306/tcp, 33060/tcp                                                                                                                         mysql</span><br></pre></td></tr></table></figure>
+<h2 id="名词解释："><a href="#名词解释：" class="headerlink" title="名词解释："></a>名词解释：</h2><ol>
+<li>CONTAIINER ID<br>指的是容器的id，是唯一的标识符，在不会混淆的情况下可以采用id的前几位进行标识一个容器。</li>
+<li>INAGE<br>表示创建容器时使用的镜像</li>
+<li>COMMAND<br>表示容器最后运行的命令。</li>
+<li>CREATED<br>创建容器的时间</li>
+<li>STATUS<br>容器的状态，这里可能显示的一个容器启动时间，也能显示容器的关闭时间。具体看看容器当前的状态</li>
+<li>PORTS<br>容器对外开放的端口</li>
+<li>NAMES<br>容器名字，如果不设置，就会有一个默认名。</li>
+</ol>
+<p>启动docker后， </p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># docker ps     查看当前正在运行的容器</span><br><span class="line"># docker ps -a  查看所有容器</span><br><span class="line"># docker ps -l  查看最近创建的容器</span><br><span class="line"># docker ps -n=xxx    docker ps -n=2 查看最新创建的2个容器</span><br></pre></td></tr></table></figure>
+<p>【创建容器】<br> <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#docker create nginx  (创建一个nginx容器,未启动,name是随机的)</span><br></pre></td></tr></table></figure><br>可以使用 docker ps -a 查看，如果status状态没有时间，则是未启动。</p>
+<p>也可在创建时指定name,  <strong># docker create –name=nginx nginx (未启动,区别：run启动，create未启动)<br>#docker run –name nginx1 -d -p 8080:80 nginx (name:容器名字，-d表示容器后台运行，-p将80端口映射到8080端口)</strong><br>测试:浏览器输入：127.0.0.1:8080</p>
+<p>【创建交互型容器】<br>例：创建ubuntu容器，命令执行完后，会打开一个输入终端：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># docker run --name ubuntu -it ubuntu /bin/bash (-it:i表示开发容器的标准输入，t为容器创建一个命令行终端)</span><br></pre></td></tr></table></figure>
+<p>【容器启动】<br>docker run （创建的容器就已经启动，用此命令时，就会自动去Docker Hub上下载相关镜像） </p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker run --name nginx1 -d -p 8080:80 nginx (name:容器名字，-d表示容器后台运行，-p将80端口映射到8080端口)</span><br></pre></td></tr></table></figure>
+<p>测试:浏览器输入：127.0.0.1:8080<br>docker create创建的未启动，需要docker start 容器id/name 启动：<br>例：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker start nginx1  或 #docker start e50ef9a67cab </span><br></pre></td></tr></table></figure>
+<p>【容器重启】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker restart 容器ID或容器名 (不管容器是否启动，直接重启容器)</span><br><span class="line">#docker restart 参数    (例如：#docker restart -t=60 容器ID或容器名)</span><br></pre></td></tr></table></figure>
+<p>-t：关闭容器的限时，如果超时未能关闭则用kill强制关闭，默认值10s，这个时间用于容器的自己保存状态 </p>
+<p>【容器自启动】<br>docker服务重启、机器重启、容器本身异常退出等原因，导致容器停止对外工作，需要自动重启，docker有自己的守护方式 restart policy.</p>
+<p>restart policy</p>
+<p>在docker run时通过–restart 设置守护机制，有四种模式 ：</p>
+<p><strong>no</strong>：  不自动重新启动容器。（默认） </p>
+<p><strong>on-failure</strong> ：  由于一个错误退出，它表现为退出状态不等于0，自动启动容器 </p>
+<p><strong>unless-stopped</strong> ：  除非被显式停止 stop、kill 否则docker服务停止或自动重启，自动启动容器 </p>
+<p><strong>always</strong>：  如果容器停止，总是重新启动容器。（这是官方解释，我测试了如果手动kill容器 无法自动重启，应该也属于正常 如果手动都不能让他停止 也许我们会更烦恼怎么停止它。）<br>对于上面的模式 我们生产常用的只有always.</p>
+<p>例：**#docker run -d -p 80:12345 –restart always –name web weba:v0.1**<br>(测试自启动是否成功：<br>1、docker ps 查看了当前运行的容器<br>2、service docker restart 重启docker 服务<br>3、再次docker ps 查看当前运行的容器，此时发现已经自动启动容器<br>4、最后用网页查看一下 web是否启动 )</p>
+<p>【进入正在运行的docker容器】<br>1、**#docker attach**</p>
+<p>docker attach 容器名称或容器ID </p>
+<p>此命令如果进入一些web服务会一致卡着无反应，猜测是监听阻塞了进入，而且已此方式进入容器如果执行exit或关闭会话 会停止掉容器。因此我们在生产环境中不用此命令。</p>
+<p>2、**#docker exec**</p>
+<p>docker exec -it 59ec /bin/bash (后补:如果提示“/bin/bash 未找到”之类的 可以改成:docker exec -it 59ec sh 此种问题我在centos中遇到过，ubuntu未测试)<br>执行会看到命令行的开头出现了变化，因为已经进入到了容器里面。</p>
+<p>接下来我们在容器里面访问内部端口12345的站点<br>curl 127.0.0.1:12345<br>我们看到出现 html代码说明访问成功  </p>
+<p>【容器停止】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker stop 容器ID或容器名 (停止容器）</span><br><span class="line">#docker kill 容器ID或容器名 (直接关闭容器)</span><br></pre></td></tr></table></figure>
+<p>主要区别:stop给与一定的关闭时间交由容器自己保存状态，kill直接关闭(杀死)容器</p>
+<p><strong>【容器删除】docker rm …<br>（单个删除）：#docker rm ubuntu (停止运行后删除)<br>              #docker rm -f ubuntu (强制删除)<br> (批量删除) ：#docker rm $(docker ps -a -q)      docker ps -a -q会列出所有容器的id，供rm命令删除<br>              #docker container prune (支持删除已退出的孤立的容器)</strong></p>
+<p>【查看容器信息】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker inspect ubuntu  (查看ubuntu详细信息，id,容器名，环境变量，网络配置等)</span><br></pre></td></tr></table></figure>
+<p>查看容器运行状态：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker inspect -f=&#x27;&#123;&#123;.Status.Running&#125;&#125;&#x27; ubuntu</span><br></pre></td></tr></table></figure>
+<p>查看容器ip地址：  </p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker inspect -f=&#x27;&#123;&#123;.NetworkSettings.IPAdress&#125;&#125;&#x27; ubuntu</span><br></pre></td></tr></table></figure>
+<p>【容器进程】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker top ubuntu (确保容器已启动)</span><br></pre></td></tr></table></figure>
+<p>【容器日志】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker logs ubuntu (历史日志)</span><br><span class="line">#docker logs -f ubuntu (实时日志)</span><br></pre></td></tr></table></figure>
+<p>【容器导出】(docker的可移植性，导出到当前目录文件夹下)</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker export $container_id &gt; 容器快照名  (e：#docker export 5fbe4b029608 &gt; ubuntu.tar)</span><br></pre></td></tr></table></figure>
+<p>【容器导入】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># docker images （列出本地镜像。）</span><br><span class="line"></span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">rabbitmq            3-management        2fb79bc1163c        30 hours ago        177MB</span><br><span class="line">mysql               5.7                 7faa3c53e6d6        4 months ago        373MB</span><br><span class="line">centos              latest              9f38484d220f        6 months ago        202MB</span><br><span class="line">hello-world         latest              fce289e99eb9        8 months ago        1.84kB</span><br></pre></td></tr></table></figure>
+<p>然后：<br><strong>#cat ubuntu.tar | docker import - mycentos:v888  (mycentos:上面的REPOSITORY，v888：上面的TAG)</strong><br>导入成功后，docker run 命令启动</p>
+<p>【查看镜像】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker images  （查看本地所有镜像）</span><br><span class="line"></span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">rabbitmq            3-management        2fb79bc1163c        30 hours ago        177MB</span><br><span class="line">mysql               5.7                 7faa3c53e6d6        4 months ago        373MB</span><br><span class="line">centos              latest              9f38484d220f        6 months ago        202MB</span><br><span class="line">hello-world         latest              fce289e99eb9        8 months ago        1.84kB</span><br></pre></td></tr></table></figure>
+<p>名词解释：1.REPOSITORY：仓库名，一般用来存放同一类型的镜像。<br>      [namespace\ubuntu] 这种仓库名由命名空间和实际的仓库名组成，类似Github<br>      [ubuntu]官方的仓库名<br>      [hub.c.163.com/library/nginx] 用于非Docker Hub上的镜像命名，例如第三方服务商提供的镜像或者开发者自己搭建的镜像中心。<br>       2.TAG：区分同一仓库中的不同镜像，默认为latest<br>       3.IMAGE ID:唯一标识符<br>       4.CREATED:创建时间<br>       5.SIZE:镜像大小</p>
+<p>【下载镜像】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker pull hub.c.163.com/library/nginx:latest   (如果docker run下载慢，先pull下载下来，然后再运行)</span><br><span class="line">#docker images 查看</span><br><span class="line">#docker run -itd --name 163nginx -p 80:80 hub.c.163.com/library/nginx:latest (运行)</span><br></pre></td></tr></table></figure>
+<p>【删除镜像】<strong>docker rmi …</strong>(参数为镜像的id或者镜像名，可有多个，中间用逗号隔开)</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker images 查看</span><br><span class="line">#docker rmi 2fb79bc1163c hello-world:latest (删除id为2fb..和hello-world的镜像)</span><br></pre></td></tr></table></figure>
+<p>注:有时候无法删除一个镜像大部分原因是因为该镜像被一个容器所依赖，要先删除容器，再删镜像。</p>
+<p>【创建本地镜像】</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker commit -m &quot;describe&quot; -author=&quot;zhangsan&quot; ce1fe32739402 zhangsan/nginx:v1</span><br></pre></td></tr></table></figure>
+<p>1.参数-m是创建该镜像的一个简单描述<br>2.–author 表示该镜像的作者<br>3.ce1fe32739402 表示创建镜像所依据的容器id<br>4.zhangsan/nginx 为仓库名，zhangsan是命名空间，mginx是镜像名<br>5.v1表示仓库的tag<br>6.创建完成后，通过docker images就可以看到刚刚创建的镜像<br>7.通过刚刚创建的镜像运行一个容器，访问该容器，发现nginx内容已经改变。</p>
+<p>【Dockerfile】详细点击下文：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/100917625">Dockerfile 使用介绍</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/100924945">Dockerfile 命令详解</a></p>
+<p>【Docker Hub】<br>类似于GitHub，镜像托管服务，地址为：<a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a> (如果嫌太慢，用网易的：<a target="_blank" rel="noopener" href="https://c.163yun.com/hub#/m/home">https://c.163yun.com/hub#/m/home</a>)<br>打开Docker Hub，注册一个账号。<br>在客户端命令行登录：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># docker login</span><br></pre></td></tr></table></figure>
+<p>看到Login Succeeded表示成功。</p>
+<p>登录成功后，就可以使用push命令上传我们自制的镜像了。命名要规范，即namespace/name格式，namespace必须是用户名</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">#docker build -t iweirdo/nginx:v1</span><br></pre></td></tr></table></figure>
+<p>【暴露网络端口】<br>Docker中设计暴露网络端口的参数有两个，分别是-p和-P （大小写）<br>1、使用-P：</p>
+<p>Docker会在宿主机上随机为应用分配一个未被使用的端口，并将其映射到容器开放的端口，以Nginx为例，如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[root@localhost lemon]# docker run -itd --name nginx -P 5a3221f0137b</span><br><span class="line">40958d13ea6a274c493bd1e2135f8416d8eb138cf510320c4f68019e1d1e41f8</span><br><span class="line">[root@localhost lemon]# docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                   NAMES</span><br><span class="line">40958d13ea6a        5a3221f0137b        &quot;nginx -g &#x27;daemon of…&quot;   16 seconds ago      Up 6 seconds        0.0.0.0:32768-&gt;80/tcp   nginx</span><br></pre></td></tr></table></figure>
+<p> docker为应用分配了一个随机端口32768,使用该端口可访问容器中的nginx(<a target="_blank" rel="noopener" href="http://192.168.1.132:32768/">http://192.168.1.132:32768</a>)</p>
+<p>2、使用-p：<br>  -p参数有几种不同的用法：</p>
+<p>hostPort:containerPort (这种方法是将宿主机端口和容器端口绑定起来，如下:)</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[root@localhost lemon]# docker run -itd --name nginx -p 80:80 5a3221f0137b  (表示将宿主机的80端口映射到容器的80上，第一个80是宿主机的80，第二个80是容器的80)</span><br></pre></td></tr></table></figure>
+<p>ip:hostPort:containerPort (这种方法是将指定的ip的端口和容器的端口进行映射，如下：)</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[root@localhost lemon]# docker run -itd --name nginx -p 192.168.1.132:80:80 5a3221f0137b （表示将192.168.1.132地址的80端口映射到容器的80端口上）</span><br></pre></td></tr></table></figure>
+<p>ip::containerPort (这种是将指定的ip地址的随机端口映射到容器的开放端口上，如下：)</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[root@localhost lemon]# docker run -itd --name nginx -p 192.168.1.132::80 5a3221f0137b</span><br></pre></td></tr></table></figure>
+
+<p>未完待续。。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/08/16/Docker——Dockerfile 使用介绍-Docker——Dockerfile 使用介绍/" data-toggle="tooltip" data-placement="top"
+                           title="Docker——Dockerfile 使用介绍">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/08/04/Docker一键安装RabbitMQ-那杯热咖啡Docker一键安装RabbitMQ/" data-toggle="tooltip" data-placement="top"
+                           title="Docker一键安装RabbitMQ">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A%EF%BC%9A"><span class="toc-text">名词解释：</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Docker"
+                           title="Docker">Docker</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

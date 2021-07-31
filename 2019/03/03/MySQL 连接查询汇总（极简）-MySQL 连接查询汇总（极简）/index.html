@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        MySQL 连接查询汇总（极简）｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/03/03/MySQL 连接查询汇总（极简）-MySQL 连接查询汇总（极简）/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>MySQL 连接查询汇总（极简）</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-03-03
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#MySQL"
+                           title="MySQL">MySQL</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            MySQL 连接查询汇总（极简）
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>MYSQL-连接查询：<br>    # 连接查询:把多张表进行记录的连接(按照某个条件进行数据的拼接)<br>    # 分类<br>        1,内链接<br>        2,外连接<br>            # 左外<br>            # 右外<br>        3,自然连接<br>        4,交叉连接</p>
+<p>MYSQL-内链接 :<br>    # inner join (inner关键字可以省略)  [inner join比left join快]<br>    # 从左表中取出每一条记录,与右表中的所有记录进行匹配<br>    # 匹配必须是某个条件,在左表和右表中相同【公共部分】,才会保留结果.否则,不保留<br>    # 基本语法<br>        SELECT * FROM [左表] innder join [右表] on [左表].[字段]=[右表].[字段];<br>    # 内连接,可以没有on,那么系统会保留所有的结果,没错.又是传说中的笛卡尔积<br>    # ‘还可以使用where代替on,但是效率没有on高’</p>
+<p>例子：<br>排他性: A,B表中至少有1个匹配时，才返回行。两表的【交集】<br>SQL语句如下：<br>select A.name,B.address from A<br>inner join B<br>on A.id = B.A_id</p>
+<p>查询结果为：<br>name     address<br>张     北京<br>王     上海</p>
+<p>inner join  内连接等价于下面的sql:<br>SELECT A.name, B.address<br>FROM A, B<br>WHERE A.id = B.A_id</p>
+<p>MYSQL-外连接:<br>1, 左外<br>   左外连接: 包含左边表的全部行（不管右边的表中是否存在与它们匹配的行），以及右边表中全部匹配的行。</p>
+<p>【通俗：就是2张表，查左表满足条件的所有以及右表中含有左表条件的数据，where (右表条件)..is not null显示不为null的数】<br>    # 以某张表为主,取出里面的所有记录.每条与另外一张表.不管能不能匹配上条件.最终都会保留.如果不能匹配,那么其他表的字段都置空</p>
+<pre><code>    # left join (left join 是left outer join的简写)
+    # 基本语法
+        SELECT
+            ...
+        FROM
+            [左表]
+        LEFT JOIN
+            [右表]
+        ON
+            [条件]
+    # 会把左边所有的数据都显示出来,如果右表没有匹配的数据.以null显示
+   例：SELECT * from a_table a LEFT  JOIN b_table b on a.a_id = b.b_id (where b_id is not NULL);
+
+2,右外
+右外连接: 包含右边表的全部行（不管左边的表中是否存在与它们匹配的行），以及左边表中全部匹配的行
+</code></pre>
+<p>   【通俗：就是2张表，查右表满足条件的所有以及左表中含有右表条件的数据，where (左表条件)..is not null显示不为null的数】</p>
+<pre><code>    # right join
+    # 基本语法
+        SELECT
+            ...
+        FROM
+            [左表]
+        RIGHT JOIN
+            [右表]
+        ON
+            [条件]
+    # 会把右表所有的数据都显示出来,如果左表没有匹配的数据.以null显示
+    例：SELECT * from a_table a RIGHT JOIN b_table b on a.a_id = b.b_id (where a_id is not NULL);
+</code></pre>
+<p>MYSQL-自然连接：<br>    # natural join<br>    # MYSQL方言,其他数据库不一定有<br>    # ‘自动的匹配连接条件’,但是.不怎么建议使用.是以’字段名称作为匹配模式’<br>    # 基本语法<br>        SELECT …FROM [表1] natural join [表2];        //内连接<br>            * 自动使用同名字段作为连接条件,结果中会合并该字段<br>        SELECT …FROM [表1] left natural join [表2];    //左外自然连接<br>        SELECT …FROM [表1] right natural join [表2];    //右外自然连接</p>
+<p>MYSQL-交叉连接：<br>    # cross join<br>    # 从一张表中循环取出每一条记录,每条记录都去另外一张表进行匹配.而且匹配一定保留(没有条件匹配不带条件where…)<br>    # 而连接本身字段就会增加(保留)    –    笛卡尔积(笛卡尔是没有意义的,【尽量要避免】)<br>    # 存在的价值:保证连接这种结构的完整性而已.<br>    # 基本语法<br>        SELECT * from [左表] cross join [右表];    == select * from [左表],[右表];<br>        select * from emp cross join dept;</p>
+<pre><code>    # 也可以加上条件
+    select * 
+        from emp e 
+    cross join 
+        dept d 
+    on e.deptno=d.deptno ;
+【两表连接如果要避免返回笛卡尔积，必须确保至少一方表是唯一的，否则在能查到记录的情况下，不论哪一种连接方式一定会返回笛卡尔积记录集的。】
+</code></pre>
+<p>MYSQL-全外：<br>    # 全外(MYSQL不支持,但是我们可以通过其他方式实现)<br>    # 这个就是,左右两表都是相同的,两个表的所有内容都必须全部出来,如果没有对应记录的,就用null填充</p>
+<pre><code>select * from 表1 left outer join 表2 on 表1.字段=表2.字段
+    union 
+select * from 表1 right outer join 表2 on 表1.字段=表2.字段;
+-联合查询 ,把他们的结果集合并一下就出来了
+
+例: SELECT * from a_table a LEFT  JOIN b_table b on a.a_id = b.b_id (where b_id is not NULL) UNION SELECT * from a_table a
+</code></pre>
+<p>LEFT  JOIN b_table b on a.a_id = b.b_id (where b_id is not NULL);</p>
+<p>例子：<a target="_blank" rel="noopener" href="https://blog.csdn.net/plg17/article/details/78758593">https://blog.csdn.net/plg17/article/details/78758593</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/03/05/CentOS 7 MySQL自动备份shell脚本-CentOS 7 MySQL自动备份shell脚本/" data-toggle="tooltip" data-placement="top"
+                           title="CentOS 7 MySQL自动备份shell脚本">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/03/01/CentOS 7安装SVN服务器-CentOS 7安装SVN服务器/" data-toggle="tooltip" data-placement="top"
+                           title="CentOS 7安装SVN服务器">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#MySQL"
+                           title="MySQL">MySQL</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

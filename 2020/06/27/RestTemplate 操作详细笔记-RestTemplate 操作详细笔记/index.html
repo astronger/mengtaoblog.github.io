@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        RestTemplate 操作详细笔记｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/06/27/RestTemplate 操作详细笔记-RestTemplate 操作详细笔记/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>RestTemplate 操作详细笔记</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-06-27
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            RestTemplate 操作详细笔记
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="RestTemplate-介绍"><a href="#RestTemplate-介绍" class="headerlink" title="RestTemplate 介绍"></a>RestTemplate 介绍</h2><ul>
+<li>spring3.0 开始支持</li>
+<li>Http 请求工具</li>
+<li>该工具与 springboot 或 springcloud 无关</li>
+<li>提供常见的 REST 请求模版</li>
+<li>例如支持 GET、PUT、POST、DELETE</li>
+<li>通用请求方法 –&gt; exchange 和 execute</li>
+<li>实现 RestOperations 接口</li>
+<li>该接口定义了常见的 RESTful 操作<h3 id="1-GET-操作"><a href="#1-GET-操作" class="headerlink" title="1.GET 操作"></a>1.GET 操作</h3>首先在 provider 中定义一个 hello2 接口：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/hello2&quot;)</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">hello2</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="string">&quot;hello &quot;</span>+name;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>接下来，我们在 consumer 去访问这个接囗，调用 RestTemplate 中 的 GET 请求。 可以看到，在 RestTemplate 中，关于 GET 请求，一共有两大类方法：</p>
+<p>这两大类方法实际上是重载的，唯一不同的，就是返回值类型。 getForObject 返回的是一个对象，这个对象就是服务端返回的具体值。getForEntiey 返回的是一个 ResponseEntity，这个 ResponseEntity 中除了服务端返回的具体数据外，还保留了 Http 应头的数据。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/hello4&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello4</span><span class="params">()</span></span>&#123;</span><br><span class="line">    String s1 = restTemplate.getForObject(<span class="string">&quot;http://provider/hello2?name=&#123;1&#125;&quot;</span>,String.class,<span class="string">&quot;javaone&quot;</span>);</span><br><span class="line">    System.out.println(s1);</span><br><span class="line">    ResponseEntity&lt;String&gt; responseEntity = restTemplate.getForEntity(<span class="string">&quot;http://provider/hello2&quot;</span>, String.class, <span class="string">&quot;javaone&quot;</span>);</span><br><span class="line">    String body = responseEntity.getBody();</span><br><span class="line">    System.out.println(<span class="string">&quot;body:&quot;</span>+body);</span><br><span class="line">    HttpStatus statusCode = responseEntity.getStatusCode();</span><br><span class="line">    System.out.println(<span class="string">&quot;HttpStatus:&quot;</span>+statusCode);</span><br><span class="line">    <span class="keyword">int</span> statusCodeValue = responseEntity.getStatusCodeValue();</span><br><span class="line">    System.out.println(<span class="string">&quot;statusCodeValue:&quot;</span>+statusCodeValue);</span><br><span class="line">    HttpHeaders headers = responseEntity.getHeaders();</span><br><span class="line">    Set&lt;String&gt; keySet = headers.keySet();</span><br><span class="line">    System.out.println(<span class="string">&quot;---------headers--------&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (String s : keySet) &#123;</span><br><span class="line">        System.out.println(s+<span class="string">&quot;:&quot;</span>+headers.get(s)+<span class="string">&quot;///&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里大家可以看到，getForObject 直接拿到了服务的返回值，getForEntity 不仅仅拿到服务的返回值， 还拿到 http 应的状态码。然后，后动 Eureka Server、provider 以及 consumer，访问 consumer 中的 hello4 接囗，既可以看到请求结果。</p>
+<p>看清楚两者的区别之舌，接下来看下两个各自的重载方法，getForObject 和 getForEntity 分别有三个重载方法，两者的三个重载方法基本都是一致的。所以，这里，我们主要看其中一种。三个重载方法， 其实代表了三种不同的传参方式。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/hello5&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello5</span><span class="params">()</span></span>&#123;</span><br><span class="line">        String s1 = restTemplate.getForObject(<span class="string">&quot;http://provider/hello2?name=&#123;1&#125;&quot;</span>,String.class,<span class="string">&quot;javatwo&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;1:&quot;</span>+s1);</span><br><span class="line">        HashMap&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        map.put(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line">        s1 = restTemplate.getForObject(<span class="string">&quot;http://provider/hello2?name=&#123;name&#125;&quot;</span>, String.class,map);</span><br><span class="line">        System.out.println(<span class="string">&quot;2:&quot;</span>+s1);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            String url = <span class="string">&quot;http://provider/hello2?name=&quot;</span>+ URLEncoder.encode(<span class="string">&quot;李四&quot;</span>,<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">            URI uri = URI.create(url);</span><br><span class="line">            s1 = restTemplate.getForObject(uri, String.class);</span><br><span class="line">            System.out.println(<span class="string">&quot;3:&quot;</span>+s1);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>小结：</p>
+<ol>
+<li>getForObject 和 getForEntity 返回值区别：</li>
+</ol>
+<ul>
+<li>getForObject 返回一个对象 (服务返回的具体值)</li>
+<li>getForEntity 不仅返回具体数据 还可以返回状态码 头信息…</li>
+</ul>
+<ol start="2">
+<li>getForObject 和 getForEntity 三种重载方式的类似</li>
+</ol>
+<ul>
+<li>Object… –&gt; 占位符 (?xxx={1}, xx.class, “xxxxx”)</li>
+<li>Map&lt;String, ?&gt; –&gt; 占位符为自定义 key (name) 需要提前声明 map (?xxx={key}, xx.class, 返回的 map)</li>
+<li>URI –&gt; 字符串中包含中文的需要转码才能创建为 URI 在被调用</li>
+</ul>
+<h3 id="2-POST-操作"><a href="#2-POST-操作" class="headerlink" title="2.POST 操作"></a>2.POST 操作</h3><h4 id="2-1-准备工作"><a href="#2-1-准备工作" class="headerlink" title="2.1 准备工作"></a>2.1 准备工作</h4><p>因为 post 请求可能是 k/v 或是 json 形式，需要提供 2 种接口，传参对象需要创建一个 model， 为了以后方便使用直接新建一个普通的 maven 项目作为 commons 模块管理。</p>
+<p>创建一个 User 类。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ToString</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String nickName;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后 provider 和 consumer 分别引用 commons 模块依赖</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.example<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-2-provider-提供-2-个接口"><a href="#2-2-provider-提供-2-个接口" class="headerlink" title="2.2 provider 提供 2 个接口"></a>2.2 provider 提供 2 个接口</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// key/value形式传递</span></span><br><span class="line"> <span class="meta">@PostMapping(&quot;/user1&quot;)</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> User <span class="title">addUser1</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">     <span class="keyword">return</span> user;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">//json传递</span></span><br><span class="line"> <span class="meta">@PostMapping(&quot;/user2&quot;)</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> User <span class="title">addUser2</span><span class="params">(<span class="meta">@RequestBody</span> User user)</span></span>&#123;</span><br><span class="line">     <span class="keyword">return</span> user;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来，我们在 consumer 中调这两个 POST 接囗。</p>
+<p>这里的 post 和前面的 get 很像，只是多出来了三个方法，就是 postForLocation，另外，两个 postForObject 和 postForEntiy 和前面 get 基不一致，所以这里我们主要来看 postForObject, 看完之后，我们再来看这个额外的 postForLocation。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/hello6&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello6</span><span class="params">()</span></span>&#123;</span><br><span class="line">    MultiValueMap&lt;String, Object&gt; map = <span class="keyword">new</span> LinkedMultiValueMap&lt;&gt;();</span><br><span class="line">    map.add(<span class="string">&quot;username&quot;</span>,<span class="string">&quot;javajava&quot;</span>);</span><br><span class="line">    map.add(<span class="string">&quot;password&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">    map.add(<span class="string">&quot;id&quot;</span>,<span class="number">666</span>);</span><br><span class="line">    User user = restTemplate.postForObject(<span class="string">&quot;http://provider/user1&quot;</span>, map, User.class);</span><br><span class="line">    System.out.println(<span class="string">&quot;1:&quot;</span>+user);</span><br><span class="line">    user.setId(<span class="number">888</span>);</span><br><span class="line">    user = restTemplate.postForObject(<span class="string">&quot;http://provider/user2&quot;</span>, user, User.class);</span><br><span class="line">    System.out.println(<span class="string">&quot;2:&quot;</span>+user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>post 参数到底是 k/v 形式还是 json 形式，主要看第二个参数，如果第二个参数是 MultiValueMap，则参数是以 k/v 形来传递的。 如果是一个普通对象，则参数是以的 son 形式 传递。</p>
+<p>最后再看看一下 postForLocation。有的时候，当执行完一个 post 请求之后，立马要进行重定向， 一个非常常见的场景就是注册，注册是一个 post 请求，注册完成之后，立马重定向到登录页面去登录。对于这种场景，我们就可以便用 postForLocation。</p>
+<p>首先我们在 provider 上提供一个用户注册接囗：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RegisterController</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">register</span><span class="params">(User user)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;redirect:http://provider/loginPage?username=&quot;</span>+user.getUsername();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@GetMapping(&quot;/loginPage&quot;)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">loginPage</span><span class="params">(String username)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;loginPage:&quot;</span>+username;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>这里的 post 接口，响应一定是 302，否则 postForLocaton 无效。<br>重定向的地址，一定要写成绝对路径，不要写成相对路径，否则在 consumer 中调用时会出问题</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/hello7&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello7</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    MultiValueMap&lt;String, Object&gt; map = <span class="keyword">new</span> LinkedMultiValueMap&lt;&gt;();</span><br><span class="line">    map.add(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;javajava&quot;</span>);</span><br><span class="line">    map.add(<span class="string">&quot;password&quot;</span>, <span class="string">&quot;123456&quot;</span>);</span><br><span class="line">    map.add(<span class="string">&quot;id&quot;</span>, <span class="number">666</span>);</span><br><span class="line">    <span class="comment">//这就是postForLocation，调用该方法返回的是一个Uri,Uri就是重定向的地址（里面包含重定向的参数），拿到Uri之后，就可以直接发送新的请求了</span></span><br><span class="line">    URI uri = restTemplate.postForLocation(<span class="string">&quot;http://provider/register&quot;</span>, map);</span><br><span class="line">    String s = restTemplate.getForObject(uri, String.class);</span><br><span class="line">    System.out.println(s);</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-PUT"><a href="#3-PUT" class="headerlink" title="3.PUT"></a>3.PUT</h3><p> 首先在 provider 提供一个 put 接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@PutMapping(&quot;/user11&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateUser1</span><span class="params">(User user1)</span></span>&#123; <span class="comment">//k/v形式</span></span><br><span class="line">    System.out.println(user1);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@PutMapping(&quot;/user12&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">updateUser2</span><span class="params">(<span class="meta">@RequestBody</span> User user2)</span></span>&#123; <span class="comment">//json形式</span></span><br><span class="line">    System.out.println(user2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 consumer 中调用该接口，和上面 post 类似：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/hello8&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello8</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    MultiValueMap&lt;String, Object&gt; map = <span class="keyword">new</span> LinkedMultiValueMap&lt;&gt;();</span><br><span class="line">    map.add(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;javajava&quot;</span>);</span><br><span class="line">    map.add(<span class="string">&quot;password&quot;</span>, <span class="string">&quot;123456&quot;</span>);</span><br><span class="line">    map.add(<span class="string">&quot;id&quot;</span>, <span class="number">666</span>);</span><br><span class="line">    restTemplate.put(<span class="string">&quot;http://provider/user11&quot;</span>,map);</span><br><span class="line">    User user = <span class="keyword">new</span> User();</span><br><span class="line">    user.setId(<span class="number">98</span>);</span><br><span class="line">    user.setUsername(<span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line">    user.setPassword(<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">    restTemplate.put(<span class="string">&quot;http://provider/user12&quot;</span>,user);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-DELETE"><a href="#4-DELETE" class="headerlink" title="4.DELETE"></a>4.DELETE</h3><p> 首先在 provider 提供一个 delete 接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@DeleteMapping(&quot;/user13&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteUser1</span><span class="params">(Integer id)</span></span>&#123;</span><br><span class="line">    System.out.println(id);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@DeleteMapping(&quot;/user14/&#123;id&#125;&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteUser2</span><span class="params">(<span class="meta">@PathVariable</span> Integer id)</span></span>&#123;</span><br><span class="line">    System.out.println(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 consumer 中调用这两个删除接口 (delete 中参数的传递，也支持 map，这块实际上和 get 是一样的)：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/hello9&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello9</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    restTemplate.delete(<span class="string">&quot;http://provider/user13?id=&#123;1&#125;&quot;</span>,<span class="number">99</span>);</span><br><span class="line">    restTemplate.delete(<span class="string">&quot;http://provider/user14/&#123;1&#125;&quot;</span>,<span class="number">99</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 示例代码地址：<a target="_blank" rel="noopener" href="https://github.com/astronger/springcloud-simple-samples">https://github.com/astronger/springcloud-simple-samples</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/06/29/Redis 基本数据类型 (ZSet) 的操作命令-Redis 基本数据类型 (ZSet) 的操作命令/" data-toggle="tooltip" data-placement="top"
+                           title="Redis 基本数据类型 (ZSet) 的操作命令">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/06/26/阿里云 Centos 7.x 安装 Consul-阿里云 Centos 7.x 安装 Consul/" data-toggle="tooltip" data-placement="top"
+                           title="阿里云 Centos 7.x 安装 Consul">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#RestTemplate-%E4%BB%8B%E7%BB%8D"><span class="toc-text">RestTemplate 介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-GET-%E6%93%8D%E4%BD%9C"><span class="toc-text">1.GET 操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-POST-%E6%93%8D%E4%BD%9C"><span class="toc-text">2.POST 操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-text">2.1 准备工作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-provider-%E6%8F%90%E4%BE%9B-2-%E4%B8%AA%E6%8E%A5%E5%8F%A3"><span class="toc-text">2.2 provider 提供 2 个接口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-PUT"><span class="toc-text">3.PUT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-DELETE"><span class="toc-text">4.DELETE</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

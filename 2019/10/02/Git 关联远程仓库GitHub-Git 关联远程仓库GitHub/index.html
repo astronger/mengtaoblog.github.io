@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Git 关联远程仓库GitHub｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/10/02/Git 关联远程仓库GitHub-Git 关联远程仓库GitHub/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Git 关联远程仓库GitHub</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-10-02
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Github"
+                           title="Github">Github</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Git 关联远程仓库GitHub
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h1 id="配置-SSH-KEY"><a href="#配置-SSH-KEY" class="headerlink" title="配置 SSH KEY"></a>配置 SSH KEY</h1><p>SSH KEY 的配置不是必须的，不配置的话我们就只能使用 HTTPS 协议，这样每次提交时要输入用户名密码，所以还是配置一下。配置 SSH KEY 的原理很简单，采用非对称加密方式生成公钥和私钥，公钥告诉 GitHub ，私钥留在自己电脑上(私钥不可泄露)，当我们向 GitHub 上提交数据时，GitHub 会用我们留给它的公钥加密一段消息返回给我们的电脑，如果我们能够用私钥解密成功，说明是合法的用户，这样就避免我们输入用户名密码了。大致的原理就是这样，现在很多免登录的系统都采用了这种方式，比如 Hadoop 免登录配置也是这样。那我们就来看看这个 SSH　KEY 要怎么生成。　　</p>
+<h2 id="1-查看本地是否已有-SSHKEY"><a href="#1-查看本地是否已有-SSHKEY" class="headerlink" title="1.查看本地是否已有 SSHKEY"></a>1.查看本地是否已有 SSHKEY</h2><p>查看当前用户目录下是否有 .ssh 文件，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-6bb9742967544cca8de4c716c8728a53.png" alt="image.png"></p>
+<p>如果查看之后有结果，则直接跳转到第四步，什么都没有就继续生成。</p>
+<h2 id="2-生成-SSH"><a href="#2-生成-SSH" class="headerlink" title="2.生成 SSH"></a>2.生成 SSH</h2><p>命令很简单，如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">&quot;你的邮箱地址&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-添加-ssh-到-ssh-agent-中"><a href="#3-添加-ssh-到-ssh-agent-中" class="headerlink" title="3.添加 ssh 到 ssh-agent 中"></a>3.添加 ssh 到 ssh-agent 中</h2><p>执行如下命令即可：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(ssh-agent -s)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+<p>做好这一切之后，我们当前用户目录(C:\Users\Administrator.ssh)下已经有了一个名为 .ssh 的隐藏文件夹了，打开这个目录，会发现有一个名为 id_rsa.pub 的文件，这就是我们一会要使用的公钥文件。</p>
+<h2 id="4-将公钥保存在-GitHub"><a href="#4-将公钥保存在-GitHub" class="headerlink" title="4.将公钥保存在 GitHub"></a>4.将公钥保存在 GitHub</h2><p>登录 GitHub ，点击右上角头像，选择 Settings ，在新打开的页面中左边侧栏选择 <strong>SSH and GPG keys</strong> ，如下： </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-0e3f087afcf24c358795c2bf8f7d35f3.png" alt="image.png"></p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-3b21ef00468a4bb88c9042749e651855.png" alt="image.png"></p>
+<p>完了之后点击最下面的 Add SSH key 按钮即可，如此之后，我们的 SSH KEY 就配置成功了。 </p>
+<h1 id="创建远程仓库"><a href="#创建远程仓库" class="headerlink" title="创建远程仓库"></a>创建远程仓库</h1><p> 接下来我们在 GitHub 上创建一个仓库，登录成功之后，直接点击右上角绿色的 New repository 按钮，如下： </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-10bf0759aacd4bb597ae4b8f0d6d6809.png" alt="image.png"></p>
+<p>这里创建了远程 test仓库。 </p>
+<h1 id="关联远程仓库"><a href="#关联远程仓库" class="headerlink" title="关联远程仓库"></a>关联远程仓库</h1><p> 创建成功之后，我们会看到仓库的地址，如下： </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-1b584b99ddf44a758e31655bf86e097a.png" alt="image.png"></p>
+<p> 然后我需要将我们之前的本地仓库 【(1)test】 和这个远程仓库【(github)test】进行关联，首先进入你本地的原始仓库【(1)test】，然后配置如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git remote add origin https://github.com/astronger/test.git</span><br><span class="line"> git 会自动将远程仓库的名字设置为 origin ，方便我们的后续操作。  </span><br></pre></td></tr></table></figure>
+<p>穿插一句：如果是本地的文件直接上传到远程仓库，直接下面一套走完即可： </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git init     <span class="comment">#初始化仓库</span></span><br><span class="line">$ git add .    <span class="comment">#添加到暂存区</span></span><br><span class="line">$ git commit -m <span class="string">&quot;first commit&quot;</span>   <span class="comment">#将当前暂存区的文件提交到本地仓库</span></span><br><span class="line">$ git remote add origin https://github.com/astronger/test.git  <span class="comment">#将我们之前的本地仓库和这个远程仓库进行关联</span></span><br><span class="line">$ git push -u origin master   <span class="comment">#将内容推送到远程 master 分支上</span></span><br></pre></td></tr></table></figure>
+<h1 id="推送到远程仓库"><a href="#推送到远程仓库" class="headerlink" title="推送到远程仓库"></a>推送到远程仓库</h1><h2 id="推送到master分支"><a href="#推送到master分支" class="headerlink" title="推送到master分支"></a>推送到master分支</h2><p>假设我想将本地 master 分支上的内容推送到远程 master 分支上，方式如下： </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git push -u origin master</span><br></pre></td></tr></table></figure>
+<p>-u 参数可以在推送的同时，将 origin 仓库的 master 分支设置为本地仓库当前分支的 upstream（上游）。添加了这个参数，将来运行 git pull 命令从远程仓库获取内容时，本地仓库的这个分支就可以直接从 origin 的 master 分支获取内容，省去了另外添加参数的麻烦。这个参数也只用在第一次 push 时加上，以后直接运行 git push 命令即可。  </p>
+<h1 id="推送到其他分支"><a href="#推送到其他分支" class="headerlink" title="推送到其他分支"></a>推送到其他分支</h1><p>如果想推送到其他分支，还是这条命令，修改一下分支的名字即可，比如我也想把我的 two 分支推送到远程仓库中，执行如下命令： </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-669c0e901c7b48d0945b292fd4acca78.png" alt="image.png"></p>
+<p> 先切换到 two 分支，然后执行 git push 命令，参数含义和之前的一样，这里我们创建的远程仓库的分支名也为 two（当然我们可以取任何名字，但是为了不混淆，最好取一致的名字）。这两条命令执行成功之后，此时在网页中我们就可以看到已经有多个分支了，如下：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-68e40361c8ed45e99dbce277837bf6ea.png" alt="image.png"></p>
+<h1 id="从远程仓库获取"><a href="#从远程仓库获取" class="headerlink" title="从远程仓库获取"></a>从远程仓库获取</h1><h2 id="首次获取"><a href="#首次获取" class="headerlink" title="首次获取"></a>首次获取</h2><p>刚刚是我们向远程仓库提交数据，有提交当然就有获取，我们可以通过 git clone 命令克隆一个远程仓库到本地，方式也简单，在本地创建一个空文件夹【(2)test】，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/astronger/test.git</span><br></pre></td></tr></table></figure>
+<p>此时克隆的远程仓库的 master 分支到本地仓库【(2)test】，我们可以通过 git branch -a 来查看本地仓库和远程仓库的信息，-a 参数可以同时显示本地仓库和远程仓库的信息，如下： </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-5784fd94b4094209ae481d9b24895dc3.png" alt="image.png"></p>
+<p>我们看到远程仓库中已经有了 two 分支了，如果我们想把 two 分支也克隆下来，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git checkout -b two origin/two</span><br></pre></td></tr></table></figure>
+<p>表示根据远程仓库的 two 分支创建一个本地仓库的 two 分支，创建完成之后进行切换，也可以通过如下命令只创建不切换：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git branch two origin/two</span><br></pre></td></tr></table></figure>
+<p>此时我在 two 分支下修改 test.txt 文件并提交，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-1d1be36cfcb3410298ca888827c2cf23.png" alt="image.png"></p>
+<p>注意由于 two 分支就是从远程仓库克隆下来的，所以这里可以不添加 -u 参数。 </p>
+<h2 id="从远程仓库更新"><a href="#从远程仓库更新" class="headerlink" title="从远程仓库更新"></a>从远程仓库更新</h2><p>此时我们回到第一次最早的那个 【(1)test】本地仓库中，那个 test 仓库的 two 分支现在和远程仓库不一致了，我们可以通过 git pull 命令来更新，如下： </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-05817dc3c3b342e6978e9c492828cd2e.png" alt="image.png"></p>
+<p>其它文章：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101028450">Git 基本操作</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101033323">Git 分支管理</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101106544">git stash工作区储藏</a></p>
+<p> 参考：<a target="_blank" rel="noopener" href="https://www.javaboy.org/2019/0612/git-remote.html">https://www.javaboy.org/2019/0612/git-remote.html</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/11/09/Webstorm中 _.vue 文件报红-Webstorm中 _.vue 文件报红/" data-toggle="tooltip" data-placement="top"
+                           title="Webstorm中 *.vue 文件报红">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/09/29/git stash工作区储藏-git stash工作区储藏/" data-toggle="tooltip" data-placement="top"
+                           title="git stash工作区储藏">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SSH-KEY"><span class="toc-text">配置 SSH KEY</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E6%98%AF%E5%90%A6%E5%B7%B2%E6%9C%89-SSHKEY"><span class="toc-text">1.查看本地是否已有 SSHKEY</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%94%9F%E6%88%90-SSH"><span class="toc-text">2.生成 SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%B7%BB%E5%8A%A0-ssh-%E5%88%B0-ssh-agent-%E4%B8%AD"><span class="toc-text">3.添加 ssh 到 ssh-agent 中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%B0%86%E5%85%AC%E9%92%A5%E4%BF%9D%E5%AD%98%E5%9C%A8-GitHub"><span class="toc-text">4.将公钥保存在 GitHub</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-text">创建远程仓库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E8%81%94%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-text">关联远程仓库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A8%E9%80%81%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="toc-text">推送到远程仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E9%80%81%E5%88%B0master%E5%88%86%E6%94%AF"><span class="toc-text">推送到master分支</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A8%E9%80%81%E5%88%B0%E5%85%B6%E4%BB%96%E5%88%86%E6%94%AF"><span class="toc-text">推送到其他分支</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E8%8E%B7%E5%8F%96"><span class="toc-text">从远程仓库获取</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A6%96%E6%AC%A1%E8%8E%B7%E5%8F%96"><span class="toc-text">首次获取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93%E6%9B%B4%E6%96%B0"><span class="toc-text">从远程仓库更新</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Github"
+                           title="Github">Github</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

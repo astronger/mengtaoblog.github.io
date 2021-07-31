@@ -159,19 +159,194 @@
 
 <div class="post-preview "
      style="background-image: url('post-default.jpg')">
-    <a href="/2019/04/01/Spring Boot入门-Spring Boot入门/">
+    <a href="/2020/05/27/Spring Boot 多文件上传亲测-Spring Boot 多文件上传亲测/">
         <h2 class="post-title">
-            Spring Boot入门
+            Spring Boot 多文件上传亲测
         </h2>
         <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-01
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2020-05-27
         </p>
         
         <div class="post-content-preview">
             <p>
-                最近在看江南一点雨的教程以及视频，以下总结的笔记资料等将会参考他的为主，声明：仅供自己学习参考使用。
-总结一下Spring Boot的主要优点：
-为所有Spring开发者更快的入门开箱即用，提供各种默认配置来简化项目配置内嵌式容器简化Web项目没有冗余代码生成和XML配置的要求Spring Bo..
+                话不多说，直接上代码：
+1、HTML &lt;div class=&quot;form-group&quot;&gt;    &lt;label class=&quot;col-sm-3 control-label is-required&quot;&gt;多文件上传：&lt;/label&gt..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2020/05/26/解决 Thymeleaf 中 th_if、th_each、th_href、th_onclick 等问题亲测-解决 Thymeleaf 中 th_if、th_each、th_href、th_onclick 等问题亲测/">
+        <h2 class="post-title">
+            解决 Thymeleaf 中 th:if、th:each、th:href、th:onclick 等问题亲测
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2020-05-26
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                最近使用若依，对前端的 thymeleaf 语法不是很熟悉，下面是自己的笔记，大神请忽略。 
+一、th:ifgt:     great than（大于）&gt;ge：    great equal（大于等于）&gt;=eq：    equal（等于）==lt：    less than（小于）&..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2020/05/06/Illegal invocation 解决方法-Illegal invocation 解决方法/">
+        <h2 class="post-title">
+            Illegal invocation 解决方法
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2020-05-06
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                使用 ajax 传送数据时，出现如下图错误情况： 
+
+我的 ajax 代码如下：
+
+解决方法如下：因为此处使用 formData ，所以需要增加两个参数：
+contentType : false,processData : false,
+
+重新启动，问题解决！
+
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2020/01/05/Java 加密、解密PDF文档-Java 加密、解密PDF文档/">
+        <h2 class="post-title">
+            Java 加密、解密PDF文档
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2020-01-05
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                本篇文章将介绍通过Java来设置PDF文档保护的方法。我们可以设置仅用于查阅文档的密码，即该通过该密码打开文档仅用于文档阅读，无法编辑；也可以设置文档编辑权限的密码，即通过该密码打开文档时，文档为可编辑状态。
+使用工具Free Spire.PDF for Java V2.0.0：（免费版）
+首先..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/09/22/Spring Boot——YAML快速入门-Spring Boot——YAML快速入门/">
+        <h2 class="post-title">
+            Spring Boot——YAML快速入门
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-09-22
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                在Springboot中，推荐使用properties或者YAML文件来完成配置，但是对于较复杂的数据结构来说，YAML又远远优于properties。本文就快速介绍YAML的常见语法格式。
+先来看一个Springboot中的properties文件和对应YAML文件的对比：
+#properti..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/09/12/Spring Boot——实现定时任务的两种方式-Spring Boot ——实现定时任务的两种方式/">
+        <h2 class="post-title">
+            Spring Boot——实现定时任务的两种方式
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-09-12
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                一、@Scheduled使用 @Scheduled 非常容易，直接创建一个 Spring Boot 项目，并且添加 web 依赖 spring-boot-starter-web，项目创建成功后，在启动类添加 @EnableScheduling 注解，开启定时任务：
+@SpringBootAppl..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/07/20/Spring Boot——整合websocket构建在线聊天室（群聊/ 私聊）-Spring Boot——整合websocket构建在线聊天室（群聊/ 私聊）/">
+        <h2 class="post-title">
+            Spring Boot——整合websocket构建在线聊天室（群聊 / 私聊）
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-07-20
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                1.引入依赖&lt;dependency&gt;     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;     &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
+    <a href="/2019/07/10/Spring Security 使用 JSON 登录-Spring Security 使用 JSON 登录/">
+        <h2 class="post-title">
+            Spring Security 使用 JSON 登录
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-07-10
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                首先创建 SpringBoot 工程，添加 SpringSecurity 依赖，如下：
+&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;sprin..
             </p>
         </div>
     </a>
@@ -187,6 +362,10 @@
 
 <ul class="pager">
     
+    
+    <li class="next">
+        <a href="/tags/Spring-Boot/page/2/">Older Posts &rarr;</a>
+    </li>
     
 </ul>
 
@@ -245,13 +424,123 @@
                 <div class="tags">
                     
                     
+                    <a href="/tags/#CentOS" title="CentOS"
+                       rel="5">CentOS</a>
+                    
+                    
+                    
+                    <a href="/tags/#CentOS  | Docker" title="CentOS  | Docker"
+                       rel="2">CentOS  | Docker</a>
+                    
+                    
+                    
+                    <a href="/tags/#Redis | CentOS" title="Redis | CentOS"
+                       rel="1">Redis | CentOS</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Cloud" title="Spring Cloud"
+                       rel="21">Spring Cloud</a>
+                    
+                    
+                    
+                    <a href="/tags/#Docker" title="Docker"
+                       rel="6">Docker</a>
+                    
+                    
+                    
+                    <a href="/tags/#Docker | RabbitMQ" title="Docker | RabbitMQ"
+                       rel="2">Docker | RabbitMQ</a>
+                    
+                    
+                    
+                    <a href="/tags/#Docker | MySQL" title="Docker | MySQL"
+                       rel="1">Docker | MySQL</a>
+                    
+                    
+                    
+                    <a href="/tags/#Github" title="Github"
+                       rel="1">Github</a>
+                    
+                    
+                    
+                    <a href="/tags/#Git" title="Git"
+                       rel="5">Git</a>
+                    
+                    
+                    
+                    <a href="/tags/#IDEA" title="IDEA"
+                       rel="2">IDEA</a>
+                    
+                    
+                    
                     <a href="/tags/#Spring Boot" title="Spring Boot"
-                       rel="1">Spring Boot</a>
+                       rel="22">Spring Boot</a>
+                    
+                    
+                    
+                    <a href="/tags/#Jsp" title="Jsp"
+                       rel="1">Jsp</a>
+                    
+                    
+                    
+                    <a href="/tags/#MySQL" title="MySQL"
+                       rel="2">MySQL</a>
+                    
+                    
+                    
+                    <a href="/tags/#Nginx" title="Nginx"
+                       rel="1">Nginx</a>
+                    
+                    
+                    
+                    <a href="/tags/#RabbitMQ" title="RabbitMQ"
+                       rel="1">RabbitMQ</a>
+                    
+                    
+                    
+                    <a href="/tags/#Redis" title="Redis"
+                       rel="11">Redis</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Boot | Nginx" title="Spring Boot | Nginx"
+                       rel="1">Spring Boot | Nginx</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Boot | Redis" title="Spring Boot | Redis"
+                       rel="1">Spring Boot | Redis</a>
+                    
+                    
+                    
+                    <a href="/tags/#Spring Boot | Swagger2" title="Spring Boot | Swagger2"
+                       rel="1">Spring Boot | Swagger2</a>
+                    
+                    
+                    
+                    <a href="/tags/#CentOS  | Linux" title="CentOS  | Linux"
+                       rel="2">CentOS  | Linux</a>
+                    
+                    
+                    
+                    <a href="/tags/#WebStorm" title="WebStorm"
+                       rel="2">WebStorm</a>
+                    
+                    
+                    
+                    <a href="/tags/#CentOS  | MySQL | Linux" title="CentOS  | MySQL | Linux"
+                       rel="1">CentOS  | MySQL | Linux</a>
                     
                     
                     
                     <a href="/tags/#工作生活" title="工作生活"
-                       rel="1">工作生活</a>
+                       rel="2">工作生活</a>
+                    
+                    
+                    
+                    <a href="/tags/#halo个人博客" title="halo个人博客"
+                       rel="1">halo个人博客</a>
                     
                     
                 </div>

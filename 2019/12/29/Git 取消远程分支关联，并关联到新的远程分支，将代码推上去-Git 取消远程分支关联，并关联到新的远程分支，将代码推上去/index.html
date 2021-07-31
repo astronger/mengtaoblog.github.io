@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Git 取消远程分支关联，并关联到新的远程分支，将代码推上去｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/12/29/Git 取消远程分支关联，并关联到新的远程分支，将代码推上去-Git 取消远程分支关联，并关联到新的远程分支，将代码推上去/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Git 取消远程分支关联，并关联到新的远程分支，将代码推上去</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-12-29
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Git"
+                           title="Git">Git</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Git 取消远程分支关联，并关联到新的远程分支，将代码推上去
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h3 id="在工作中，经常需要将同一份代码传到不同的git仓库中去"><a href="#在工作中，经常需要将同一份代码传到不同的git仓库中去" class="headerlink" title="在工作中，经常需要将同一份代码传到不同的git仓库中去"></a>在工作中，经常需要将同一份代码传到不同的git仓库中去</h3><p>如果本地同样一份代码，已经关联了一个与远程分支，那么怎么才能解除原程分支，并关联到一个新的分支将代码提交到新的分支上去呢？ </p>
+<ol>
+<li>如果你已经在远程创建了一个分支，远程分支地址：<a target="_blank" rel="noopener" href="https://xxxxxxx/xxxx/xxxx.git">https://xxxxxxx/xxxx/xxxx.git</a> </li>
+<li>从命令行创建一个新的仓库，关联到该远程分支<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">touch README.md</span><br><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git remote add origin https://xxxxxxx/xxxx/xxxx.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure></li>
+<li>如果本地的代码，没有关联任何远程分支<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote add origin https://xxxxxxx/xxxx/xxxx.git</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure></li>
+<li>如果本地代码，已经关联了远程分支，则需要先解除关联<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote remove origin</span><br></pre></td></tr></table></figure></li>
+<li>解除后、重新关联新的远程分支，并将代码传上去<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/dev33/alioss-file on  master ⌚ 10:44:56</span><br><span class="line">$ git remote add origin https://xxxxxxx/xxxx/xxxx.git</span><br></pre></td></tr></table></figure></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">~/dev33/alioss-file on  master ⌚ 10:45:01</span><br><span class="line">$ git push -u origin master</span><br><span class="line">Counting objects: 102, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 8 threads.</span><br><span class="line">Compressing objects: 100% (82/82), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (102/102), 62.52 KiB | 7.81 MiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 102 (delta 26), reused 0 (delta 0)</span><br><span class="line">To https://xxxxxxx/xxxx/xxxx.git</span><br><span class="line"> * [new branch]      master -&gt; master</span><br><span class="line">Branch master <span class="built_in">set</span> up to track remote branch master from origin.</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>完成</li>
+</ol>
+<h3 id="还有一种简单粗暴的方法，如果此无需再关联其它分支，只需要将本地文件的-git删除即可。"><a href="#还有一种简单粗暴的方法，如果此无需再关联其它分支，只需要将本地文件的-git删除即可。" class="headerlink" title="还有一种简单粗暴的方法，如果此无需再关联其它分支，只需要将本地文件的.git删除即可。"></a>还有一种简单粗暴的方法，如果此无需再关联其它分支，只需要将本地文件的.git删除即可。</h3><p><img src="https://www.itmengtao.cn/upload/2020/11/image-4f3eb9f42689451691480521cefc3d6e.png" alt="image.png"></p>
+<p>删除后继续下面的流程即可。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git init     <span class="comment">#初始化仓库</span></span><br><span class="line">$ git add .    <span class="comment">#添加到暂存区</span></span><br><span class="line">$ git commit -m <span class="string">&quot;first commit&quot;</span>   <span class="comment">#将当前暂存区的文件提交到本地仓库</span></span><br><span class="line">$ git remote add origin https://xxxxxxx/xxxx/xxxx.git  <span class="comment">#将我们之前的本地仓库和这个远程仓库进行关联</span></span><br><span class="line">$ git push -u origin master   <span class="comment">#将内容推送到远程 master 分支上</span></span><br></pre></td></tr></table></figure>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/101059246">https://blog.csdn.net/ourstronger/article/details/101059246</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/30/docker解决删除镜像时出错 image is referenced in multiple repositories-docker解决删除镜像时出错 image is referenced in multiple repositories/" data-toggle="tooltip" data-placement="top"
+                           title="docker解决删除镜像时出错 image is referenced in multiple repositories">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/12/28/Redis字符串(STRING)的操作命令-Redis字符串(STRING)的操作命令/" data-toggle="tooltip" data-placement="top"
+                           title="Redis字符串(STRING)的操作命令">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E5%B7%A5%E4%BD%9C%E4%B8%AD%EF%BC%8C%E7%BB%8F%E5%B8%B8%E9%9C%80%E8%A6%81%E5%B0%86%E5%90%8C%E4%B8%80%E4%BB%BD%E4%BB%A3%E7%A0%81%E4%BC%A0%E5%88%B0%E4%B8%8D%E5%90%8C%E7%9A%84git%E4%BB%93%E5%BA%93%E4%B8%AD%E5%8E%BB"><span class="toc-text">在工作中，经常需要将同一份代码传到不同的git仓库中去</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%98%E6%9C%89%E4%B8%80%E7%A7%8D%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%8C%E5%A6%82%E6%9E%9C%E6%AD%A4%E6%97%A0%E9%9C%80%E5%86%8D%E5%85%B3%E8%81%94%E5%85%B6%E5%AE%83%E5%88%86%E6%94%AF%EF%BC%8C%E5%8F%AA%E9%9C%80%E8%A6%81%E5%B0%86%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E7%9A%84-git%E5%88%A0%E9%99%A4%E5%8D%B3%E5%8F%AF%E3%80%82"><span class="toc-text">还有一种简单粗暴的方法，如果此无需再关联其它分支，只需要将本地文件的.git删除即可。</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Git"
+                           title="Git">Git</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

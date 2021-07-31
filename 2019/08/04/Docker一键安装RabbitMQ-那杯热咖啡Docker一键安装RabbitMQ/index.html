@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Docker一键安装RabbitMQ｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/08/04/Docker一键安装RabbitMQ-那杯热咖啡Docker一键安装RabbitMQ/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Docker一键安装RabbitMQ</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-08-04
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Docker | RabbitMQ"
+                           title="Docker | RabbitMQ">Docker | RabbitMQ</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Docker一键安装RabbitMQ
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>AMQP（Advanced Message Queuing Protocol，高级消息队列协议）是一个进程间传递异步消息的网络协议。</p>
+<p>RabbitMQ是采用Erlang语言实现AMQP（Advanced Message Queuing Protocol，高级消息队列协议）的消息中间件，它最初起源于金融系统，用于在分布式系统中存储转发消息。</p>
+<p>MQ全称为Message Queue, 消息队列（MQ）是一种应用程序对应用程序的通信方法。应用程序通过读写出入队列的消息（针对应用程序的数据）来通信，而无需专用连接来链接它们。消息传递指的是程序之间通过在消息中发送数据进行通信，而不是通过直接调用彼此来通信，直接调用通常是用于诸如远程过程调用的技术。排队指的是应用程序通过 队列来通信。队列的使用除去了接收和发送应用程序同时执行的要求。其中较为成熟的MQ产品有IBM WEBSPHERE MQ等等。</p>
+<h2 id="什么是消息中间件"><a href="#什么是消息中间件" class="headerlink" title="什么是消息中间件"></a>什么是消息中间件</h2><p>消息（Message）是指在应用间传送的数据，消息可以很简单，如：文本字符串、JSON等，也可以很复杂，如：内嵌对象等。</p>
+<p>消息队列中间件（Message Queue Middleware，简称MQ）是指利用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成，通过提供消息传递和消息排队模型，可以在分布式环境下扩展进程间的通信。</p>
+<p>消息队列中间件，也可成为消息队列或者消息中间件，它一般有二种传递模式：</p>
+<ol>
+<li><p>点对点（P2P，Point-to-Point）模式<br>点对点模式是基于队列的，消息生产者发送消息到队列，消息消费者从队列中接收消息，队列的存在使得消息的异步传输成为可能。</p>
+</li>
+<li><p>发布/订阅（Pub/Sub）模式<br>发布订阅模式定义了如何向一个内容节点发布和订阅消息，这个内容节点成为主题，主题可以认为是消息传递的中介，消息发布者将消息发布到某个主题，而消息的订阅者则从主题中订阅消息。主题使得消息的订阅和消息的发布者互相保持独立，不需要进行接触即可保证消息的传递，发布/订阅模式在消息的一对多广播时采用。</p>
+</li>
+</ol>
+<h2 id="主要特性"><a href="#主要特性" class="headerlink" title="主要特性"></a>主要特性</h2><ul>
+<li><p>可伸缩性：集群服务</p>
+</li>
+<li><p>消息持久化：从内存持久化消息到硬盘，再从硬盘加载到内存</p>
+</li>
+<li><p>可靠性：使用一些机制来保证可靠性，如持久化、传输确认及发布确认等；</p>
+</li>
+<li><p>灵活的路由：在消息进入队列之前，通过交换器来路由消息。对于典型的路由功能，RabbitMQ已经提供了一些内置的交换器来实现；</p>
+</li>
+<li><p>扩展性：多个RabbitMQ节点可以组成一个集群，也可以根据实际业务情况动态地扩展集群中节点；</p>
+</li>
+<li><p>高可用性：队列可以在集群中的机器上设置镜像，使得在部分 节点出现问题的情况下队列仍然可用；</p>
+</li>
+<li><p>多种协议：RabbitMQ除了原生支持AMQP协议，还支持 STOMP、MQTT等多种消息中间件协议；</p>
+</li>
+<li><p>多语言客户端：RabbitMQ几乎支持所有常用语言，比如Java、 Python、Ruby、PHP、C#、JavaScript等；</p>
+</li>
+<li><p>管理界面：RabbitMQ提供了一个易用的用户界面，使得用户 可以监控和管理消息、集群中的节点等；</p>
+</li>
+<li><p>插件机制：RabbitMQ提供了许多插件，以实现从多方面进行 扩展，当然也可以编写自己的插件。</p>
+</li>
+</ul>
+<h2 id="RabbitMQ-核心概念"><a href="#RabbitMQ-核心概念" class="headerlink" title="RabbitMQ 核心概念"></a>RabbitMQ 核心概念</h2><ol>
+<li>Publisher：生产者，消息的发送方。</li>
+<li>Connection：网络连接。</li>
+<li>Channel：信道，多路复用连接中的一条独立的双向数据流通道。</li>
+<li>Exchange：交换器（路由器），负责消息的路由到相应队列。</li>
+<li>Binding：队列与交换器间的关联绑定。消费者将关注的队列绑定到指定交换器上，以便Exchange能准确分发消息到指定队列。</li>
+<li>Queue：队列，消息的缓冲存储区。</li>
+<li>Virtual Host：虚拟主机，虚拟主机提供资源的逻辑分组和分离。包含连接，交换，队列，绑定，用户权限，策略等。</li>
+<li>Broker：消息队列的服务器实体。</li>
+<li>Consumer：消费者，消息的接收方。</li>
+</ol>
+<h2 id="RabbitMQ安装"><a href="#RabbitMQ安装" class="headerlink" title="RabbitMQ安装"></a>RabbitMQ安装</h2><p>原始的安装方法有点复杂，现在有一个强大的东西叫Docker， 直接用docker一键安装快速方便。如果不会用docker的话<a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/category/9344348">请点击这里的教程</a>安装学习。这里就假设已经成功安装了docker.</p>
+<p>1.首先来到docker hub首页：<a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com</a>  ，搜索RabbitMQ，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-d3df41e9b86c4f08a13dcd987063288e.png" alt="image.png"></p>
+<p>找到Management Plugin，复制下列命令:<br><img src="https://www.itmengtao.cn/upload/2020/11/image-e361152089c749ba8dab5a4320b948ff.png" alt="image.png"><br> 然后打开命令框，先开启docker，然后将刚才复制的命令粘进去，此处的 -P 是随机端口，便于测试</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[root@localhost lemon]# service docker start</span><br><span class="line">Redirecting to /bin/systemctl start docker.service</span><br><span class="line">[root@localhost lemon]# docker run -d --hostname my-rabbit --name some-rabbit -P rabbitmq:3-management</span><br><span class="line">f5eb3c4645a2b844253021210a171143eeadac912f21a8c9d7be0f8371fcad2e</span><br></pre></td></tr></table></figure>
+<p>然后看有没有跑起来，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost lemon]# docker ps</span><br><span class="line">CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS              PORTS                                                                                                                                                     NAMES</span><br><span class="line">f5eb3c4645a2        rabbitmq:3-management   &quot;docker-entrypoint.s…&quot;   3 minutes ago       Up 3 minutes        0.0.0.0:32773-&gt;4369/tcp, 0.0.0.0:32772-&gt;5671/tcp, 0.0.0.0:32771-&gt;5672/tcp, 0.0.0.0:32770-&gt;15671/tcp, 0.0.0.0:32769-&gt;15672/tcp, 0.0.0.0:32768-&gt;25672/tcp   some-rabbit</span><br></pre></td></tr></table></figure>
+<p>这里的15672为管理端口，映射到了32769端口。通信端口为 5672，映射到了32771 端口，浏览器输入：<a target="_blank" rel="noopener" href="http://192.168.1.132:32769/">http://192.168.1.132:32769</a></p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-118e3df2f3cf4ac28201598770cd1bbd.png" alt="image.png"></p>
+<p> 如果看到上面页面就说明你的rabbitmq已经安装好了，默认用户名密码为：<strong>guest</strong> ，点击登录。如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-1479343afc154b01b368e3628a8a3ce7.png" alt="image.png"></p>
+<p>登陆成功页面。 </p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/08/15/Docker 命令（快速理解）-Docker 命令（快速理解）/" data-toggle="tooltip" data-placement="top"
+                           title="Docker 命令（快速理解）">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/07/31/CentOS 7.x 安装Docker-CentOS 7.x 安装Docker/" data-toggle="tooltip" data-placement="top"
+                           title="CentOS 7.x 安装Docker">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-text">什么是消息中间件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%89%B9%E6%80%A7"><span class="toc-text">主要特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-text">RabbitMQ 核心概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ%E5%AE%89%E8%A3%85"><span class="toc-text">RabbitMQ安装</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Docker | RabbitMQ"
+                           title="Docker | RabbitMQ">Docker | RabbitMQ</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

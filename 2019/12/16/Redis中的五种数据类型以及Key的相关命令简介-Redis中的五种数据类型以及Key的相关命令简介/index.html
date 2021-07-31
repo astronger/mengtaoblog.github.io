@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Redis中的五种数据类型以及Key的相关命令简介｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/12/16/Redis中的五种数据类型以及Key的相关命令简介-Redis中的五种数据类型以及Key的相关命令简介/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Redis中的五种数据类型以及Key的相关命令简介</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-12-16
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Redis"
+                           title="Redis">Redis</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Redis中的五种数据类型以及Key的相关命令简介
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>上篇文章我们介绍了如何在 <a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger/article/details/100590486">Linux(CentOS 7.x)中安装Redis</a>，本文我们来了解下Redis中的<strong>五种</strong>数据类型。</p>
+<h2 id="五大数据类型介绍"><a href="#五大数据类型介绍" class="headerlink" title="五大数据类型介绍"></a>五大数据类型介绍</h2><p>redis中的数据都是以<strong>key / value</strong>的形式存储的，五大数据类型主要是指value的数据类型，包含如下五种：</p>
+<h2 id="1-STRING"><a href="#1-STRING" class="headerlink" title="1.STRING"></a>1.STRING</h2><p>STRING是redis中最基本的数据类型，redis中的STRING类型是二进制安全的，即它可以包含任何数据，比如一个序列化的对象甚至一个jpg图片，要注意的是redis中的字符串大小上限是<strong>512M</strong>。</p>
+<h2 id="2-LIST"><a href="#2-LIST" class="headerlink" title="2.LIST"></a>2.LIST</h2><p>LIST是一个简单的字符串列表，按照插入顺序进行排序，我们可以从LIST的头部(LEFT)或者尾部(RIGHT)插入一个元素，也可以从LIST的头部(LEFT)或者尾部(RIGHT)弹出一个元素。</p>
+<h2 id="3-HASH"><a href="#3-HASH" class="headerlink" title="3.HASH"></a>3.HASH</h2><p>HASH类似于Java中的Map，是一个键值对集合，在redis中可以用来存储对象。</p>
+<h2 id="4-SET"><a href="#4-SET" class="headerlink" title="4.SET"></a>4.SET</h2><p>SET是STRING类型的无序集合，不同于LIST，SET中的元素不可以重复。</p>
+<h2 id="5-ZSET"><a href="#5-ZSET" class="headerlink" title="5.ZSET"></a>5.ZSET</h2><p>ZSET和SET一样，也是STRING类型的元素的集合，不同的是ZSET中的每个元素都会关联一个double类型的分数，ZSET中的成员都是唯一的，但是所关联的分数可以重复。</p>
+<p>OK，通过上面的介绍，相信小伙伴们对五大数据类型都有一个大致的认识了，接下来我们就来看看这<strong>五种数据类型要怎么操作</strong>。</p>
+<h2 id="key相关的命令"><a href="#key相关的命令" class="headerlink" title="key相关的命令"></a>key相关的命令</h2><p>由于五大数据类型的数据结构本身有差异，因此对应的命令也会不同，但是有一些命令不管对于哪种数据类型都是存在的，我们今天就先来看看这样一些特殊的命令。</p>
+<p>首先通过redis-server redis.conf命令启动redis，再通过redis-cli命令进入到控制台中，如下：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-82a49cb20c1f4d3ea4f5a23a63651063.png" alt="image.png"></p>
+<p> 首先我们可以通过<strong>set</strong>命令插入一条记录：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-a1331eeac61a44a599239ad68069b2c7.png" alt="image.png"></p>
+<h2 id="DEL命令"><a href="#DEL命令" class="headerlink" title="DEL命令"></a>DEL命令</h2><p>看到OK表示插入成功。通过DEL命令我们可以删除一个已经存在的key，如下：</p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/11/image-74b70e691080437ebe42722383eba4ec.png" alt="image.png"></p>
+<h2 id="DUMP命令"><a href="#DUMP命令" class="headerlink" title="DUMP命令"></a>DUMP命令</h2><p>DUMP命令可以序列化给定的key，并返回序列化之后的值：</p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/11/image-4bde46c0dc514336b7e1e5e8f3cdc4b7.png" alt="image.png"></p>
+<h2 id="EXISTS命令"><a href="#EXISTS命令" class="headerlink" title="EXISTS命令"></a>EXISTS命令</h2><p>EXISTS命令用来检测一个给定的key是否存在，如下(结果表示k1存在而k2不存在。)：</p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/11/image-3136bf16a03c43a5ba86280e81cf1c20.png" alt="image.png"></p>
+<h2 id="TTL命令"><a href="#TTL命令" class="headerlink" title="TTL命令"></a>TTL命令</h2><p>TTL命令可以查看一个给定key的有效时间：</p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/11/image-e9acb5d771074650a6f011cc8269b554.png" alt="image.png"></p>
+<p>-2表示key不存在或者已过期；-1表示key存在并且没有设置过期时间（永久有效）。</p>
+<p>当然，我们可以通过下面的命令给key设置一个过期时间： </p>
+<h2 id="EXPIRE命令"><a href="#EXPIRE命令" class="headerlink" title="EXPIRE命令"></a>EXPIRE命令</h2><p>EXPIRE命令可以给key设置有效期 (单位:秒)，在有效期过后，key会被销毁。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-5481beaf81ee44dea90dcab825c8724e.png" alt="image.png"></p>
+<p>设置有效期30秒，TTL k1返回22表示这个key1的有效期还剩22秒。 </p>
+<h2 id="PERSIST命令"><a href="#PERSIST命令" class="headerlink" title="PERSIST命令"></a>PERSIST命令</h2><p>PERSIST命令表示移除一个key的过期时间，这样该key就永远不会过期：</p>
+<p> <img src="https://www.itmengtao.cn/upload/2020/11/image-021109a919064730baede9952711cf98.png" alt="image.png"></p>
+<h2 id="PEXPIRE命令"><a href="#PEXPIRE命令" class="headerlink" title="PEXPIRE命令"></a>PEXPIRE命令</h2><p>PEXPIRE命令的功能和EXPIRE命令的功能基本一致，只不过这里设置的参数是毫秒：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-e3984803b63d47a8972b15fb50496679.png" alt="image.png"></p>
+<h2 id="PTTL命令"><a href="#PTTL命令" class="headerlink" title="PTTL命令"></a>PTTL命令</h2><p>PTTL命令和TTL命令基本一致，只不过PTTL返回的是毫秒数：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-b5a39790f2a349e7a634a8cfa71ae8e7.png" alt="image.png"></p>
+<h2 id="KEYS-命令"><a href="#KEYS-命令" class="headerlink" title="KEYS 命令"></a>KEYS 命令</h2><p>KEYS命令可以获取满足给定模式的所有key，比如：<br><img src="https://www.itmengtao.cn/upload/2020/11/image-c476a541a62b45ca97063b41ee5827f1.png" alt="image.png"></p>
+<p> KEYS <em>表示获取所有的KEY，</em>也可以是一个正则表达式。</p>
+<p>参考：官方文档 <a target="_blank" rel="noopener" href="http://www.redis.cn/commands.html">http://www.redis.cn/commands.html</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/27/Redis字符串(STRING)中BIT相关命令-Redis字符串(STRING)中BIT相关命令/" data-toggle="tooltip" data-placement="top"
+                           title="Redis字符串(STRING)中BIT相关命令">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/11/25/在Adobe Acrobat DC中设置PDF单页连续-在Adobe Acrobat DC中设置PDF单页连续/" data-toggle="tooltip" data-placement="top"
+                           title="在Adobe Acrobat DC中设置PDF单页连续">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="toc-text">五大数据类型介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-STRING"><span class="toc-text">1.STRING</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-LIST"><span class="toc-text">2.LIST</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-HASH"><span class="toc-text">3.HASH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-SET"><span class="toc-text">4.SET</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-ZSET"><span class="toc-text">5.ZSET</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#key%E7%9B%B8%E5%85%B3%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-text">key相关的命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DEL%E5%91%BD%E4%BB%A4"><span class="toc-text">DEL命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DUMP%E5%91%BD%E4%BB%A4"><span class="toc-text">DUMP命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EXISTS%E5%91%BD%E4%BB%A4"><span class="toc-text">EXISTS命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TTL%E5%91%BD%E4%BB%A4"><span class="toc-text">TTL命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EXPIRE%E5%91%BD%E4%BB%A4"><span class="toc-text">EXPIRE命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PERSIST%E5%91%BD%E4%BB%A4"><span class="toc-text">PERSIST命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PEXPIRE%E5%91%BD%E4%BB%A4"><span class="toc-text">PEXPIRE命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PTTL%E5%91%BD%E4%BB%A4"><span class="toc-text">PTTL命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KEYS-%E5%91%BD%E4%BB%A4"><span class="toc-text">KEYS 命令</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Redis"
+                           title="Redis">Redis</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

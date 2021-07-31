@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Boot ——devtools 热部署的几种方式（详细）｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/06/10/Spring Boot ——devtools 热部署的几种方式（详细）-Spring Boot ——devtools 热部署的几种方式（详细）/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Boot ——devtools 热部署的几种方式（详细）</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-06-10
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Boot ——devtools 热部署的几种方式（详细）
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="（一）方法一"><a href="#（一）方法一" class="headerlink" title="（一）方法一"></a>（一）方法一</h2><p>添加DevTools依赖：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-fd89c63e16a54b6c8e5763c721fd1d26.png" alt="image.png"></p>
+<p>pom依赖如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">              <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-devtools<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span><span class="comment">&lt;!-- optional=true,依赖不会传递，该项目依赖devtools；之后依赖myboot项目的项目如果想要使用devtools，需要重新引入 --&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>当配置了 devtools 后，我们在classpath修改任何文件项目都将会自动重启。</strong></p>
+<p>当我们再次启动项目的时候，使用的加载器就变为了 restartedMain 了，说明热部署已经成功。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-ff6b876d68e843e29cd5204ec7b96aab.png" alt="image.png"></p>
+<p>当然 IDEA默认是不会去帮你自动编译的，需要打开Settings，选择Compiler，开启自动编译。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-70c8f8d815ed41eca7bbd4d7933b81e2.png" alt="image.png"></p>
+<p>然后Ctrl+Shift+Alt+/，选择Registry</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-b610c41ea42146c4bc95d34dfe460fc6.png" alt="image.png"></p>
+<p>compiler.automake.allow.when.app.running后面的勾也需要打上。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-fa35564f27c1437db7e5b41350bfa4ce.png" alt="image.png"></p>
+<p>至此，IDEA中SpringBoot集成DevTools实现热部署也实现了。DevTools会监听classpath下的文件变动，并且会在保存文件时立即重启应用。但是这样实时跟进修改的会影响电脑性能，意义也不大，除非你的电脑配置高。</p>
+<h2 id="（二）方法二"><a href="#（二）方法二" class="headerlink" title="（二）方法二"></a>（二）方法二</h2><p>还有一种方式可以跟进热部署，我们可以在application.properties中配置如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">spring.devtools.restart.trigger-file=.trigger-file  <span class="comment">//.trigger-file随便起的名字</span></span><br></pre></td></tr></table></figure>
+<p>在resources文件夹新建 <strong>.trigger-file</strong> 文件，然后每次当你想重新启动的时候，就去改动一下.trigger-file文件内容即可（内容可随意修改），修改完后项目就会自动重启，<strong>否则</strong>无论修改多少文件都不会重启，效率比较高点。</p>
+<h2 id="（三）全局配置"><a href="#（三）全局配置" class="headerlink" title="（三）全局配置"></a>（三）全局配置</h2><p>如果你的项目中有很多个spring boot模块，特别是做微服务的话，那么此时可以进行全局配置来控制自动重启的问题。如何解决呢？</p>
+<p>先在系统用户目录下创建文件，命名为：**.spring-boot-devtools.properties**</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-f41401015b68448892380fd0c088984b.png" alt="image.png"></p>
+<p>打开文件写入: spring.devtools.restart.trigger-file=.trigger-file </p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-74d3d15e5b7c4e9d999e17b7fd0c5dfd.png" alt="image.png"></p>
+<p>和之前一样，resources文件夹下创建 .trigger-file文件，此处的.trigger-file要和刚才创建的文件内容一样，均使用.trigger-file</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-3a9d016d961544c881cb8a53366f343b.png" alt="image.png"></p>
+<p>然后就可以了，重启项目，修改代码内容后在.trigger-file文件内输入内容后项目就会自动重启，原理和上面一样。</p>
+<p><em><strong>这个全局的配置对于当前电脑上任何使用devtools模块的spring boot项目都有效。</strong></em></p>
+<h2 id="（四）禁用热部署（禁用自动重启）"><a href="#（四）禁用热部署（禁用自动重启）" class="headerlink" title="（四）禁用热部署（禁用自动重启）"></a>（四）禁用热部署（禁用自动重启）</h2><p>如果使用过程中不想项目自动重启，并且还配置了devtools依赖不想删掉，怎么办呢？</p>
+<p>只需在application.properties中添加一行配置即可，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-69b12b1c39e44683936f1bfcf19f0930.png" alt="image.png"></p>
+<p>或者修改启动类的配置，如下图，和上面的原理一样，两种方式都行：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-cb9b83ea275f40a9867b69dd9fa78646.png" alt="image.png"></p>
+<p>配置完后，重新启动项目，修改文件后，项目就不会自动重启了。</p>
+<h3 id="另外："><a href="#另外：" class="headerlink" title="另外："></a>另外：</h3><p>（1）某些资源在更改时不一定需要触发重新启动。例如, Thymeleaf 模板可以就地进行编辑。默认情况下更改资源路径包括了：/META-INF/maven, /META-INF/resources ,/resources ,/static ,/public 或者 /templates 不会触发重新启动, 但会触发实时重新加载。</p>
+<p>如果逆向排除这些路径，可以使用如下配置，<strong>也就是说以下的文件目录如果有改动将会触发重启：</strong></p>
+<p>spring.devtools.restart.exclude=classpath:/static/<strong>,public/</strong></p>
+<p>　　（2）如果要保留这些默认值并添加其他排除项, 请使用 spring.devtools.restart.additional-exclude 属性代替。</p>
+<p>　　（3）通过 System.setProperty(“spring.devtools.restart.enabled”, “false”); 方法，可以在SpringApplication.run()方法运行天使用关闭 devtools。</p>
+<p>注意点：devtools 由于是双类加载机制，再结合了通用Mapper后可能会出现 java.lang.ClassCastException 异常(例如：说class x.x.A cannot be cast to x.x.A。)。</p>
+<p>　　<strong>解决方案就如下：</strong></p>
+<p>　　在 src/main/resources 中创建 META-INF 目录，在此目录下添加 spring-devtools.properties 配置，内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">　　restart.include.mapper=/mapper-[\\w-\\.]+jar</span><br><span class="line">　　restart.include.pagehelper=/pagehelper-[\\w-\\.]+jar</span><br></pre></td></tr></table></figure>
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/06/12/Spring Cache + Redis-Spring Cache + Redis/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cache + Redis">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/06/05/IDEA 中java文件右下角红色J的解决方法-IDEA 中java文件右下角红色J的解决方法/" data-toggle="tooltip" data-placement="top"
+                           title="IDEA 中java文件右下角红色J的解决方法">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BC%88%E4%B8%80%EF%BC%89%E6%96%B9%E6%B3%95%E4%B8%80"><span class="toc-text">（一）方法一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BC%88%E4%BA%8C%EF%BC%89%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="toc-text">（二）方法二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BC%88%E4%B8%89%EF%BC%89%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE"><span class="toc-text">（三）全局配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BC%88%E5%9B%9B%EF%BC%89%E7%A6%81%E7%94%A8%E7%83%AD%E9%83%A8%E7%BD%B2%EF%BC%88%E7%A6%81%E7%94%A8%E8%87%AA%E5%8A%A8%E9%87%8D%E5%90%AF%EF%BC%89"><span class="toc-text">（四）禁用热部署（禁用自动重启）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%A6%E5%A4%96%EF%BC%9A"><span class="toc-text">另外：</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

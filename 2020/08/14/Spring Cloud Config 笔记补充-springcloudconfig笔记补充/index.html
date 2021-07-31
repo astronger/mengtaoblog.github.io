@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Cloud Config 笔记补充｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/08/14/Spring Cloud Config 笔记补充-springcloudconfig笔记补充/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Cloud Config 笔记补充</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-08-14
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Cloud Config 笔记补充
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>@[TOC](Spring Cloud Config)</p>
+<h1 id="1-基本用法"><a href="#1-基本用法" class="headerlink" title="1. 基本用法"></a>1. 基本用法</h1><h2 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h2><p>Spring Ccloud Config 是一个分布式系统配置管理的解决方案，它包含了 Client 和 Server 。配置文件放在 Server 端，通过接口的形式提供给 Client。</p>
+<p><strong>主要功能</strong>：</p>
+<ul>
+<li>集中管理各个微服务/环境的配置文件(中央仓库 统一打包 发快递)</li>
+<li>支持多种开发语言和高并发查询</li>
+<li>提供server(服务端)和客户端(client)</li>
+<li>配置文件一经修改 可快速生效 但是client立刻生效需要中间件</li>
+<li>配置文件通过git/svn进行管理(支持版本回退)</li>
+</ul>
+<h2 id="1-2-准备工作-提交文件"><a href="#1-2-准备工作-提交文件" class="headerlink" title="1.2 准备工作-提交文件"></a>1.2 准备工作-提交文件</h2><p>在本地找一个位置，新建目录 client1 添加 3 个文件.properties结尾，上传到git上。 一个文件夹代表一个微服务。</p>
+<p><img src="https://img-blog.csdnimg.cn/20201120113421795.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="1-3-ConfigServer搭建"><a href="#1-3-ConfigServer搭建" class="headerlink" title="1.3 ConfigServer搭建"></a>1.3 ConfigServer搭建</h2><p>首先创建一个 ConfigServer 工程，添加如下依赖：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201120113711145.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>完事后启动添加注解：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableConfigServer</span>  <span class="comment">// 启动ConfigServer</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConfigServerApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ConfigServerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改配置文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.application.name=config-server</span><br><span class="line">server.port=8081</span><br><span class="line"></span><br><span class="line"># 配置文件仓库地址</span><br><span class="line">spring.cloud.config.server.git.uri=https://github.com/xxx/configRepo.git</span><br><span class="line"></span><br><span class="line"># 仓库中， 配置文件的目录</span><br><span class="line">spring.cloud.config.server.git.search-paths=client1</span><br><span class="line"></span><br><span class="line">spring.cloud.config.server.git.username=xxxx@163.com</span><br><span class="line">spring.cloud.config.server.git.password=</span><br></pre></td></tr></table></figure>
+
+<p>然后启动 ConfigServer 项目，就可以访问配置文件了，访问地址： <a target="_blank" rel="noopener" href="http://localhost:8081/client1/prod/main">http://localhost:8081/client1/prod/main</a> （github上面master分支现在已经没有了）</p>
+<p>接下来修改本地配置文件并重新提交到 GitHub ，此时，刷新 ConfigServer 接口，就可以及时看到更改的内容。</p>
+<p> <strong>访问规则</strong>：</p>
+<ul>
+<li>/{application}/{profile}[/{label}] /{application}-{profile}.yml</li>
+<li>/{label}/{application}-{profile}.yml</li>
+<li> /{application}-{profile}.properties</li>
+<li> /{label}/{application}-{profile}.properties</li>
+</ul>
+<blockquote>
+<p>{application} 就是应用名称，对应到配置文件上来，就是配置文件的名称部分，例如我上面创建的配置文件。<br>{profile} 就是配置文件的版本，我们的项目有开发版本、测试环境版本、生产环境版本，对应到配置文件上来就是以 application-{profile}.yml 加以区分，例如application-dev.yml、application-sit.yml、application-prod.yml。<br>{label} 表示 git 分支，默认是 master 分支，如果项目是以分支做区分也是可以的，那就可以通过不同的 label 来控制访问不同的配置文件了。</p>
+</blockquote>
+<h2 id="1-4-ConfigClient搭建"><a href="#1-4-ConfigClient搭建" class="headerlink" title="1.4 ConfigClient搭建"></a>1.4 ConfigClient搭建</h2><p>首先创建一个 Spring Boot 项目，添加如下依赖：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201121113602341.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>项目创建成功后，在 Resoures 目录下，添加 <strong>boostrap.properties</strong> 配置(boostrap.properties 优先级高于 application.properties)，内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 下面三行配置，分别对应 config-server 中的 &#123;application&#125;、&#123;profile&#125;以及&#123;label&#125;占位符</span><br><span class="line">spring.application.name=client1</span><br><span class="line">spring.cloud.config.profile=dev</span><br><span class="line">spring.cloud.config.label=main</span><br><span class="line">spring.cloud.config.uri=http://localhost:8081</span><br><span class="line">server.port=8082</span><br></pre></td></tr></table></figure>
+<p>接下来创建一个HelloController 测试：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;javaboy&#125;&quot;)</span></span><br><span class="line">    String javaboys;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> javaboys;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>访问：<a target="_blank" rel="noopener" href="http://localhost:8082/hello">http://localhost:8082/hello</a> </p>
+<h2 id="1-5-配置"><a href="#1-5-配置" class="headerlink" title="1.5 配置"></a>1.5 配置</h2><p>使用占位符灵活控制查询目录。<br>修改 config-server 配置文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.cloud.config.server.git.search-paths=&#123;application&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 {application} 占位符，表示链接上来的 client1 的 spring.application.name 属性的值。<br>在 config-server 中，也可以用 {profile} 表示 client 的 spring.cloud.config.profile，也可以用 {label} 表示 client 的 spring.cloud.config.label<br>虽然在实际开发中，配置文件一般都是放在 Git 仓库，但是 config-server 也支持将配置文件放在 classpath 下。<br>在 config-server 中添加如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 表示让 config-server 从 classpath 下查找配置，而不是去 Git 仓库中查找</span><br><span class="line">spring.profiles.active=native</span><br></pre></td></tr></table></figure>
+
+<p>也可以在 config-server 中，添加如下配置，表示指定配置文件的位置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.cloud.config.server.native.search-locations=file:/E:/properties/</span><br></pre></td></tr></table></figure>
+<h1 id="2-配置文件加解密"><a href="#2-配置文件加解密" class="headerlink" title="2. 配置文件加解密"></a>2. 配置文件加解密</h1><h2 id="2-1-常见加密方案"><a href="#2-1-常见加密方案" class="headerlink" title="2.1 常见加密方案"></a>2.1 常见加密方案</h2><ul>
+<li>不可逆加密  </li>
+<li>可逆加密</li>
+</ul>
+<p><strong>不可逆加密</strong>：</p>
+<blockquote>
+<p>理论上无法根据已加密的密文推导出明文(常用算法 MD5消息摘要算法 SHA安全散列算法) ，一般用在密码加密上。</p>
+</blockquote>
+<p><strong>可逆加密</strong>：</p>
+<blockquote>
+<p> <strong>对称加密</strong>：加密和解密密钥是一样的(算法 aes 3des des)。</p>
+</blockquote>
+<blockquote>
+<p> <strong>非对称加密</strong>：加密的密钥和解密的密钥不同。加密的称为公钥，可以给任何人； 解密的叫私钥(只有自己知道)。 常见算法RSA</p>
+</blockquote>
+<h2 id="2-2-对称加密"><a href="#2-2-对称加密" class="headerlink" title="2.2 对称加密"></a>2.2 对称加密</h2><p>首先下载不限长度的JCE：<a target="_blank" rel="noopener" href="https://www.oracle.com/technetwork/cn/java/javase/downloads/jce8-download-2133166-zhs.html">oracle中下载</a><br>将下载的文件解压，解压出来的 jar 拷贝到 Java 安装目录中： E:**\lib\security<br>然后，在 config-server 的 bootstrap.properties 配置文件中，添加如下内容配置密钥：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 密钥</span><br><span class="line">encrypt.key=javaboy</span><br></pre></td></tr></table></figure>
+<p>然后启动 config-server 访问如下地址，查看密钥配置是否OK：<br><img src="https://img-blog.csdnimg.cn/2020112311460925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20201123114810543.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>然后在 postman 访问：<a target="_blank" rel="noopener" href="http://localhost:8081/encrypt">http://localhost:8081/encrypt</a> ，这是一个 post 请求，访问该地址，可以对一段明文进行加密。把加密后的明文存储到Git仓库中，存储时，要加一个 <strong>{cipher}</strong> 前：<br><img src="https://img-blog.csdnimg.cn/20201123114959100.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>修改本地文件如下，并提交至github 上去。<br><img src="https://img-blog.csdnimg.cn/2020112313543914.png#pic_center" alt="在这里插入图片描述"><br>然后访问： <a target="_blank" rel="noopener" href="http://localhost:8081/client1/dev/main">http://localhost:8081/client1/dev/main</a> 查看效果，如下：<br><img src="https://img-blog.csdnimg.cn/20201123140003966.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>config-client 需要重启才会感知并生效(后续考虑用中间件等办法解决)。config-client 重启后访问如下：<br><img src="https://img-blog.csdnimg.cn/20201123141904113.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="2-3-非对称加密"><a href="#2-3-非对称加密" class="headerlink" title="2.3 非对称加密"></a>2.3 非对称加密</h2><p>首先生成一个密钥对：<br>在命令行执行如下命令，生成 keystore :</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">keytool -genkeypair -alias config-server -keyalg RSA -keystore F:\BaiduNetdiskDownload\config-server.keystore</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>命令执行完后，拷贝生成的 keystore 文件到 config-server 的 resources 目录下。<br>然后在 config-server 的 bootstrap.properties 目录中，添加如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">encrypt.key-store.location=config-server.keystore</span><br><span class="line">encrypt.key-store.alias=config-server</span><br><span class="line">encrypt.key-store.password=111111</span><br><span class="line">encrypt.key-store.secret=111111</span><br></pre></td></tr></table></figure>
+<p>在pom.xml 的 build 节点上，添加如下配置，防止 keystore 文件被过滤。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.keystore<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后重启 config-server ，测试方法与对称加密一致。<br><img src="https://img-blog.csdnimg.cn/20201123144941976.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>接下来加密文件 ，并cv 到github 上进行测试。<br><img src="https://img-blog.csdnimg.cn/20201123145525452.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>重启/启动 config-server和 config-client ，访问如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123145812995.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20201123145744497.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="3-安全管理"><a href="#3-安全管理" class="headerlink" title="3. 安全管理"></a>3. 安全管理</h1><p>防止用户直接通过访问 config-server 看到配置文件内容，我们可以用 spring security 来保护 config-server 接口。<br>首先在 config-server 中添加 spring security 依赖：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>添加完依赖后，config-server 中的接口就被保护起来了。<br>默认生成的密码不好记，所以我们可以在 config-server 中配置自己的密码。<br>在 config-server 的配置文件中，添加如下配置，固定用户名密码：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.security.user.name=user</span><br><span class="line">spring.security.user.password=321</span><br></pre></td></tr></table></figure>
+<p>然后在 config-client 的 bootstrap.properties 配置文件中，添加如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.cloud.config.username=user</span><br><span class="line">spring.cloud.config.password=321</span><br></pre></td></tr></table></figure>
+<p>重 config-server和 config-client ，访问如下即成功：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201123154633809.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="4-服务化"><a href="#4-服务化" class="headerlink" title="4. 服务化"></a>4. 服务化</h1><p>首先启动 Eureka 。<br>然后让 config-server 和 config-client 都注册到 Eureka。给他两添加如下依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后在两个 application.properties 配置文件中配置注册信息。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
+<p>接下来修改 config-client 配置文件，不再直接写死 config-server 地址。如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 下面三行配置，分别对应 config-server 中的 &#123;application&#125;、&#123;profile&#125;以及&#123;label&#125;占位符</span><br><span class="line">spring.application.name=client1</span><br><span class="line">spring.cloud.config.profile=test</span><br><span class="line">spring.cloud.config.label=main</span><br><span class="line">#spring.cloud.config.uri=http://localhost:8081</span><br><span class="line"></span><br><span class="line"># 开启通过 eureka 获取 config-server 的功能</span><br><span class="line">spring.cloud.config.discovery.enabled=true</span><br><span class="line"># 配置 config-server 服务名称</span><br><span class="line">spring.cloud.config.discovery.service-id=config-server</span><br><span class="line">server.port=8082</span><br><span class="line"></span><br><span class="line">spring.cloud.config.username=user</span><br><span class="line">spring.cloud.config.password=321</span><br><span class="line"></span><br><span class="line"># 注册 eureka</span><br><span class="line">eureka.client.serviceUrl.defaultZone=http://localhost:1111/eureka/</span><br></pre></td></tr></table></figure>
+<p>加入 eureka client 之后，启动 config-server 可能会报错。此时我们重新生成一个 jks 格式的密钥。cmd命令框：</p>
+<blockquote>
+<p>keytool -genkeypair -alias new-config-server -keyalg RSA -keypass 123456 -keystore D:\git\config-server.jks -storepass 123456</p>
+</blockquote>
+<p>生成之后，将文件拷贝到 configserver 的 resources 目录下，同时修改 bootstrap.properties 配置。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 密钥 【对称加密】</span><br><span class="line">#encrypt.key=javaboy</span><br><span class="line"></span><br><span class="line">encrypt.key-store.location=classpath:config-server.jks</span><br><span class="line">encrypt.key-store.alias=mytestkey</span><br><span class="line">encrypt.key-store.password=111111</span><br><span class="line">encrypt.key-store.secret=111111</span><br><span class="line"></span><br><span class="line">spring.security.user.name=user</span><br><span class="line">spring.security.user.password=321</span><br></pre></td></tr></table></figure>
+<p>同时修改 pom 文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">		<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.yml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.jks<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--                    &lt;include&gt;**/*.keystore&lt;/include&gt;--&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>为了得到效果 非对称加密那部分就不用了。修改 config-client 配置文件：</p>
+<blockquote>
+<p>config-client profile: test</p>
+</blockquote>
+<p>重启后访问成功如下：<br><img src="https://img-blog.csdnimg.cn/20201124100703488.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="5-动态刷新-config-client感知数据更新"><a href="#5-动态刷新-config-client感知数据更新" class="headerlink" title="5. 动态刷新(config-client感知数据更新)"></a>5. 动态刷新(config-client感知数据更新)</h1><p>当配置文件发生变化后，config-server 可以及时感知到变化，但是 config-client 不会及时感知到变化，默认情况下， config-client 只有重启才会加载到最新的配置文件（实际上这个在后面可以结合消息中间件来做，这里为了简单先这样做）。<br>首先给 config-client 添加如下依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-actuator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后，添加配置，使 refresh 端点暴露出来：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">management.endpoints.web.exposure.include=refresh</span><br></pre></td></tr></table></figure>
+<p>最后，再给 config-client 使用了配置文件的地方加上 @RefreshScope 注解，这样当配置改变后，只需要调用 refresh 端点，config-client 中的配置就可以自动刷新。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RefreshScope</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;javaboy&#125;&quot;)</span></span><br><span class="line">    String javaboys;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> javaboys;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来修改本地的配置文件并提交至 GitHub，内容如下(将test改为test123)：<br><img src="https://img-blog.csdnimg.cn/20201124113107466.png#pic_center" alt="在这里插入图片描述"><br>提交成功后，这个时候你如果不做其他操作的话，直接访问config-client ，实际上那个文件是不会变的。至此，以后只要配置文件发生变化，发送 post 请求，调用 <a target="_blank" rel="noopener" href="http://localhost:8082/actuator/refresh">http://localhost:8082/actuator/refresh</a> 接口即可，配置文件就会自动刷新。<br><img src="https://img-blog.csdnimg.cn/2020112413555572.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>调用成后再去访问 config-client 接口，发现已经改变，如下：<br><img src="https://img-blog.csdnimg.cn/20201124140001498.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="6-请求失败重试"><a href="#6-请求失败重试" class="headerlink" title="6. 请求失败重试"></a>6. 请求失败重试</h1><p>config-client 在调用 config-server 时，一样也可能发生请求失败的问题，这个时候我们可以配置一个请求重试的功能。<br>要给 config-client 添加重试功能，只需要添加如下依赖：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-aop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.retry<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-retry<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>然后，修改配置，开启失败快速响应（默认情况下，config-client 访问 config-server 时，如果它访问失败了，这个时候项目还是会继续启动，不会马上报错。而快速相应在这里访问失败会立马报错，进行重试）。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 开启失败快速响应</span><br><span class="line">spring.cloud.config.fail-fast=true</span><br></pre></td></tr></table></figure>
+<p>然后，注释掉配置文件的用户名和密码，重启 config-client ，此时加载配置文件失败，就会自动重试。</p>
+<p>再次启动如下图：<br><img src="https://img-blog.csdnimg.cn/20201124142436567.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>也可以通过如下配置保证服务的可用性：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 开启失败快速响应</span><br><span class="line">spring.cloud.config.fail-fast=true</span><br><span class="line"># 请求重试的初始间隔时间</span><br><span class="line">spring.cloud.config.retry.initial-interval=1000</span><br><span class="line"># 最大重试次数</span><br><span class="line">spring.cloud.config.retry.max-attempts=6</span><br><span class="line"># 重试时间间隔乘数</span><br><span class="line">spring.cloud.config.retry.multiplier=1.1</span><br><span class="line"># 最大间隔时间</span><br><span class="line">spring.cloud.config.retry.max-interval=2000</span><br></pre></td></tr></table></figure>
+
+<p><strong>地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/astronger/springcloud-simple-samples">https://github.com/astronger/springcloud-simple-samples</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/08/14/Spring Cloud Bus 笔记补充-springcloudbus笔记补充/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Bus 笔记补充">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/08/14/Spring Cloud Gateway 笔记补充-springcloudgateway笔记补充/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Gateway 笔记补充">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">1. 基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E7%AE%80%E4%BB%8B"><span class="toc-text">1.1 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C-%E6%8F%90%E4%BA%A4%E6%96%87%E4%BB%B6"><span class="toc-text">1.2 准备工作-提交文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-ConfigServer%E6%90%AD%E5%BB%BA"><span class="toc-text">1.3 ConfigServer搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-ConfigClient%E6%90%AD%E5%BB%BA"><span class="toc-text">1.4 ConfigClient搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5-%E9%85%8D%E7%BD%AE"><span class="toc-text">1.5 配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8A%A0%E8%A7%A3%E5%AF%86"><span class="toc-text">2. 配置文件加解密</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E5%B8%B8%E8%A7%81%E5%8A%A0%E5%AF%86%E6%96%B9%E6%A1%88"><span class="toc-text">2.1 常见加密方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="toc-text">2.2 对称加密</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="toc-text">2.3 非对称加密</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E5%AE%89%E5%85%A8%E7%AE%A1%E7%90%86"><span class="toc-text">3. 安全管理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%9C%8D%E5%8A%A1%E5%8C%96"><span class="toc-text">4. 服务化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E5%8A%A8%E6%80%81%E5%88%B7%E6%96%B0-config-client%E6%84%9F%E7%9F%A5%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0"><span class="toc-text">5. 动态刷新(config-client感知数据更新)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E8%AF%B7%E6%B1%82%E5%A4%B1%E8%B4%A5%E9%87%8D%E8%AF%95"><span class="toc-text">6. 请求失败重试</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

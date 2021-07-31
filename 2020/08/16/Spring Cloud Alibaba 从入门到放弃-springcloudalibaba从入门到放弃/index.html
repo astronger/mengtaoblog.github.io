@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Cloud Alibaba 从入门到放弃｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/08/16/Spring Cloud Alibaba 从入门到放弃-springcloudalibaba从入门到放弃/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Cloud Alibaba 从入门到放弃</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-08-16
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Cloud Alibaba 从入门到放弃
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>@<a href="Nacos">TOC</a></p>
+<h1 id="Spring-Cloud-Alibaba简介"><a href="#Spring-Cloud-Alibaba简介" class="headerlink" title="Spring Cloud Alibaba简介"></a>Spring Cloud Alibaba简介</h1><p>Spring Cloud Alibaba 致力于提供微服务开发一站式解决方案。此项目包括开发分布式应用微服务的必需组件，方便开发者通过 Spring Cloud 编程模型轻松使用这些组件来开发分布式应用服务。</p>
+<p>依托 Spring Cloud Alibaba，你只需要添加一些注解和少量配置，就可以将 Spring Cloud 应用接入阿里微服务解决方案，通过阿里云中间件来迅速搭建分布式应用系统。</p>
+<p><strong>SpringCloud Alibaba 和 Spring Cloud 搭配方案</strong>：</p>
+<ul>
+<li>SpringCoud Alibaba-Nacos：注册中心（服务发现 / 注册）</li>
+<li>SpringCoud Alibaba-Nacos：配置中心（动态配置管理）</li>
+<li>SpringCoud Alibaba-Sentinel：服务容错（限流、降级、熔断）</li>
+<li>SpringCoud Alibaba-Seata：原 Fescar，即分布式解决方案</li>
+<li>SpringCoud-Ribbon：负载均衡</li>
+<li>SpringCoud-Feign：声明式 HTTP 客户端（调用远程服务）</li>
+<li>SpringCoud-Gateway：API 网关（webflux 编程模式）</li>
+<li> SpringCoud-Sleuth：调用链监控</li>
+</ul>
+<p><strong>Spring Cloud Alibaba主要功能</strong>：</p>
+<ul>
+<li><strong>服务限流降级</strong>：默认支持 WebServlet、WebFlux, OpenFeign、RestTemplate、Spring Cloud Gateway, Zuul, Dubbo 和 RocketMQ 限流降级功能的接入，可以在运行时通过控制台实时修改限流降级规则，还支持查看限流降级 Metrics 监控。</li>
+<li><strong>服务注册与发现</strong>：适配 Spring Cloud 服务注册与发现标准，默认集成了 Ribbon 的支持。</li>
+<li><strong>分布式配置管理</strong>：支持分布式系统中的外部化配置，配置更改时自动刷新。</li>
+<li><strong>消息驱动能力</strong>：基于 Spring Cloud Stream 为微服务应用构建消息驱动能力。</li>
+<li><strong>分布式事务</strong>：使用 @GlobalTransactional 注解， 高效并且对业务零侵入地解决分布式事务问题。。</li>
+<li><strong>阿里云对象存储</strong>：阿里云提供的海量、安全、低成本、高可靠的云存储服务。支持在任何应用、任何时间、任何地点存储和访问任意类型的数据。</li>
+<li><strong>分布式任务调度</strong>：提供秒级、精准、高可靠、高可用的定时（基于 Cron 表达式）任务调度服务。同时提供分布式的任务执行模型，如网格任务。网格任务支持海量子任务均匀分配到所有 Worker（schedulerx-client）上执行。</li>
+<li><strong>阿里云短信服务</strong>：覆盖全球的短信服务，友好、高效、智能的互联化通讯能力，帮助企业迅速搭建客户触达通道。</li>
+</ul>
+<p><strong>相关组件</strong>：</p>
+<ul>
+<li><p><strong>Nacos</strong>：阿里巴巴开源产品，一个更易于构建云原生应用的动态服务发现、配置管理和服务管理平台。</p>
+</li>
+<li><p><strong>Sentinel</strong>：阿里巴巴开源产品，把流量作为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
+</li>
+</ul>
+<p>开源地址：<a target="_blank" rel="noopener" href="https://github.com/alibaba/spring-cloud-alibaba/">https://github.com/alibaba/spring-cloud-alibaba/</a></p>
+<h1 id="1-Nacos-简介"><a href="#1-Nacos-简介" class="headerlink" title="1. Nacos 简介"></a>1. Nacos 简介</h1><p>Nacos 主要提供了服务发现、服务配置以及服务管理的功能。以下援引自 **<a target="_blank" rel="noopener" href="https://nacos.io/zh-cn/docs/what-is-nacos.html">官方网站</a>**：</p>
+<p>基本特征：</p>
+<ul>
+<li>服务发现</li>
+<li>动态配置</li>
+<li>动态 DNS 服务</li>
+<li>服务及元数据管理</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/2020120717034960.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="1-1-Nacos-安装-配置中心"><a href="#1-1-Nacos-安装-配置中心" class="headerlink" title="1.1  Nacos 安装 + 配置中心"></a>1.1  Nacos 安装 + 配置中心</h2><ul>
+<li>Docker 安装</li>
+<li>下载编译好的安装包</li>
+</ul>
+<p>首先下载安装包：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases/download/1.4.0/nacos-server-1.4.0.tar.gz">https://github.com/alibaba/nacos/releases/download/1.4.0/nacos-server-1.4.0.tar.gz</a></p>
+<p>然后解压，如果是 windows 直接在 bin 目录下双击 startup.cmd 启动。</p>
+<p>如果是Linux， bin 目录下执行命令： <strong>sh startup.sh -m standalone</strong></p>
+<blockquote>
+<p><strong>注意：系统一定要配置好 jdk ，测试 java 和 javac 两个命令要存在！</strong></p>
+</blockquote>
+<p>Nacos 启动成功后，浏览器输入： <a target="_blank" rel="noopener" href="http://192.168.1.132:8848/nacos">http://192.168.1.132:8848/nacos</a> 就能看到启动页面了。登录页面的默认用户名/密码都是 nacos ，登录后如下图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201207111851310.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"> 配置中心：类似于 Spring Cloud Config ，点击服务端配置——&gt; 配置管理——&gt; 配置列表——&gt; 点击+，这里主要配置三个东西， Data ID、Group 以及配置的内容。</p>
+<p> Data Id 的格式是：</p>
+<blockquote>
+<p>${prefix}- ${spring.profile.active}. ${file-extension}</p>
+</blockquote>
+<ol>
+<li>prefix 默认为 spring.application.name 的值；</li>
+<li>spring.profile.active 即为当前环境对应的 profile；</li>
+<li>file-exetension 为配置内容的数据格式。<blockquote>
+<p><strong>注</strong>：当 - spring.profile.active 为空 / 未填写时，相对应的连接符 - 也将不存在 (省略)，dataId 的拼接格式变成 ${prefix}. ${file-extension}；<br>file-exetensio可以通过配置项 spring.cloud.nacos.config.file-extension 来配置。目前只支持 properties 和 yaml 类型</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>最终格式：${spring.application.name}- ${spring.profile.active}. ${spring.cloud.nacos.config.file-extension}</p>
+</blockquote>
+<p>然后在新添加一个配置如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201207145818106.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>接下来创建新的  Spring Cloud Alibaba 项目进行测试，添加如下依赖：<br><img src="https://img-blog.csdnimg.cn/20201207144726385.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>然后，新建 bootstrap.properties，配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.application.name=nacos</span><br><span class="line">spring.cloud.nacos.server-addr=192.168.1.132:8848</span><br><span class="line">spring.cloud.nacos.config.file-extension=properties</span><br></pre></td></tr></table></figure>
+<p>添加测试 Controller：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RefreshScope</span> <span class="comment">//动态刷新</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;name&#125;&quot;)</span></span><br><span class="line">    String name;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后启动项目，浏览器访问： <a target="_blank" rel="noopener" href="http://localhost:8080/hello">http://localhost:8080/hello</a> ，就会获取到在页面配置的内容，如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201207152620441.png" alt="在这里插入图片描述"></p>
+<h2 id="1-2-注册中心"><a href="#1-2-注册中心" class="headerlink" title="1.2 注册中心"></a>1.2 注册中心</h2><p>Navos 也可做注册中心，代替 Eureka。创建 Spring Boot 项目(此时相当于provider)，添加依赖：<br><img src="https://img-blog.csdnimg.cn/20201207153453233.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>添加如下配置：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.application.name=nacos01</span><br><span class="line">spring.cloud.nacos.discovery.server-addr=192.168.1.132:8848</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>提供测试 Controller ：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;server.port&#125;&quot;)</span></span><br><span class="line">    Integer port;<span class="comment">//添加端口号，测试集群</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello:&quot;</span>+port;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将项目打包，启动两个实例。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">java -jar nacos01-0.0.1-SNAPSHOT.jar --server.port=8080</span><br><span class="line">java -jar nacos01-0.0.1-SNAPSHOT.jar --server.port=8081</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>启动成功后，这时刷新，服务已经注册上来了。如图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201207155300498.png" alt="在这里插入图片描述"></p>
+<p>provider 已经创建成功，再创建一个 consumer ，配置基本与 nacos01 一致。</p>
+<p><img src="https://img-blog.csdnimg.cn/20201207155622676.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>配置如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.application.name=nacos02</span><br><span class="line">spring.cloud.nacos.discovery.server-addr=192.168.1.132:8848</span><br><span class="line"></span><br><span class="line">server.port=8083</span><br></pre></td></tr></table></figure>
+
+<p>开启负载均衡：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Nacos02Application</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Nacos02Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span> <span class="comment">//开启负载均衡</span></span><br><span class="line">    <span class="function">RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建测试 Controller：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">&quot;http://nacos01/hello&quot;</span>,String.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动 naxos02 ，然后可以看到已经注册挤进去了。</p>
+<p><img src="https://img-blog.csdnimg.cn/20201207160719234.png" alt="在这里插入图片描述"><br>然后浏览器不停刷新访问：<a target="_blank" rel="noopener" href="http://localhost:8083/hello%EF%BC%8C%E8%BE%BE%E5%88%B0%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%95%88%E6%9E%9C%E3%80%82">http://localhost:8083/hello，达到负载均衡效果。</a></p>
+<p><img src="https://img-blog.csdnimg.cn/2020120716080490.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20201207160816132.png" alt="在这里插入图片描述"></p>
+<blockquote>
+<p><strong>总结：Nacos 做为配置中心的话比 Spring Cloud Config 方便一些，作为注册中心与 Eureka、Consul 区别不大。</strong></p>
+</blockquote>
+<h1 id="2-Sentinel"><a href="#2-Sentinel" class="headerlink" title="2. Sentinel"></a>2. Sentinel</h1><ul>
+<li>使用场景丰富</li>
+<li>有完备的实时监控</li>
+<li>广泛的开源生态 </li>
+</ul>
+<p>Sentinel 整体上可以分为两个核心部分：</p>
+<ul>
+<li>核心库</li>
+<li>控制台 <h3 id="2-1-Sentinel-安装"><a href="#2-1-Sentinel-安装" class="headerlink" title="2.1 Sentinel 安装"></a>2.1 Sentinel 安装</h3>首先下载 <strong>控制台</strong> jar ，这是一个 Spring Boot 工程，下载好之后，直接启动。下载地址：<br><a target="_blank" rel="noopener" href="https://github.com/alibaba/Sentinel/releases/download/v1.8.0/sentinel-dashboard-1.8.0.jar">https://github.com/alibaba/Sentinel/releases/download/v1.8.0/sentinel-dashboard-1.8.0.jar</a></li>
+</ul>
+<p>下载完后启动服务，浏览器访问如下则成功。</p>
+<p><img src="https://img-blog.csdnimg.cn/2020120810511211.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="2-2-Sentinel-应用"><a href="#2-2-Sentinel-应用" class="headerlink" title="2.2 Sentinel 应用"></a>2.2 Sentinel 应用</h3><p>1.新建一个 Spring Boot 项目，添加 Sentinel 依赖，如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201208105331868.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>创建成功后，配置 Sentinel 控制台地址：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.application.name=sentinel</span><br><span class="line">spring.cloud.sentinel.transport.dashboard=localhost:8080</span><br><span class="line"></span><br><span class="line">server.port=8081</span><br></pre></td></tr></table></figure>
+<p>再创建一个测试 Controller：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello sentinel&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试如下：<br><img src="https://img-blog.csdnimg.cn/2020120811074363.png" alt="在这里插入图片描述"><br>然后刷新 sentinel 控制台页面，发现它的信息已经注册上去了，如下图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201208113135991.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>2. 接下来做一个流量控制的测试，先配置如下信息，每秒处理5个请求：<br><img src="https://img-blog.csdnimg.cn/20201208113044333.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>写一个测试类，这里假设一次来25个请求：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SentinelApplicationTests</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">contextLoads</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">25</span>; i++) &#123;</span><br><span class="line">            String forObject = restTemplate.getForObject(<span class="string">&quot;http://localhost:8081/hello&quot;</span>, String.class);</span><br><span class="line">            System.out.println(forObject+<span class="string">&quot;：&quot;</span>+<span class="keyword">new</span> Date());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动测试类，打印日志，每秒处理5个请求：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201208114238604.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<blockquote>
+<p><strong>总结： 这里的流控规则比之前的 Resilience4j 较为方便一些，只需针对接口进行配置即可。</strong></p>
+</blockquote>
+<h3 id="2-2-1-Nacos-中配置流控规则"><a href="#2-2-1-Nacos-中配置流控规则" class="headerlink" title="2.2.1 Nacos 中配置流控规则"></a>2.2.1 Nacos 中配置流控规则</h3><p>接上文代码，整合配置中心，添加依赖至 sentinel 服务中：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--关联 nacos 与 sentinel --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.csp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sentinel-datasource-nacos<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>修改配置文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.cloud.sentinel.datasource.ds.nacos.server-addr=192.168.1.132:8848</span><br><span class="line">spring.cloud.sentinel.datasource.ds.nacos.data-id=sentinel-rule</span><br><span class="line">spring.cloud.sentinel.datasource.ds.nacos.group-id=DEFAULT_GROUP</span><br><span class="line">spring.cloud.sentinel.datasource.ds.nacos.rule-type=flow</span><br></pre></td></tr></table></figure>
+
+<p>由于 nacos 要把数据告诉 sentinel，然后它去创建限流规则，那么服务需要注册到 nacos 上去。那么参考之前的，新建 bootstrap.properties 配置文件注册到 nacos，添加如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.cloud.nacos.config.server-addr=192.168.1.132:8848</span><br></pre></td></tr></table></figure>
+
+<p>访问nacos 控制台：<a target="_blank" rel="noopener" href="http://192.168.1.132:8848/nacos%EF%BC%8C%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA%E9%85%8D%E7%BD%AE%EF%BC%8C%E5%A6%82%E4%B8%8B%EF%BC%9A">http://192.168.1.132:8848/nacos，新建一个配置，如下：</a><br><img src="https://img-blog.csdnimg.cn/20201209101142155.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;resource&quot;: &quot;/hello&quot;,  //限流的接口</span><br><span class="line">      &quot;limitApp&quot;: &quot;default&quot;,    //流控针对的调用源【有手机的、小程序的等；default表示不限制】</span><br><span class="line">      &quot;grade&quot;: 1,  //【阈值类型】0：表示并发线程数；1：QPS</span><br><span class="line">      &quot;count&quot;: 5,  // 单机阈值</span><br><span class="line">      &quot;clusterMode&quot;: false,  //是否是集群模式</span><br><span class="line">      &quot;strategy&quot;: 0, //流控模式</span><br><span class="line">      &quot;controlBehavior&quot;: 0   //流控效果</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>添加完后启动 sentinel 服务，此时刷新 sentinel  管理页面没有数据。如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201209102632937.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>然后访问 <a target="_blank" rel="noopener" href="http://127.0.0.1:8081/hello%EF%BC%8C%E5%A6%82%E4%B8%8B%EF%BC%9A">http://127.0.0.1:8081/hello，如下：</a></p>
+<p><img src="https://img-blog.csdnimg.cn/20201209102727629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>然后再次刷新 sentinel  管理页面，发现数据已经注册上来了，这条数据就是刚才配置的信息，如下图：</p>
+<p><img src="https://img-blog.csdnimg.cn/2020120910291924.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20201209102931415.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>以上就是 nacos 与 sentinel  的结合使用。</p>
+<p><strong>项目案例地址</strong> ：<a target="_blank" rel="noopener" href="https://github.com/astronger/springcloud-simple-samples">https://github.com/astronger/springcloud-simple-samples</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2021/03/24/阿里云盘不限速来了，一大堆福利码送上-阿里云盘不限速来了一大堆福利码送上/" data-toggle="tooltip" data-placement="top"
+                           title="阿里云盘不限速来了，一大堆福利码送上">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/08/15/Spring Cloud Stream （消息驱动）笔记补充-springcloudstream消息驱动笔记补充/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Stream （消息驱动）笔记补充">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Cloud-Alibaba%E7%AE%80%E4%BB%8B"><span class="toc-text">Spring Cloud Alibaba简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Nacos-%E7%AE%80%E4%BB%8B"><span class="toc-text">1. Nacos 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-Nacos-%E5%AE%89%E8%A3%85-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83"><span class="toc-text">1.1  Nacos 安装 + 配置中心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83"><span class="toc-text">1.2 注册中心</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Sentinel"><span class="toc-text">2. Sentinel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Sentinel-%E5%AE%89%E8%A3%85"><span class="toc-text">2.1 Sentinel 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Sentinel-%E5%BA%94%E7%94%A8"><span class="toc-text">2.2 Sentinel 应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-Nacos-%E4%B8%AD%E9%85%8D%E7%BD%AE%E6%B5%81%E6%8E%A7%E8%A7%84%E5%88%99"><span class="toc-text">2.2.1 Nacos 中配置流控规则</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

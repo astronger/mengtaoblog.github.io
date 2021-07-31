@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Boot——实现定时任务的两种方式｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/09/12/Spring Boot——实现定时任务的两种方式-Spring Boot ——实现定时任务的两种方式/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Boot——实现定时任务的两种方式</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-09-12
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Boot——实现定时任务的两种方式
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h2 id="一、-Scheduled"><a href="#一、-Scheduled" class="headerlink" title="一、@Scheduled"></a>一、@Scheduled</h2><p>使用 @Scheduled 非常容易，直接创建一个 Spring Boot 项目，并且添加 web 依赖 spring-boot-starter-web，项目创建成功后，在启动类添加 @EnableScheduling 注解，开启定时任务：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableScheduling</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduleApplication</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(ScheduleApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来配置定时任务，新建一个service测试，详细含义已经写在注释里： </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloService</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用 @Scheduled 注解开启一个定时任务，所有时间单位都是毫秒。</span></span><br><span class="line">    <span class="meta">@Scheduled(fixedDelay = 2000)</span><span class="comment">//前面的任务结束时间和后面任务的开始时间之间间隔2s</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fixedDelay</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="comment">//     System.out.println(&quot;fixedDelay&gt;&gt;&quot;+new Date());//每隔2s打印一次</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Scheduled(fixedRate = 2000)</span><span class="comment">//两次定时任务&quot;开始&quot;的时间间隔为2s (新的任务执行时，不管旧的任务有没有结束)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fixedRate</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="comment">//      System.out.println(&quot;fixedRate&gt;&gt;&quot;+new Date());</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Scheduled(initialDelay = 2000,fixedDelay = 2000)</span><span class="comment">// 表示首次任务启动的延迟时间。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initialDelay</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;initialDelay&gt;&gt;&quot;</span>+<span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这是一个基本用法，除了这几个基本属性之外，@Scheduled 注解也支持 cron 表达式，使用 cron 表达式，可以非常丰富的描述定时任务的时间。cron 表达式格式如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">[秒] [分] [小时] [日] [月] [周] [年]</span><br></pre></td></tr></table></figure>
+<p>具体取值如下，（**月份中的日期和星期可能会起冲突，因此在配置时这两个得有一个是 ?**）<br><img src="https://www.itmengtao.cn/upload/2020/11/image-dbf091963f5540ddb72250cc366215ab.png" alt="image.png"></p>
+<h3 id="通配符含义："><a href="#通配符含义：" class="headerlink" title="通配符含义："></a>通配符含义：</h3><ul>
+<li><p>? 表示不指定值，即不关心某个字段的取值时使用。需要注意的是，月份中的日期和星期可能会起冲突，因此在配置时这两个得有一个是 ?</p>
+</li>
+<li><p>*表示所有值，例如:在秒的字段上设置 *,表示每一秒都会触发</p>
+</li>
+<li><p>, 用来分开多个值，例如在周字段上设置 “MON,WED,FRI” 表示周一，周三和周五触发</p>
+</li>
+<li><p>-表示区间，例如在秒上设置 “10-12”,表示 10,11,12秒都会触发</p>
+</li>
+<li><p>/用于递增触发，如在秒上面设置”5/15” 表示从5秒开始，每增15秒触发(5,20,35,50)</p>
+</li>
+<li><p>#序号(表示每月的第几个周几)，例如在周字段上设置”6#3”表示在每月的第三个周六，(用 在母亲节和父亲节再合适不过了)</p>
+</li>
+<li><p>周字段的设置，若使用英文字母是不区分大小写的 ，即 MON 与mon相同</p>
+</li>
+<li><p>L 表示最后的意思。在日字段设置上，表示当月的最后一天(依据当前月份，如果是二月还会自动判断是否是润年), 在周字段上表示星期六，相当于”7”或”SAT”（注意周日算是第一天）。如果在”L”前加上数字，则表示该数据的最后一个。例如在周字段上设置”6L”这样的格式,则表示”本月最后一个星期五”</p>
+</li>
+<li><p>W 表示离指定日期的最近工作日(周一至周五)，例如在日字段上设置”15W”，表示离每月15号最近的那个工作日触发。如果15号正好是周六，则找最近的周五(14号)触发, 如果15号是周未，则找最近的下周一(16号)触发，如果15号正好在工作日(周一至周五)，则就在该天触发。如果指定格式为 “1W”,它则表示每月1号往后最近的工作日触发。如果1号正是周六，则将在3号下周一触发。(注，”W”前只能设置具体的数字,不允许区间”-“)</p>
+</li>
+<li><p>L 和 W 可以一组合使用。如果在日字段上设置”LW”,则表示在本月的最后一个工作日触发(一般指发工资 )</p>
+</li>
+</ul>
+<p>例如，在 @Scheduled 注解中来一个简单的 cron 表达式，在11时内每隔5秒触发一次，如下： </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Scheduled(cron =&quot;0/5 * 11 * * ?&quot;)</span> <span class="comment">//表示在11时内每个5秒发送一次</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cron</span><span class="params">()</span></span>&#123;</span><br><span class="line">       System.out.println(<span class="keyword">new</span> Date());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>上面介绍的是使用 @Scheduled 注解的方式来实现定时任务，接下来我们再来看看如何使用 Quartz 实现定时任务。 </p>
+<h2 id="二、Quartz"><a href="#二、Quartz" class="headerlink" title="二、Quartz"></a>二、Quartz</h2><p>一般在项目中，除非定时任务涉及到的业务实在是太简单，使用 @Scheduled 注解来解决定时任务，否则大部分情况可能都是使用 Quartz 来做定时任务。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/11/image-ea7003c13c4248e8b3865e233eb5ebcb.png" alt="image.png"></p>
+<p>项目创建完成后，需要添加开启定时任务的注解： </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableScheduling</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuartzApplication</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(QuartzApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Quartz 在使用过程中，有两个概念，一个是<strong>JobDetail</strong>（要做的事情），另一个是<strong>触发器</strong>（什么时候做），要定义 JobDetail，需要先定义 Job，Job 的定义有两种方式： </p>
+<h3 id="第一种方式，直接定义一个Bean："><a href="#第一种方式，直接定义一个Bean：" class="headerlink" title="第一种方式，直接定义一个Bean："></a>第一种方式，直接定义一个Bean：</h3><p>首先将这个 Job 注册到 Spring 容器中。<br>这种定义方式有一个缺陷，就是<strong>无法传参</strong>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span> <span class="comment">//(注册到spring容器中，不支持传参数)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyFirstJob</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;first job :&quot;</span>+<span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="第二种定义方式，则是继承-QuartzJobBean-并实现默认的方法，支持传参："><a href="#第二种定义方式，则是继承-QuartzJobBean-并实现默认的方法，支持传参：" class="headerlink" title="第二种定义方式，则是继承 QuartzJobBean 并实现默认的方法，支持传参："></a>第二种定义方式，则是继承 QuartzJobBean 并实现默认的方法，支持传参：</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MySecondJob</span> <span class="keyword">extends</span> <span class="title">QuartzJobBean</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//任务启动时，executeInternal方法将会被执行。</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">executeInternal</span><span class="params">(JobExecutionContext jobExecutionContext)</span> <span class="keyword">throws</span> JobExecutionException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;second job :&quot;</span>+name+<span class="string">&quot;:&quot;</span>+<span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Job 有了之后，接下来创建类，配置 JobDetail 和 Trigger 触发器，<strong>JobDetail</strong> 的配置有两种方式：MethodInvokingJobDetailFactoryBean 和 JobDetailFactoryBean 。如下： </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuartzConfig</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *MethodInvokingJobDetailFactoryBean配置目标Bean的类名和目标方法的名字，这种方式不支持传参</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">MethodInvokingJobDetailFactoryBean <span class="title">methodInvokingJobDetailFactoryBean</span><span class="params">()</span></span>&#123; </span><br><span class="line">        MethodInvokingJobDetailFactoryBean bean = <span class="keyword">new</span> MethodInvokingJobDetailFactoryBean();</span><br><span class="line">        bean.setTargetBeanName(<span class="string">&quot;myFirstJob&quot;</span>);</span><br><span class="line">        bean.setTargetMethod(<span class="string">&quot;sayHello&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *JobDetailFactoryBean配置JobDetail，继承自QuartzJobBean ，这种方式支持传参，将参数封装在 JobDataMap中进行传递。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">JobDetailFactoryBean <span class="title">jobDetailFactoryBean</span><span class="params">()</span></span>&#123;</span><br><span class="line">        JobDetailFactoryBean bean = <span class="keyword">new</span> JobDetailFactoryBean();</span><br><span class="line">        JobDataMap map = <span class="keyword">new</span> JobDataMap();</span><br><span class="line">        map.put(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;javahello&quot;</span>);<span class="comment">//配置secondjob中的name</span></span><br><span class="line">        bean.setJobDataMap(map);</span><br><span class="line">        bean.setJobClass(MySecondJob.class);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置触发器SimpleTrigger用法</span></span><br><span class="line"><span class="comment">     * 有点类似于前面说的 <span class="doctag">@Scheduled</span> 的基本用法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">SimpleTriggerFactoryBean <span class="title">simpleTriggerFactoryBean</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SimpleTriggerFactoryBean bean = <span class="keyword">new</span> SimpleTriggerFactoryBean();</span><br><span class="line">        bean.setJobDetail(methodInvokingJobDetailFactoryBean().getObject());<span class="comment">//绑定第一种方式methodInvokingJobDetailFactoryBean</span></span><br><span class="line">        bean.setStartTime(<span class="keyword">new</span> Date());</span><br><span class="line">        bean.setRepeatInterval(<span class="number">2000</span>); <span class="comment">//重复的时间间隔</span></span><br><span class="line">        bean.setRepeatCount(<span class="number">4</span>); <span class="comment">//重复次数</span></span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置触发器CronTrigger用法</span></span><br><span class="line"><span class="comment">     * 有点类似于 <span class="doctag">@Scheduled</span> 中 cron 表达式的用法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">CronTriggerFactoryBean <span class="title">cronTriggerFactoryBean</span><span class="params">()</span></span>&#123;</span><br><span class="line">        CronTriggerFactoryBean bean = <span class="keyword">new</span> CronTriggerFactoryBean();</span><br><span class="line">        bean.setJobDetail(jobDetailFactoryBean().getObject());</span><br><span class="line">        bean.setCronExpression(<span class="string">&quot;* * * * * ?&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 启动定时任务（注入上面两个Trigger）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">SchedulerFactoryBean <span class="title">schedulerFactoryBean</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SchedulerFactoryBean bean = <span class="keyword">new</span> SchedulerFactoryBean();</span><br><span class="line">        bean.setTriggers(simpleTriggerFactoryBean().getObject(),cronTriggerFactoryBean().getObject());</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后启动项目，控制台就可以看到 定时任务的执行了。</p>
+<p>代码已上传至：<a target="_blank" rel="noopener" href="https://github.com/astronger/Spring-Boot-Quartz">https://github.com/astronger/Spring-Boot-Quartz</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/09/13/SpringBoot——整合Swagger2-SpringBoot——整合Swagger2/" data-toggle="tooltip" data-placement="top"
+                           title="SpringBoot——整合Swagger2">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/09/08/Spring Boot + RabbitMQ 简单案例 (exchange的四种类型)-Spring Boot + RabbitMQ 简单案例 (exchange的四种类型)/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Boot + RabbitMQ 简单案例 (exchange的四种类型)">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-Scheduled"><span class="toc-text">一、@Scheduled</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E9%85%8D%E7%AC%A6%E5%90%AB%E4%B9%89%EF%BC%9A"><span class="toc-text">通配符含义：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Quartz"><span class="toc-text">二、Quartz</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E6%96%B9%E5%BC%8F%EF%BC%8C%E7%9B%B4%E6%8E%A5%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AABean%EF%BC%9A"><span class="toc-text">第一种方式，直接定义一个Bean：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E5%AE%9A%E4%B9%89%E6%96%B9%E5%BC%8F%EF%BC%8C%E5%88%99%E6%98%AF%E7%BB%A7%E6%89%BF-QuartzJobBean-%E5%B9%B6%E5%AE%9E%E7%8E%B0%E9%BB%98%E8%AE%A4%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%8C%E6%94%AF%E6%8C%81%E4%BC%A0%E5%8F%82%EF%BC%9A"><span class="toc-text">第二种定义方式，则是继承 QuartzJobBean 并实现默认的方法，支持传参：</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

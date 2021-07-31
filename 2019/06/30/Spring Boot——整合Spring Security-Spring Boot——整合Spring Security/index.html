@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Boot——整合Spring Security｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/06/30/Spring Boot——整合Spring Security-Spring Boot——整合Spring Security/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Boot——整合Spring Security</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2019-06-30
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Boot——整合Spring Security
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>Spring Security 是 Spring 家族中的一个安全管理框架，实际上，在 Spring Boot 出现之前，Spring Security 就已经发展了多年了，但是使用的并不多，安全管理这个领域，一直是 Shiro 的天下。</p>
+<p>相对于 Shiro，在 SSM/SSH 中整合 Spring Security 都是比较麻烦的操作，所以，Spring Security 虽然功能比 Shiro 强大，但是使用反而没有 Shiro 多（Shiro 虽然功能没有 Spring Security 多，但是对于大部分项目而言，Shiro 也够用了）。</p>
+<p>自从有了 Spring Boot 之后，Spring Boot 对于 Spring Security 提供了 自动化配置方案，可以<strong>零配置</strong>使用 Spring Security。</p>
+<p>因此，一般来说，常见的安全管理技术栈的组合是这样的：</p>
+<ul>
+<li>SSM + Shiro</li>
+<li>Spring Boot/Spring Cloud + Spring Security</li>
+</ul>
+<p><strong>注意，这只是一个推荐的组合而已，如果单纯从技术上来说，无论怎么组合，都是可以运行的。</strong></p>
+<p>我们来看下具体使用。</p>
+<h2 id="1-项目创建"><a href="#1-项目创建" class="headerlink" title="1.项目创建"></a>1.项目创建</h2><p>在 Spring Boot 中使用 Spring Security 非常容易，引入依赖即可：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-a0b3b4cdea7a4ffe9a6034d4c77a335f.png" alt="image.png"></p>
+<p>pom.xml 中的 Spring Security 依赖：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>只要加入依赖，项目的所有接口都会被自动保护起来。</p>
+<h2 id="2-初次体验"><a href="#2-初次体验" class="headerlink" title="2.初次体验"></a>2.初次体验</h2><p>我们创建一个 HelloController:</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>访问 /hello ，需要登录之后才能访问。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-c21eaca26fae40cb8567479d2cc7dbd3.png" alt="image.png"></p>
+<p>当用户从浏览器发送请求访问 /hello 接口时，服务端会返回 302 响应码，让客户端重定向到 /login 页面，用户在 /login 页面登录，登陆成功之后，就会自动跳转到 /hello 接口。</p>
+<p>另外，也可以使用 POSTMAN 来发送请求，使用 POSTMAN 发送请求时，可以将用户信息放在请求头中（这样可以避免重定向到登录页面）：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-77aa42c204df45b593838b4a0a66b18b.png" alt="image.png"></p>
+<p>通过以上两种不同的登录方式，可以看出，Spring Security 支持两种不同的认证方式：</p>
+<ul>
+<li>可以通过 form 表单来认证</li>
+<li>可以通过 HttpBasic 来认证<h2 id="3-用户名配置"><a href="#3-用户名配置" class="headerlink" title="3.用户名配置"></a>3.用户名配置</h2>默认情况下，登录的用户名是 user ，密码则是项目启动时随机生成的字符串，可以从启动的控制台日志中看到默认密码：</li>
+</ul>
+<p> <img src="https://www.itmengtao.cn/upload/2020/10/image-16649432d8ac48938357065afdd97468.png" alt="image.png"></p>
+<p>这个随机生成的密码，每次启动时都会变。对登录的用户名/密码进行配置，有三种不同的方式：</p>
+<ol>
+<li>在 application.properties 中进行配置</li>
+<li>通过 Java 代码配置在内存中</li>
+<li>通过 Java 从数据库中加载<br>前两种比较简单，第三种代码量略大，本文就先来看看前两种。</li>
+</ol>
+<h3 id="3-1-配置文件配置用户名-密码"><a href="#3-1-配置文件配置用户名-密码" class="headerlink" title="3.1 配置文件配置用户名/密码"></a>3.1 配置文件配置用户名/密码</h3><p>可以直接在 application.properties 文件中配置用户的基本信息：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">spring.security.user.name=javaboy</span><br><span class="line">spring.security.user.password=<span class="number">123</span></span><br></pre></td></tr></table></figure>
+<p>配置完成后，重启项目，就可以使用这里配置的用户名/密码登录了。</p>
+<h3 id="3-2-Java-配置用户名-密码"><a href="#3-2-Java-配置用户名-密码" class="headerlink" title="3.2 Java 配置用户名/密码"></a>3.2 Java 配置用户名/密码</h3><p>也可以在 Java 代码中配置用户名密码，首先需要我们创建一个 Spring Security 的配置类，集成自 WebSecurityConfigurerAdapter 类，如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//下面这两行配置表示在内存中配置了两个用户</span></span><br><span class="line">        auth.inMemoryAuthentication()</span><br><span class="line">                .withUser(<span class="string">&quot;javaboy&quot;</span>).roles(<span class="string">&quot;admin&quot;</span>).password(<span class="string">&quot;$2a$10$OR3VSksVAmCzc.7WeaRPR.t0wyCsIj24k0Bne8iKWV1o.V9wsP8Xe&quot;</span>)</span><br><span class="line">                .and()</span><br><span class="line">                .withUser(<span class="string">&quot;lisi&quot;</span>).roles(<span class="string">&quot;user&quot;</span>).password(<span class="string">&quot;$2a$10$p1H8iWa8I4.CA.7Z8bwLjes91ZpY.rYREGHQEInNtAp4NzL6PLKxi&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function">PasswordEncoder <span class="title">passwordEncoder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BCryptPasswordEncoder();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们在 configure 方法中配置了两个用户，用户的密码都是加密之后的字符串(明文是 123)，从 Spring5 开始，强制要求密码要加密，如果非不想加密，可以使用一个过期的 PasswordEncoder 的实例 NoOpPasswordEncoder，但是不建议这么做，毕竟不安全。</p>
+<p>Spring Security 中提供了 BCryptPasswordEncoder 密码编码工具，可以非常方便的实现密码的加密加盐，相同明文加密出来的结果总是不同，这样就不需要用户去额外保存盐的字段了，这一点比 Shiro 要方便很多。</p>
+<h2 id="4-登录配置"><a href="#4-登录配置" class="headerlink" title="4.登录配置"></a>4.登录配置</h2><p>对于登录接口，登录成功后的响应，登录失败后的响应，我们都可以在 WebSecurityConfigurerAdapter 的实现类中进行配置。例如下面这样：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    VerifyCodeFilter verifyCodeFilter;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(HttpSecurity http)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        http.addFilterBefore(verifyCodeFilter, UsernamePasswordAuthenticationFilter.class);</span><br><span class="line">        http</span><br><span class="line">        .authorizeRequests()<span class="comment">//开启登录配置</span></span><br><span class="line">        .antMatchers(<span class="string">&quot;/hello&quot;</span>).hasRole(<span class="string">&quot;admin&quot;</span>)<span class="comment">//表示访问 /hello 这个接口，需要具备 admin 这个角色</span></span><br><span class="line">        .anyRequest().authenticated()<span class="comment">//表示剩余的其他接口，登录之后就能访问</span></span><br><span class="line">        .and()</span><br><span class="line">        .formLogin()</span><br><span class="line">        <span class="comment">//定义登录页面，未登录时，访问一个需要登录之后才能访问的接口，会自动跳转到该页面</span></span><br><span class="line">        .loginPage(<span class="string">&quot;/login_p&quot;</span>)</span><br><span class="line">        <span class="comment">//登录处理接口</span></span><br><span class="line">        .loginProcessingUrl(<span class="string">&quot;/doLogin&quot;</span>)</span><br><span class="line">        <span class="comment">//定义登录时，用户名的 key，默认为 username</span></span><br><span class="line">        .usernameParameter(<span class="string">&quot;uname&quot;</span>)</span><br><span class="line">        <span class="comment">//定义登录时，用户密码的 key，默认为 password</span></span><br><span class="line">        .passwordParameter(<span class="string">&quot;passwd&quot;</span>)</span><br><span class="line">        <span class="comment">//登录成功的处理器</span></span><br><span class="line">        .successHandler(<span class="keyword">new</span> AuthenticationSuccessHandler() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAuthenticationSuccess</span><span class="params">(HttpServletRequest req, HttpServletResponse resp, Authentication authentication)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">                    resp.setContentType(<span class="string">&quot;application/json;charset=utf-8&quot;</span>);</span><br><span class="line">                    PrintWriter out = resp.getWriter();</span><br><span class="line">                    out.write(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">                    out.flush();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .failureHandler(<span class="keyword">new</span> AuthenticationFailureHandler() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAuthenticationFailure</span><span class="params">(HttpServletRequest req, HttpServletResponse resp, AuthenticationException exception)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">                    resp.setContentType(<span class="string">&quot;application/json;charset=utf-8&quot;</span>);</span><br><span class="line">                    PrintWriter out = resp.getWriter();</span><br><span class="line">                    out.write(<span class="string">&quot;fail&quot;</span>);</span><br><span class="line">                    out.flush();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .permitAll()<span class="comment">//和表单登录相关的接口统统都直接通过</span></span><br><span class="line">            .and()</span><br><span class="line">            .logout()</span><br><span class="line">            .logoutUrl(<span class="string">&quot;/logout&quot;</span>)</span><br><span class="line">            .logoutSuccessHandler(<span class="keyword">new</span> LogoutSuccessHandler() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLogoutSuccess</span><span class="params">(HttpServletRequest req, HttpServletResponse resp, Authentication authentication)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">                    resp.setContentType(<span class="string">&quot;application/json;charset=utf-8&quot;</span>);</span><br><span class="line">                    PrintWriter out = resp.getWriter();</span><br><span class="line">                    out.write(<span class="string">&quot;logout success&quot;</span>);</span><br><span class="line">                    out.flush();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .permitAll()</span><br><span class="line">            .and()</span><br><span class="line">            .httpBasic()</span><br><span class="line">            .and()</span><br><span class="line">            .csrf().disable();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以在 successHandler 方法中，配置登录成功的回调，如果是前后端分离开发的话，登录成功后返回 JSON 即可，同理，<strong>failureHandler</strong>方法中配置登录失败的回调，logoutSuccessHandler 中则配置注销成功的回调。</p>
+<h2 id="5-忽略拦截"><a href="#5-忽略拦截" class="headerlink" title="5.忽略拦截"></a>5.忽略拦截</h2><p>如果某一个请求地址不需要拦截的话，有两种方式实现：</p>
+<ul>
+<li>设置该地址匿名访问</li>
+<li>直接过滤掉该地址，即该地址不走 Spring Security 过滤器链<br>推荐使用第二种方案，配置如下：<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(WebSecurity web)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        web.ignoring().antMatchers(<span class="string">&quot;/vercode&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+参考：<a target="_blank" rel="noopener" href="http://springboot.javaboy.org/2019/0725/springboot-springsecurity">http://springboot.javaboy.org/2019/0725/springboot-springsecurity</a> </li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/07/07/JSP中的EL表达式使用大于小于等符号-JSP中的EL表达式使用大于小于等符号/" data-toggle="tooltip" data-placement="top"
+                           title="JSP中的EL表达式使用大于小于等符号">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/06/28/Spring Boot——整合 Shiro-Spring Boot——整合 Shiro/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Boot——整合 Shiro">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%A1%B9%E7%9B%AE%E5%88%9B%E5%BB%BA"><span class="toc-text">1.项目创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%9D%E6%AC%A1%E4%BD%93%E9%AA%8C"><span class="toc-text">2.初次体验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%94%A8%E6%88%B7%E5%90%8D%E9%85%8D%E7%BD%AE"><span class="toc-text">3.用户名配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE%E7%94%A8%E6%88%B7%E5%90%8D-%E5%AF%86%E7%A0%81"><span class="toc-text">3.1 配置文件配置用户名&#x2F;密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Java-%E9%85%8D%E7%BD%AE%E7%94%A8%E6%88%B7%E5%90%8D-%E5%AF%86%E7%A0%81"><span class="toc-text">3.2 Java 配置用户名&#x2F;密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%99%BB%E5%BD%95%E9%85%8D%E7%BD%AE"><span class="toc-text">4.登录配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%BF%BD%E7%95%A5%E6%8B%A6%E6%88%AA"><span class="toc-text">5.忽略拦截</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>

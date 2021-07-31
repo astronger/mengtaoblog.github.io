@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="求知若饥 虚心若愚">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="/image/002.jpg">
+    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Spring Cloud Stream （消息驱动）笔记补充｜MengTao&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="http://mengtaoblog.github.io/2020/08/15/Spring Cloud Stream （消息驱动）笔记补充-springcloudstream消息驱动笔记补充/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS -->
+    
+<link rel="stylesheet" href="/css/blog-style.css">
+
+
+    <!-- Pygments Github CSS -->
+    
+<link rel="stylesheet" href="/css/syntax.css">
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('/image/002.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    MengTao
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="post-default.jpg">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('post-default.jpg')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Spring Cloud Stream （消息驱动）笔记补充</h1>
+                    
+                    <span class="meta">
+                         作者 Lemon
+                        <span>
+                          日期 2020-08-15
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Spring Cloud Stream （消息驱动）笔记补充
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>@[TOC](Spring Cloud Stream 笔记补充)</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Spring Cloud Stream 是一个用来为微服务应用构建消息驱动能力的框架。它可以基于 Spring Boot 来创建独立的、可用于生产的 Spring 应用程序。Spring Cloud Stream 为一些供应商的消息中间件产品提供了个性化的自动化配置实现，并引入了发布-订阅、消费组、分区这三个核心概念。</p>
+<p>通过使用 Spring Cloud Stream，可以有效简化开发人员对消息中间件的使用复杂度，让系统开发人员可以有更多的精力关注于核心业务逻辑的处理。但是目前 Spring Cloud Stream 只支持 RabbitMQ 和 Kafka 的自动化配置。</p>
+<p>Spring Cloud Stream 提供了 Binder (负责与消息中间件进行交互)，我们则通过 inputs 或者 outputs 这样的消息通道与 Binder 进行交互。</p>
+<h1 id="HelloWorld"><a href="#HelloWorld" class="headerlink" title="HelloWorld"></a>HelloWorld</h1><p>创建一个Spring Cloud Stream项目，添加如下三个依赖：<br><img src="https://img-blog.csdnimg.cn/20201201151240532.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>项目创建成功后，添加Rabbitmq基本配置信息，这里默认已经启动 Rabbitmq：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.rabbitmq.host=192.168.1.132</span><br><span class="line">spring.rabbitmq.port=5672</span><br><span class="line">spring.rabbitmq.username=guest</span><br><span class="line">spring.rabbitmq.password=guest</span><br></pre></td></tr></table></figure>
+<p>然后创建一个简单的<strong>消息接收器</strong>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 该注解表示绑定Sink消息通道</span></span><br><span class="line"><span class="meta">@EnableBinding(Sink.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgReceiver</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(MsgReceiver.class);</span><br><span class="line">    <span class="comment">// 自带 消费者</span></span><br><span class="line">    <span class="meta">@StreamListener(Sink.INPUT)</span><span class="comment">//(sink是一个默认的消息通道)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receive</span><span class="params">(Object payload)</span></span>&#123;</span><br><span class="line">        logger.info(<span class="string">&quot;received: &quot;</span> + payload);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>启动 stream 项目，然后在 rabbitmq 后台管理页面去发送一条消息：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201201155015302.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>在IDEA 控制台会收到消息，此时说明消息已经成功发送并且消费。如下图：<br><img src="https://img-blog.csdnimg.cn/20201201155114270.png" alt="在这里插入图片描述"></p>
+<h1 id="自定义消息通道"><a href="#自定义消息通道" class="headerlink" title="自定义消息通道"></a>自定义消息通道</h1><p>首先创建一个名叫 MyChannel 的接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyChannel</span> </span>&#123;</span><br><span class="line">    String INPUT = <span class="string">&quot;test-input&quot;</span>;</span><br><span class="line">    String OUTPUT = <span class="string">&quot;test-output&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这两个通道可能定义在两个不同的通道里面，这里为了方便放在同一个项目中演示</span></span><br><span class="line"><span class="comment">     * F版之前消息通道的名称可以相同</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">// 收(订阅频道/消息消费者)</span></span><br><span class="line">    <span class="meta">@Input(INPUT)</span></span><br><span class="line">    <span class="function">SubscribableChannel <span class="title">input</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发（消息生产者）</span></span><br><span class="line">    <span class="meta">@Output(OUTPUT)</span></span><br><span class="line">    <span class="function">MessageChannel <span class="title">output</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<ol>
+<li>两个消息通道的名字是不一样的</li>
+<li>从 F 版开始，默认使用通道的名称作为实例命令，所以这里的通道名称<strong>不同</strong> (早期版本可以相同)，这样的话，为了能够正常收发消息，需要我们在 application.properties 中做一些额外的配置。</li>
+</ol>
+</blockquote>
+<p>接下来自定义一个<strong>消息接收器</strong>：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 绑定自定义消息通道【 MyChannel 为刚才自己建立的通道】</span></span><br><span class="line"><span class="meta">@EnableBinding(MyChannel.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgReceiver1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(MsgReceiver1.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接收器</span></span><br><span class="line">    <span class="meta">@StreamListener(MyChannel.INPUT)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receive</span><span class="params">(Object payload)</span></span>&#123;</span><br><span class="line">        logger.info(<span class="string">&quot;received1: &quot;</span> + payload + <span class="string">&quot;:&quot;</span> + <span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定义 HelloController 进行测试：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.integration.support.MessageBuilder;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    MyChannel myChannel;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        myChannel.output().send(MessageBuilder.withPayload(<span class="string">&quot;你好 spring cloud stream!&quot;</span>).build());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时，因为现在这两个通道的名称不同，为了让消息输入输出通道对接上，再增加一些额外配置。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 此处的test-input/test-output 与实际的输入输出通道一致即可，test-topic 要配置一样； </span><br><span class="line">spring.cloud.stream.bindings.test-input.destination=test-topic</span><br><span class="line">spring.cloud.stream.bindings.test-output.destination=test-topic</span><br></pre></td></tr></table></figure>
+<p>启动服务，访问 <a target="_blank" rel="noopener" href="http://localhost:8080/hello%EF%BC%8C%E5%A6%82%E4%B8%8B%EF%BC%9A">http://localhost:8080/hello，如下：</a><br><img src="https://img-blog.csdnimg.cn/20201202143550594.png" alt="在这里插入图片描述"></p>
+<h1 id="消息分组"><a href="#消息分组" class="headerlink" title="消息分组"></a>消息分组</h1><p>紧接上文。默认情况下，如果消费者是一个集群，此时，一条消息会被多次消费。通过消息分组，我们可以解决这个问题。</p>
+<p>添加如下配置分组，放入组 g1：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">spring.cloud.stream.bindings.test-input.destination=test-topic</span><br><span class="line">spring.cloud.stream.bindings.test-output.destination=test-topic</span><br><span class="line"> </span><br><span class="line">spring.cloud.stream.bindings.test-input.group=g1</span><br><span class="line">spring.cloud.stream.bindings.test-output.group=g1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>然后对 Spring Cloud Stream 项目进行打包，打包完毕后，在 target 目录下分别启动：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">java -jar stream-0.0.1-SNAPSHOT.jar </span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">java -jar stream-0.0.1-SNAPSHOT.jar --server.port=8081</span><br></pre></td></tr></table></figure>
+
+<p>运行访问 <a target="_blank" rel="noopener" href="http://localhost:8080/hello">http://localhost:8080/hello</a></p>
+<p><img src="https://img-blog.csdnimg.cn/20201202153209751.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20201202153223349.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L291cnN0cm9uZ2Vy,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>如上图，现在<strong>同一个消息只能被一个实例消费</strong>，至于是哪一个，不可控。但是可以确定的只被一个实例消费。</p>
+<h1 id="消息分区"><a href="#消息分区" class="headerlink" title="消息分区"></a>消息分区</h1><p>在分组的基础上，通过消息分区可以实现<strong>相同特征</strong>的消息总是被同一个实例处理。只需要添加如下配置即可：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 分为同一个组g1</span><br><span class="line">spring.cloud.stream.bindings.test-input.group=g1</span><br><span class="line">spring.cloud.stream.bindings.test-output.group=g1</span><br><span class="line"></span><br><span class="line"># 开启消息分区 （消费者上配置）</span><br><span class="line">spring.cloud.stream.bindings.test-input.consumer.partitioned=true</span><br><span class="line"># 消费者实例个数 （消费者上配置）</span><br><span class="line">spring.cloud.stream.instance-count=2</span><br><span class="line"># 当前实例的下标 （消费者上配置）</span><br><span class="line">spring.cloud.stream.instance-index=0</span><br><span class="line"># (生产者上配置)【此处为方便放一起】</span><br><span class="line"># 表示消息将被下标为1的消费者所消费</span><br><span class="line">spring.cloud.stream.bindings.test-output.producer.partition-key-expression=1</span><br><span class="line"># 消费端的节点数量（生产者上配置）</span><br><span class="line">spring.cloud.stream.bindings.test-output.producer.partition-count=2</span><br></pre></td></tr></table></figure>
+<p>注意，启动时 spring.cloud.stream.instance-index 参数要修改：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">java -jar stream-0.0.1-SNAPSHOT.jar --server.port=8080 --spring.cloud.stream.instance-index=0</span><br><span class="line">java -jar stream-0.0.1-SNAPSHOT.jar --server.port=8081 --spring.cloud.stream.instance-index=1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>然后继续 <strong>多次</strong> 访问 <a target="_blank" rel="noopener" href="http://localhost:8080/hello">http://localhost:8080/hello</a> ，由于配置了spring.cloud.stream.bindings.test-output.producer.partition-key-expression=1 ，并且正如上文所说，此时的消息具有<strong>相同的特征</strong>。所以<strong>消息将被下标为 1 的消费者所消费</strong>，也就是 8081 端口消费，不会被 8080 端口消费。如下图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201202161507377.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20201202161554481.png" alt="在这里插入图片描述"></p>
+<h1 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h1><p>每天定时执行的任务，可以使用 cron 表达式， 有一种比较特殊的定时任务，例如几分钟后执行，这种可以结合 Spring Cloud Stream + RabbitMQ 来实现。</p>
+<p>首先需要下载一个 rabbitMQ 插件：<a target="_blank" rel="noopener" href="https://dl.bintray.com/rabbitmq/community-plugins/3.7.x/rabbitmq_delayed_message_exchange/rabbitmq_delayed_message_exchange-20171201-3.7.x.zip"><strong>点击这里下载</strong></a>，下载完后上传至root目录下。</p>
+<p>执行如下命令：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> # 将上传的文件解压</span><br><span class="line"> unzip rabbitmq_delayed_message_exchange-20171201-3.7.x.zip </span><br><span class="line"> # 将解压后的文件拷贝到 docker 容器中【lemon-rabbit 是docker中rabbitmq 的 NAMES】</span><br><span class="line">docker cp /root/rabbitmq_delayed_message_exchange-20171201-3.7.x.ez lemon-rabbit:/plugins</span><br><span class="line"> # 进入到容器中</span><br><span class="line">docker exec -it lemon-rabbit /bin/bash</span><br><span class="line"> # 启用插件</span><br><span class="line">rabbitmq-plugins enable rabbitmq_delayed_message_exchange</span><br><span class="line"> # 查看是否启用成功</span><br><span class="line">rabbitmq-plugins list</span><br></pre></td></tr></table></figure>
+
+<p>配置文件中开启消息延迟功能：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 绑定通道</span><br><span class="line">spring.cloud.stream.bindings.test-input.destination=topic</span><br><span class="line">spring.cloud.stream.bindings.test-output.destination=topic</span><br><span class="line"></span><br><span class="line"># 开启消息延迟功能</span><br><span class="line">spring.cloud.stream.rabbit.bindings.test-input.consumer.delayed-exchange=true</span><br><span class="line">spring.cloud.stream.rabbit.bindings.test-output.producer.delayed-exchange=true</span><br></pre></td></tr></table></figure>
+<p>在消息发送时，将消息延迟设置为 3 秒：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(MsgReceiver1.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    MyChannel myChannel;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        logger.info(<span class="string">&quot;send msg:&quot;</span>+<span class="keyword">new</span> Date());</span><br><span class="line">        myChannel.output().send(MessageBuilder.withPayload(<span class="string">&quot;你好 spring cloud stream!&quot;</span>).setHeader(<span class="string">&quot;x-delay&quot;</span>,<span class="number">3000</span>).build());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时在消息接收时，打印出延迟时间：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@EnableBinding(MyChannel.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MsgReceiver1</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LoggerFactory.getLogger(MsgReceiver1.class);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接收器</span></span><br><span class="line">    <span class="meta">@StreamListener(MyChannel.INPUT)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receive</span><span class="params">(Object payload)</span></span>&#123;</span><br><span class="line">        logger.info(<span class="string">&quot;received1: &quot;</span> + payload + <span class="string">&quot;:&quot;</span> + <span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后启动项目，访问 ：<a target="_blank" rel="noopener" href="http://localhost:8080/hello">http://localhost:8080/hello</a> ，延迟3秒 ，如下图：<img src="https://img-blog.csdnimg.cn/20201203112920135.png" alt="在这里插入图片描述"><br>项目地址：<a target="_blank" rel="noopener" href="https://github.com/astronger/springcloud-simple-samples">https://github.com/astronger/springcloud-simple-samples</a></p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/08/16/Spring Cloud Alibaba 从入门到放弃-springcloudalibaba从入门到放弃/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Alibaba 从入门到放弃">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/08/15/Spring Cloud Sleuth 笔记补充-springcloudsleuth笔记补充/" data-toggle="tooltip" data-placement="top"
+                           title="Spring Cloud Sleuth 笔记补充">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HelloWorld"><span class="toc-text">HelloWorld</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF%E9%80%9A%E9%81%93"><span class="toc-text">自定义消息通道</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E5%88%86%E7%BB%84"><span class="toc-text">消息分组</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E5%88%86%E5%8C%BA"><span class="toc-text">消息分区</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1"><span class="toc-text">定时任务</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring Cloud"
+                           title="Spring Cloud">Spring Cloud</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; MengTao 2021
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/blog.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="/image/002.jpg">
+</body>
+
+</html>
