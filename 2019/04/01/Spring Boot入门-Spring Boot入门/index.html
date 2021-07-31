@@ -6,23 +6,23 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="生活是不公平的 我们要学会适应">
+    <meta name="description" content="求知若饥 虚心若愚">
     <meta name="keyword" content="">
     <meta name="theme-color" content="#600090">
     <meta name="msapplication-navbutton-color" content="#600090">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
-    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="shortcut icon" href="/image/002.jpg">
     <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        My New Post｜MengTao&#39;s blog
+        Spring Boot入门｜MengTao&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="http://mengtaoblog.github.io/2021/06/23/My-New-Post/">
+    <link rel="canonical" href="http://mengtaoblog.github.io/2019/04/01/Spring Boot入门-Spring Boot入门/">
 
     <!-- Bootstrap Core CSS -->
     
@@ -43,7 +43,7 @@
 <style>
 
     header.intro-header {
-        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+        background-image: url('/image/002.jpg')
     }
 </style>
 <!-- hack iOS CSS :active style -->
@@ -151,15 +151,18 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
                 <div class="post-heading">
-                    <h1>My New Post</h1>
+                    <h1>Spring Boot入门</h1>
                     
                     <span class="meta">
                          作者 Lemon
                         <span>
-                          日期 2021-06-23
+                          日期 2019-04-01
                          </span>
                     </span>
                     <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
                         
                     </div>
                 </div>
@@ -168,7 +171,7 @@
     </div>
     <div class="post-title-haojen">
         <span>
-            My New Post
+            Spring Boot入门
         </span>
     </div>
 </header>
@@ -179,21 +182,27 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                
+                <p>最近在看江南一点雨的教程以及视频，以下总结的笔记资料等将会参考他的为主，声明：仅供自己学习参考使用。</p>
+<p>总结一下Spring Boot的主要优点：</p>
+<h4 id="为所有Spring开发者更快的入门"><a href="#为所有Spring开发者更快的入门" class="headerlink" title="为所有Spring开发者更快的入门"></a>为所有Spring开发者更快的入门</h4><h4 id="开箱即用，提供各种默认配置来简化项目配置"><a href="#开箱即用，提供各种默认配置来简化项目配置" class="headerlink" title="开箱即用，提供各种默认配置来简化项目配置"></a>开箱即用，提供各种默认配置来简化项目配置</h4><h4 id="内嵌式容器简化Web项目"><a href="#内嵌式容器简化Web项目" class="headerlink" title="内嵌式容器简化Web项目"></a>内嵌式容器简化Web项目</h4><h4 id="没有冗余代码生成和XML配置的要求"><a href="#没有冗余代码生成和XML配置的要求" class="headerlink" title="没有冗余代码生成和XML配置的要求"></a>没有冗余代码生成和XML配置的要求</h4><h2 id="Spring-Boot-三种创建方式"><a href="#Spring-Boot-三种创建方式" class="headerlink" title="Spring Boot 三种创建方式"></a>Spring Boot 三种创建方式</h2><p>   这个就不详细写了，挑重点写，这个网上大把的有，随便百度。。。</p>
+<p>   这里<strong>建议</strong>使用开发工具IntelliJ IDEA直接创建，系统的要求：Spring Boot 目前版本是 2.1.6，要求至少JDK8，集成的 Spring 版本是5.1.6 。</p>
+<p>  1、首先在创建项目时选择 Spring Initializr，如下图：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/8/image-3d344a75639a49b4bf09aa10b2023a50.png" alt="image.png"></p>
+<p>2、然后点击 Next ，填入 Maven 项目的基本信息，如下：<br><img src="https://www.itmengtao.cn/upload/2020/8/image-e0c4754ba95545ccb04939ac9c99bace.png" alt="image.png"></p>
+<p>3、再接下来选择需要添加的依赖，勾选Web即可，如下图：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/8/image-e06f8860ae3e4d13af3a22c2f7bade58.png" alt="image.png"></p>
+<p>4、勾选完成后，点击 Next 完成项目的创建。</p>
+<p>  至此项目创建就完成了，很简单。然后执行这里的 main 方法就可以启动一个 Spring Boot 工程了。</p>
+
                 <hr>
                 
 
                 <ul class="pager">
                     
-                    <li class="previous">
-                        <a href="/2021/07/17/your-post-name/" data-toggle="tooltip" data-placement="top"
-                           title="your-post-name">&larr; Previous Post</a>
-                    </li>
-                    
                     
                     <li class="next">
-                        <a href="/2021/06/11/hello-world/" data-toggle="tooltip" data-placement="top"
-                           title="Hello World">Next Post &rarr;</a>
+                        <a href="/2019/02/25/为什么要写博客？-为什么要写博客/" data-toggle="tooltip" data-placement="top"
+                           title="为什么要写博客？">Next Post &rarr;</a>
                     </li>
                     
                 </ul>
@@ -205,6 +214,25 @@
 
                 <!--加入新的评论系统-->
                 
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC81MzY2Mi8zMDEzNQ==">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
 
                 
 
@@ -212,7 +240,7 @@
 
             <div class="hidden-xs col-sm-3 toc-col">
                 <div class="toc-wrap">
-                    
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E6%89%80%E6%9C%89Spring%E5%BC%80%E5%8F%91%E8%80%85%E6%9B%B4%E5%BF%AB%E7%9A%84%E5%85%A5%E9%97%A8"><span class="toc-text">为所有Spring开发者更快的入门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E7%AE%B1%E5%8D%B3%E7%94%A8%EF%BC%8C%E6%8F%90%E4%BE%9B%E5%90%84%E7%A7%8D%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%9D%A5%E7%AE%80%E5%8C%96%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE"><span class="toc-text">开箱即用，提供各种默认配置来简化项目配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%B5%8C%E5%BC%8F%E5%AE%B9%E5%99%A8%E7%AE%80%E5%8C%96Web%E9%A1%B9%E7%9B%AE"><span class="toc-text">内嵌式容器简化Web项目</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%A1%E6%9C%89%E5%86%97%E4%BD%99%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%92%8CXML%E9%85%8D%E7%BD%AE%E7%9A%84%E8%A6%81%E6%B1%82"><span class="toc-text">没有冗余代码生成和XML配置的要求</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Boot-%E4%B8%89%E7%A7%8D%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="toc-text">Spring Boot 三种创建方式</span></a>
                 </div>
             </div>
         </div>
@@ -234,11 +262,23 @@
                     </h5>
                     <div class="tags">
                         
+                        <a class="tag" href="/tags/#Spring Boot"
+                           title="Spring Boot">Spring Boot</a>
+                        
                     </div>
                 </section>
                 
 
                 <!-- Friends Blog -->
+                
+                <div style="margin-top: 20px;">
+                    <h5 class="text-center">FRIENDS</h5>
+                    <ul class="list-inline text-center">
+                        
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        
+                    </ul>
+                </div>
                 
             </div>
         </div>
@@ -366,7 +406,7 @@
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <!--wechat title img-->
-<img class="wechat-title-img" src="">
+<img class="wechat-title-img" src="/image/002.jpg">
 </body>
 
 </html>
