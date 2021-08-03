@@ -13,16 +13,32 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
     <link rel="shortcut icon" href="/image/002.jpg">
-    <link rel="alternate" type="application/atom+xml" title="MengTao" href="/atom.xml">
+    <link rel="alternate" type="application/atom+xml" title="李多多" href="/atom.xml">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+        <style>
+        .pace .pace-progress {
+            background: #6d6d6d; /*进度条颜色*/
+            height: 2px;
+        }
+        .pace .pace-progress-inner {
+             box-shadow: 0 0 10px #1E92FB, 0 0 5px     #6d6d6d; /*阴影颜色*/
+        }
+        .pace .pace-activity {
+            border-top-color: #6d6d6d;    /*上边框颜色*/
+            border-left-color: #6d6d6d;    /*左边框颜色*/
+        }
+      </style>
+
     <title>
         
-        Linux 快速安装 Prometheus｜MengTao&#39;s blog
+        Linux 快速安装 Prometheus｜李多多
         
     </title>
 
-    <link rel="canonical" href="http://mengtaoblog.github.io/2020/08/11/Linux 快速安装 Prometheus-linux快速安装prometheus/">
+    <link rel="canonical" href="http://astronger.github.io/mengtaoblog.github.io/2020/08/11/Linux 快速安装 Prometheus-linux快速安装prometheus/">
 
     <!-- Bootstrap Core CSS -->
     
@@ -62,7 +78,7 @@
             </button>
             <a class="navbar-brand animated pulse" href="/">
                 <span class="brand-logo">
-                    MengTao
+                    李多多
                 </span>
                 's Blog
             </a>
@@ -85,13 +101,23 @@
                     
                         
 							
+								
+							
+						
+                    
+                        
+							
                         <li>
-                            <a href="/Tags/">Tags</a>
+                            <a href="/tags/">tags</a>
                         </li>
 							
 						
                     
 					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
 					
                 </ul>
             </div>
@@ -154,9 +180,9 @@
                     <h1>Linux 快速安装 Prometheus</h1>
                     
                     <span class="meta">
-                         作者 Lemon
+                         作者： 李多多
                         <span>
-                          日期 2020-08-11
+                          日期： 2020-08-11
                          </span>
                     </span>
                     <div class="tags text-center">
@@ -164,6 +190,8 @@
                         <a class="tag" href="/tags/#Spring Cloud"
                            title="Spring Cloud">Spring Cloud</a>
                         
+                    <br/><span id="busuanzi_container_page_pv" style="display:none;">浏览量：
+                       <span id="busuanzi_value_page_pv"></span>次</span>
                     </div>
                 </div>
             </div>
@@ -278,7 +306,7 @@
                     <h5 class="text-center">FRIENDS</h5>
                     <ul class="list-inline text-center">
                         
-                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN</a></li>
+                        <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ourstronger">CSDN博客</a></li>
                         
                     </ul>
                 </div>
@@ -305,8 +333,35 @@
                 <ul class="list-inline text-center">
                 
                 
+                    <li>
+                        <a target="_blank" href="https://twitter.com/mengtao_li">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/lemon-01">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
                 
 
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/astronge">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
                 
 
                 
@@ -326,11 +381,12 @@
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; MengTao 2021
+                    Copyright &copy; 2018-2021  ❤  李多多
                     <br>
-                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                     ICP:  <a  target="_blank" rel="noopener" href="https://beian.miit.gov.cn/">陕 19024873 号</a>
+                                        <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 13px;">本站总访问量: <span id="busuanzi_value_site_pv"></span> 次</span>
                     <br>
-                    Theme by <a target="_blank" rel="noopener" href="https://haojen.github.io/">Haojen Ma</a>
                 </p>
 
             </div>
@@ -369,7 +425,7 @@
 <script>
     // only load tagcloud.js in tag.html
     if($('#tag_cloud').length !== 0){
-        async("http://mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+        async("http://astronger.github.io/mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 //size: {start: 1, end: 1, unit: 'em'},
                 color: {start: '#bbbbee', end: '#0085a1'},
@@ -407,7 +463,6 @@
 </script>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
 <!--wechat title img-->
 <img class="wechat-title-img" src="/image/002.jpg">
 </body>
