@@ -38,7 +38,7 @@
         
     </title>
 
-    <link rel="canonical" href="http://astronger.github.io/mengtaoblog.github.io/2019/08/25/Docker——Dockerfile 命令详解-Docker——Dockerfile 命令详解/">
+    <link rel="canonical" href="http://www.itmengtao.cn/2019/08/25/Docker——Dockerfile 命令详解-Docker——Dockerfile 命令详解/">
 
     <!-- Bootstrap Core CSS -->
     
@@ -247,7 +247,7 @@
 <p>docker run运行容器时指定的参数都会被传递给 ENTRYPOINT ，且会覆盖 CMD 命令指定的参数。如，执行docker run <image> -d时，-d 参数将被传递给入口点。</p>
 <p>也可以通过docker run –entrypoint重写 ENTRYPOINT 入口点。如：可以像下面这样指定一个容器执行程序：</p>
 <p>ENTRYPOINT [“/usr/bin/nginx”]<br>完整构建代码：</p>
-<h1 id="Version-0-0-3"><a href="#Version-0-0-3" class="headerlink" title="Version: 0.0.3"></a>Version: 0.0.3</h1><p>FROM ubuntu:16.04<br>MAINTAINER 何民三 “<a href="mailto:&#x63;&#x6e;&#46;&#108;&#x69;&#x75;&#104;&#x74;&#x40;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#x63;&#x6e;&#46;&#108;&#x69;&#x75;&#104;&#x74;&#x40;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a>“<br>RUN apt-get update<br>RUN apt-get install -y nginx<br>RUN echo ‘Hello World, 我是个容器’ \ <br>   &gt; /var/www/html/index.html<br>ENTRYPOINT [“/usr/sbin/nginx”]<br>EXPOSE 80<br>使用docker build构建镜像，并将镜像指定为 itbilu/test：</p>
+<h1 id="Version-0-0-3"><a href="#Version-0-0-3" class="headerlink" title="Version: 0.0.3"></a>Version: 0.0.3</h1><p>FROM ubuntu:16.04<br>MAINTAINER 何民三 “<a href="mailto:&#99;&#110;&#46;&#x6c;&#x69;&#117;&#x68;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#109;">&#99;&#110;&#46;&#x6c;&#x69;&#117;&#x68;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#109;</a>“<br>RUN apt-get update<br>RUN apt-get install -y nginx<br>RUN echo ‘Hello World, 我是个容器’ \ <br>   &gt; /var/www/html/index.html<br>ENTRYPOINT [“/usr/sbin/nginx”]<br>EXPOSE 80<br>使用docker build构建镜像，并将镜像指定为 itbilu/test：</p>
 <p>docker build -t=”itbilu/test” .<br>构建完成后，使用itbilu/test启动一个容器：</p>
 <p>docker run -i -t  itbilu/test -g “daemon off;”<br>在运行容器时，我们使用了 -g “daemon off;”，这个参数将会被传递给 ENTRYPOINT，最终在容器中执行的命令为 /usr/sbin/nginx -g “daemon off;”。</p>
 <p>12 LABEL<br>LABEL用于为镜像添加元数据，元数以键值对的形式指定：</p>
@@ -269,7 +269,7 @@
 <h1 id="Executed-as-powershell-command-Write-Host-hello"><a href="#Executed-as-powershell-command-Write-Host-hello" class="headerlink" title="Executed as powershell -command Write-Host hello"></a>Executed as powershell -command Write-Host hello</h1><p>SHELL [“powershell”, “-command”]<br>RUN Write-Host hello</p>
 <h1 id="Executed-as-cmd-S-C-echo-hello"><a href="#Executed-as-cmd-S-C-echo-hello" class="headerlink" title="Executed as cmd /S /C echo hello"></a>Executed as cmd /S /C echo hello</h1><p>SHELL [“cmd”, “/S””, “/C”]<br>RUN echo hello<br>Dockerfile 使用经验<br>Dockerfile 示例<br>构建Nginx运行环境</p>
 <h1 id="指定基础镜像"><a href="#指定基础镜像" class="headerlink" title="指定基础镜像"></a>指定基础镜像</h1><p>FROM sameersbn/ubuntu:14.04.20161014</p>
-<h1 id="维护者信息"><a href="#维护者信息" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER <a href="mailto:&#115;&#x61;&#x6d;&#101;&#101;&#114;&#64;&#x64;&#x61;&#x6d;&#x61;&#x67;&#101;&#x68;&#101;&#97;&#x64;&#x2e;&#x63;&#x6f;&#x6d;">&#115;&#x61;&#x6d;&#101;&#101;&#114;&#64;&#x64;&#x61;&#x6d;&#x61;&#x67;&#101;&#x68;&#101;&#97;&#x64;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<h1 id="维护者信息"><a href="#维护者信息" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER <a href="mailto:&#115;&#97;&#x6d;&#101;&#101;&#114;&#x40;&#x64;&#x61;&#109;&#x61;&#x67;&#101;&#104;&#101;&#97;&#x64;&#x2e;&#x63;&#111;&#109;">&#115;&#97;&#x6d;&#101;&#101;&#114;&#x40;&#x64;&#x61;&#109;&#x61;&#x67;&#101;&#104;&#101;&#97;&#x64;&#x2e;&#x63;&#111;&#109;</a></p>
 <h1 id="设置环境"><a href="#设置环境" class="headerlink" title="设置环境"></a>设置环境</h1><p>ENV RTMP_VERSION=1.1.10 <br>    NPS_VERSION=1.11.33.4 <br>    LIBAV_VERSION=11.8 <br>    NGINX_VERSION=1.10.1 <br>    NGINX_USER=www-data <br>    NGINX_SITECONF_DIR=/etc/nginx/sites-enabled <br>    NGINX_LOG_DIR=/var/log/nginx <br>    NGINX_TEMP_DIR=/var/lib/nginx <br>    NGINX_SETUP_DIR=/var/cache/nginx</p>
 <h1 id="设置构建时变量，镜像建立完成后就失效"><a href="#设置构建时变量，镜像建立完成后就失效" class="headerlink" title="设置构建时变量，镜像建立完成后就失效"></a>设置构建时变量，镜像建立完成后就失效</h1><p>ARG BUILD_LIBAV=false<br>ARG WITH_DEBUG=false<br>ARG WITH_PAGESPEED=true<br>ARG WITH_RTMP=true</p>
 <h1 id="复制本地文件到容器目录中"><a href="#复制本地文件到容器目录中" class="headerlink" title="复制本地文件到容器目录中"></a>复制本地文件到容器目录中</h1><p>COPY setup/ ${NGINX_SETUP_DIR}/<br>RUN bash ${NGINX_SETUP_DIR}/install.sh</p>
@@ -280,7 +280,7 @@
 <p>ENTRYPOINT [“/sbin/entrypoint.sh”]<br>CMD [“/usr/sbin/nginx”]</p>
 <p>构建tomcat 环境<br>Dockerfile文件</p>
 <h1 id="指定基于的基础镜像"><a href="#指定基于的基础镜像" class="headerlink" title="指定基于的基础镜像"></a>指定基于的基础镜像</h1><p>FROM ubuntu:13.10  </p>
-<h1 id="维护者信息-1"><a href="#维护者信息-1" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER zhangjiayang “<a href="mailto:&#122;&#104;&#97;&#110;&#103;&#106;&#x69;&#97;&#121;&#x61;&#x6e;&#103;&#64;&#x73;&#99;&#122;&#113;&#46;&#99;&#x6f;&#109;&#x2e;&#x63;&#x6e;">&#122;&#104;&#97;&#110;&#103;&#106;&#x69;&#97;&#121;&#x61;&#x6e;&#103;&#64;&#x73;&#99;&#122;&#113;&#46;&#99;&#x6f;&#109;&#x2e;&#x63;&#x6e;</a>“  </p>
+<h1 id="维护者信息-1"><a href="#维护者信息-1" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER zhangjiayang “<a href="mailto:&#122;&#104;&#97;&#x6e;&#103;&#106;&#x69;&#x61;&#121;&#97;&#x6e;&#103;&#64;&#115;&#99;&#122;&#x71;&#x2e;&#x63;&#111;&#109;&#x2e;&#99;&#x6e;">&#122;&#104;&#97;&#x6e;&#103;&#106;&#x69;&#x61;&#121;&#97;&#x6e;&#103;&#64;&#115;&#99;&#122;&#x71;&#x2e;&#x63;&#111;&#109;&#x2e;&#99;&#x6e;</a>“  </p>
 <h1 id="镜像的指令操作"><a href="#镜像的指令操作" class="headerlink" title="镜像的指令操作"></a>镜像的指令操作</h1><h1 id="获取APT更新的资源列表"><a href="#获取APT更新的资源列表" class="headerlink" title="获取APT更新的资源列表"></a>获取APT更新的资源列表</h1><p>RUN echo “deb <a target="_blank" rel="noopener" href="http://archive.ubuntu.com/ubuntu">http://archive.ubuntu.com/ubuntu</a> precise main universe”&gt; /etc/apt/sources.list</p>
 <h1 id="更新软件"><a href="#更新软件" class="headerlink" title="更新软件"></a>更新软件</h1><p>RUN apt-get update  </p>
 <h1 id="Install-curl"><a href="#Install-curl" class="headerlink" title="Install curl"></a>Install curl</h1><p>RUN apt-get -y install curl  </p>
@@ -498,7 +498,7 @@
 <script>
     // only load tagcloud.js in tag.html
     if($('#tag_cloud').length !== 0){
-        async("http://astronger.github.io/mengtaoblog.github.io/js/jquery.tagcloud.js",function(){
+        async("http://www.itmengtao.cn/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 //size: {start: 1, end: 1, unit: 'em'},
                 color: {start: '#bbbbee', end: '#0085a1'},

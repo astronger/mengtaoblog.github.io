@@ -115,6 +115,38 @@
       </tags>
   </entry>
   <entry>
+    <title>CentOS 7.x 安装Redis（极简）</title>
+    <url>/2019/06/23/CentOS%207.x%20%E5%AE%89%E8%A3%85Redis%EF%BC%88%E6%9E%81%E7%AE%80%EF%BC%89-CentOS%207.x%20%E5%AE%89%E8%A3%85Redis%EF%BC%88%E6%9E%81%E7%AE%80%EF%BC%89/</url>
+    <content><![CDATA[<p><strong>环境配置：<br>CentOS 7 / redis4.0.6</strong></p>
+<p>1.首先下载Redis，下载地址<a href="https://redis.io/%EF%BC%8C%E4%B8%8B%E8%BD%BD%E8%8E%B7%E5%BE%97redis-4.0.6.tar.gz%E5%90%8E%E5%B0%86%E5%AE%83%E6%94%BE%E5%85%A5%E6%88%91%E4%BB%AC%E7%9A%84Linux%E7%9B%AE%E5%BD%95/opt">https://redis.io/，下载获得redis-4.0.6.tar.gz后将它放入我们的Linux目录/opt</a> 下。</p>
+<p>2./opt目录下，对文件进行解压，解压命令:tar -zxvf redis-4.0.6.tar.gz</p>
+<p>3.解压完成后出现文件夹：redis-4.0.6，进入到该目录中: cd redis-4.0.6</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-5df1d82224a5423b8c5114eb063dc1d6.png" alt="image.png"></p>
+<p>4.在redis-4.0.6目录下执行make命令进行编译</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-23f5a3d0066946eebba5a153ce1c4307.png" alt="image.png"></p>
+<p>5.make完成后继续执行 make install 命令进行安装。</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-6932a0dfa05849edb7d4dcd596afc618.png" alt="image.png"></p>
+<p>至此，<strong>redis就算安装成功了。</strong></p>
+<p>6.在我们启动之前，需要先做一个简单的配置：修改redis.conf 文件，将里面的daemonize no 改成 yes，让服务在后台启动，如下：<br><img src="https://www.itmengtao.cn/upload/2020/10/image-3693c3aa562b4fbf82db010e1fb9ad9e.png" alt="image.png"></p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-bc04b9974ab549d8ac7c2c0858c1c19d.png" alt="image.png"></p>
+<p>7.启动，通过redis-server redis.conf命令启动redis，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-e68b290274c140b2a3e2e283f0477596.png" alt="image.png"></p>
+<p>8.测试</p>
+<p>通过 redis-cli命令进入到控制台，首先设置你的登录密码，否则会报(error) NOAUTH Authentication required错误，此处密码是123456，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-f47c7ad7cc5242168e195b4ac99c1bfa.png" alt="image.png"></p>
+<p>设置成功后，输入 redis-cli -a 123456 登录，然后通过 ping命令进行连通性测试，如果看到 pong，表示连接成功了，如下：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-4d51b2a0880045818f8c5615c2cbd85d.png" alt="image.png"></p>
+<p>9.清空/关闭，通过 flushall命令可清空缓存，通过shutdown命令我们可以关闭实例。。。</p>
+<p>以上完。</p>
+]]></content>
+      <categories>
+        <category>Redis | CentOS</category>
+      </categories>
+      <tags>
+        <tag>Redis | CentOS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CentOS 7.x 安装Docker</title>
     <url>/2019/07/31/CentOS%207.x%20%E5%AE%89%E8%A3%85Docker-CentOS%207.x%20%E5%AE%89%E8%A3%85Docker/</url>
     <content><![CDATA[<h5 id="1、Docker-要求-CentOS-系统的内核版本高于-3-10-，查看本页面的前提条件来验证你的CentOS-版本是否支持-Docker-。"><a href="#1、Docker-要求-CentOS-系统的内核版本高于-3-10-，查看本页面的前提条件来验证你的CentOS-版本是否支持-Docker-。" class="headerlink" title="1、Docker 要求 CentOS 系统的内核版本高于 3.10 ，查看本页面的前提条件来验证你的CentOS 版本是否支持 Docker 。"></a>1、Docker 要求 CentOS 系统的内核版本高于 3.10 ，查看本页面的前提条件来验证你的CentOS 版本是否支持 Docker 。</h5><p>通过 uname -r 命令查看你当前的内核版本</p>
@@ -152,38 +184,6 @@
       </categories>
       <tags>
         <tag>CentOS  | Docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CentOS 7.x 安装Redis（极简）</title>
-    <url>/2019/06/23/CentOS%207.x%20%E5%AE%89%E8%A3%85Redis%EF%BC%88%E6%9E%81%E7%AE%80%EF%BC%89-CentOS%207.x%20%E5%AE%89%E8%A3%85Redis%EF%BC%88%E6%9E%81%E7%AE%80%EF%BC%89/</url>
-    <content><![CDATA[<p><strong>环境配置：<br>CentOS 7 / redis4.0.6</strong></p>
-<p>1.首先下载Redis，下载地址<a href="https://redis.io/%EF%BC%8C%E4%B8%8B%E8%BD%BD%E8%8E%B7%E5%BE%97redis-4.0.6.tar.gz%E5%90%8E%E5%B0%86%E5%AE%83%E6%94%BE%E5%85%A5%E6%88%91%E4%BB%AC%E7%9A%84Linux%E7%9B%AE%E5%BD%95/opt">https://redis.io/，下载获得redis-4.0.6.tar.gz后将它放入我们的Linux目录/opt</a> 下。</p>
-<p>2./opt目录下，对文件进行解压，解压命令:tar -zxvf redis-4.0.6.tar.gz</p>
-<p>3.解压完成后出现文件夹：redis-4.0.6，进入到该目录中: cd redis-4.0.6</p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-5df1d82224a5423b8c5114eb063dc1d6.png" alt="image.png"></p>
-<p>4.在redis-4.0.6目录下执行make命令进行编译</p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-23f5a3d0066946eebba5a153ce1c4307.png" alt="image.png"></p>
-<p>5.make完成后继续执行 make install 命令进行安装。</p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-6932a0dfa05849edb7d4dcd596afc618.png" alt="image.png"></p>
-<p>至此，<strong>redis就算安装成功了。</strong></p>
-<p>6.在我们启动之前，需要先做一个简单的配置：修改redis.conf 文件，将里面的daemonize no 改成 yes，让服务在后台启动，如下：<br><img src="https://www.itmengtao.cn/upload/2020/10/image-3693c3aa562b4fbf82db010e1fb9ad9e.png" alt="image.png"></p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-bc04b9974ab549d8ac7c2c0858c1c19d.png" alt="image.png"></p>
-<p>7.启动，通过redis-server redis.conf命令启动redis，如下：</p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-e68b290274c140b2a3e2e283f0477596.png" alt="image.png"></p>
-<p>8.测试</p>
-<p>通过 redis-cli命令进入到控制台，首先设置你的登录密码，否则会报(error) NOAUTH Authentication required错误，此处密码是123456，如下：</p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-f47c7ad7cc5242168e195b4ac99c1bfa.png" alt="image.png"></p>
-<p>设置成功后，输入 redis-cli -a 123456 登录，然后通过 ping命令进行连通性测试，如果看到 pong，表示连接成功了，如下：</p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-4d51b2a0880045818f8c5615c2cbd85d.png" alt="image.png"></p>
-<p>9.清空/关闭，通过 flushall命令可清空缓存，通过shutdown命令我们可以关闭实例。。。</p>
-<p>以上完。</p>
-]]></content>
-      <categories>
-        <category>Redis | CentOS</category>
-      </categories>
-      <tags>
-        <tag>Redis | CentOS</tag>
       </tags>
   </entry>
   <entry>
@@ -670,7 +670,7 @@
 <p>docker run运行容器时指定的参数都会被传递给 ENTRYPOINT ，且会覆盖 CMD 命令指定的参数。如，执行docker run <image> -d时，-d 参数将被传递给入口点。</p>
 <p>也可以通过docker run –entrypoint重写 ENTRYPOINT 入口点。如：可以像下面这样指定一个容器执行程序：</p>
 <p>ENTRYPOINT [“/usr/bin/nginx”]<br>完整构建代码：</p>
-<h1 id="Version-0-0-3"><a href="#Version-0-0-3" class="headerlink" title="Version: 0.0.3"></a>Version: 0.0.3</h1><p>FROM ubuntu:16.04<br>MAINTAINER 何民三 “<a href="mailto:&#x63;&#x6e;&#46;&#108;&#x69;&#x75;&#104;&#x74;&#x40;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#x63;&#x6e;&#46;&#108;&#x69;&#x75;&#104;&#x74;&#x40;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a>“<br>RUN apt-get update<br>RUN apt-get install -y nginx<br>RUN echo ‘Hello World, 我是个容器’ \ <br>   &gt; /var/www/html/index.html<br>ENTRYPOINT [“/usr/sbin/nginx”]<br>EXPOSE 80<br>使用docker build构建镜像，并将镜像指定为 itbilu/test：</p>
+<h1 id="Version-0-0-3"><a href="#Version-0-0-3" class="headerlink" title="Version: 0.0.3"></a>Version: 0.0.3</h1><p>FROM ubuntu:16.04<br>MAINTAINER 何民三 “<a href="mailto:&#99;&#110;&#46;&#x6c;&#x69;&#117;&#x68;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#109;">&#99;&#110;&#46;&#x6c;&#x69;&#117;&#x68;&#116;&#x40;&#103;&#109;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#109;</a>“<br>RUN apt-get update<br>RUN apt-get install -y nginx<br>RUN echo ‘Hello World, 我是个容器’ \ <br>   &gt; /var/www/html/index.html<br>ENTRYPOINT [“/usr/sbin/nginx”]<br>EXPOSE 80<br>使用docker build构建镜像，并将镜像指定为 itbilu/test：</p>
 <p>docker build -t=”itbilu/test” .<br>构建完成后，使用itbilu/test启动一个容器：</p>
 <p>docker run -i -t  itbilu/test -g “daemon off;”<br>在运行容器时，我们使用了 -g “daemon off;”，这个参数将会被传递给 ENTRYPOINT，最终在容器中执行的命令为 /usr/sbin/nginx -g “daemon off;”。</p>
 <p>12 LABEL<br>LABEL用于为镜像添加元数据，元数以键值对的形式指定：</p>
@@ -692,7 +692,7 @@
 <h1 id="Executed-as-powershell-command-Write-Host-hello"><a href="#Executed-as-powershell-command-Write-Host-hello" class="headerlink" title="Executed as powershell -command Write-Host hello"></a>Executed as powershell -command Write-Host hello</h1><p>SHELL [“powershell”, “-command”]<br>RUN Write-Host hello</p>
 <h1 id="Executed-as-cmd-S-C-echo-hello"><a href="#Executed-as-cmd-S-C-echo-hello" class="headerlink" title="Executed as cmd /S /C echo hello"></a>Executed as cmd /S /C echo hello</h1><p>SHELL [“cmd”, “/S””, “/C”]<br>RUN echo hello<br>Dockerfile 使用经验<br>Dockerfile 示例<br>构建Nginx运行环境</p>
 <h1 id="指定基础镜像"><a href="#指定基础镜像" class="headerlink" title="指定基础镜像"></a>指定基础镜像</h1><p>FROM sameersbn/ubuntu:14.04.20161014</p>
-<h1 id="维护者信息"><a href="#维护者信息" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER <a href="mailto:&#115;&#x61;&#x6d;&#101;&#101;&#114;&#64;&#x64;&#x61;&#x6d;&#x61;&#x67;&#101;&#x68;&#101;&#97;&#x64;&#x2e;&#x63;&#x6f;&#x6d;">&#115;&#x61;&#x6d;&#101;&#101;&#114;&#64;&#x64;&#x61;&#x6d;&#x61;&#x67;&#101;&#x68;&#101;&#97;&#x64;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<h1 id="维护者信息"><a href="#维护者信息" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER <a href="mailto:&#115;&#97;&#x6d;&#101;&#101;&#114;&#x40;&#x64;&#x61;&#109;&#x61;&#x67;&#101;&#104;&#101;&#97;&#x64;&#x2e;&#x63;&#111;&#109;">&#115;&#97;&#x6d;&#101;&#101;&#114;&#x40;&#x64;&#x61;&#109;&#x61;&#x67;&#101;&#104;&#101;&#97;&#x64;&#x2e;&#x63;&#111;&#109;</a></p>
 <h1 id="设置环境"><a href="#设置环境" class="headerlink" title="设置环境"></a>设置环境</h1><p>ENV RTMP_VERSION=1.1.10 <br>    NPS_VERSION=1.11.33.4 <br>    LIBAV_VERSION=11.8 <br>    NGINX_VERSION=1.10.1 <br>    NGINX_USER=www-data <br>    NGINX_SITECONF_DIR=/etc/nginx/sites-enabled <br>    NGINX_LOG_DIR=/var/log/nginx <br>    NGINX_TEMP_DIR=/var/lib/nginx <br>    NGINX_SETUP_DIR=/var/cache/nginx</p>
 <h1 id="设置构建时变量，镜像建立完成后就失效"><a href="#设置构建时变量，镜像建立完成后就失效" class="headerlink" title="设置构建时变量，镜像建立完成后就失效"></a>设置构建时变量，镜像建立完成后就失效</h1><p>ARG BUILD_LIBAV=false<br>ARG WITH_DEBUG=false<br>ARG WITH_PAGESPEED=true<br>ARG WITH_RTMP=true</p>
 <h1 id="复制本地文件到容器目录中"><a href="#复制本地文件到容器目录中" class="headerlink" title="复制本地文件到容器目录中"></a>复制本地文件到容器目录中</h1><p>COPY setup/ ${NGINX_SETUP_DIR}/<br>RUN bash ${NGINX_SETUP_DIR}/install.sh</p>
@@ -703,7 +703,7 @@
 <p>ENTRYPOINT [“/sbin/entrypoint.sh”]<br>CMD [“/usr/sbin/nginx”]</p>
 <p>构建tomcat 环境<br>Dockerfile文件</p>
 <h1 id="指定基于的基础镜像"><a href="#指定基于的基础镜像" class="headerlink" title="指定基于的基础镜像"></a>指定基于的基础镜像</h1><p>FROM ubuntu:13.10  </p>
-<h1 id="维护者信息-1"><a href="#维护者信息-1" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER zhangjiayang “<a href="mailto:&#122;&#104;&#97;&#110;&#103;&#106;&#x69;&#97;&#121;&#x61;&#x6e;&#103;&#64;&#x73;&#99;&#122;&#113;&#46;&#99;&#x6f;&#109;&#x2e;&#x63;&#x6e;">&#122;&#104;&#97;&#110;&#103;&#106;&#x69;&#97;&#121;&#x61;&#x6e;&#103;&#64;&#x73;&#99;&#122;&#113;&#46;&#99;&#x6f;&#109;&#x2e;&#x63;&#x6e;</a>“  </p>
+<h1 id="维护者信息-1"><a href="#维护者信息-1" class="headerlink" title="维护者信息"></a>维护者信息</h1><p>MAINTAINER zhangjiayang “<a href="mailto:&#122;&#104;&#97;&#x6e;&#103;&#106;&#x69;&#x61;&#121;&#97;&#x6e;&#103;&#64;&#115;&#99;&#122;&#x71;&#x2e;&#x63;&#111;&#109;&#x2e;&#99;&#x6e;">&#122;&#104;&#97;&#x6e;&#103;&#106;&#x69;&#x61;&#121;&#97;&#x6e;&#103;&#64;&#115;&#99;&#122;&#x71;&#x2e;&#x63;&#111;&#109;&#x2e;&#99;&#x6e;</a>“  </p>
 <h1 id="镜像的指令操作"><a href="#镜像的指令操作" class="headerlink" title="镜像的指令操作"></a>镜像的指令操作</h1><h1 id="获取APT更新的资源列表"><a href="#获取APT更新的资源列表" class="headerlink" title="获取APT更新的资源列表"></a>获取APT更新的资源列表</h1><p>RUN echo “deb <a href="http://archive.ubuntu.com/ubuntu">http://archive.ubuntu.com/ubuntu</a> precise main universe”&gt; /etc/apt/sources.list</p>
 <h1 id="更新软件"><a href="#更新软件" class="headerlink" title="更新软件"></a>更新软件</h1><p>RUN apt-get update  </p>
 <h1 id="Install-curl"><a href="#Install-curl" class="headerlink" title="Install curl"></a>Install curl</h1><p>RUN apt-get -y install curl  </p>
@@ -2823,39 +2823,6 @@ select * from 表1 right outer join 表2 on 表1.字段=表2.字段;
       </tags>
   </entry>
   <entry>
-    <title>Spring Cache + Redis</title>
-    <url>/2019/06/12/Spring%20Cache%20+%20Redis-Spring%20Cache%20+%20Redis/</url>
-    <content><![CDATA[<p>在Spring Boot中，使用Redis缓存，既可以使用RedisTemplate自己来实现，也可以使用使用这种方式，这种方式是Spring Cache提供的统一接口，实现既可以是Redis，也可以是Ehcache或者其他支持这种规范的缓存框架。从这个角度来说，Spring Cache和Redis、Ehcache的关系就像JDBC与各种数据库驱动的关系。今天整理一下 ，在Spring Boot中，使用Redis来作为Cache的实现，进而实现数据的缓存。</p>
-<h2 id="工程创建"><a href="#工程创建" class="headerlink" title="工程创建"></a>工程创建</h2><p>首先创建一个Spring Boot工程，注意创建的时候需要引入三个依赖，web、cache以及redis，如下图：</p>
-<p><img src="https://www.itmengtao.cn/upload/2020/10/image-6cb6b109118e4c04a56d78dabb0eae27.png" alt="image.png"></p>
-<p>依赖内容如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">      &lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-cache&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">          &lt;!-- Springboot <span class="number">2.1</span><span class="number">.5</span>之后远程访问Redis必须引入Spring security --&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt; </span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><p>application.properties中配置一下Redis的基本信息，另外，这里要用到Cache，因此还需要稍微配置一下Cache，如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">spring.redis.host=<span class="number">192.168</span><span class="number">.1</span><span class="number">.132</span></span><br><span class="line">spring.redis.port=<span class="number">6379</span></span><br><span class="line">spring.redis.database=<span class="number">0</span></span><br><span class="line">spring.redis.password=<span class="number">123456</span></span><br><span class="line"></span><br><span class="line">#缓存起名叫c1</span><br><span class="line">spring.cache.cache-names=c1</span><br></pre></td></tr></table></figure>
-<p>还需要在配置类上添加@EnableCaching注解，表示开启缓存： </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableCaching</span>  <span class="comment">//启用缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheRedisApplication</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		SpringApplication.run(CacheRedisApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>配置之后，Spring Boot就会自动帮我们在后台配置一个RedisCacheManager，相关的配置是在org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration类中完成的。部分源码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnClass(RedisConnectionFactory.class)</span></span><br><span class="line"><span class="meta">@AutoConfigureAfter(RedisAutoConfiguration.class)</span></span><br><span class="line"><span class="meta">@ConditionalOnBean(RedisConnectionFactory.class)</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean(CacheManager.class)</span></span><br><span class="line"><span class="meta">@Conditional(CacheCondition.class)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RedisCacheConfiguration</span> </span>&#123;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RedisCacheManager <span class="title">cacheManager</span><span class="params">(RedisConnectionFactory redisConnectionFactory, ResourceLoader resourceLoader)</span> </span>&#123;</span><br><span class="line">        RedisCacheManagerBuilder builder = RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(<span class="keyword">this</span>.determineConfiguration(resourceLoader.getClassLoader()));</span><br><span class="line">        List cacheNames = <span class="keyword">this</span>.cacheProperties.getCacheNames();</span><br><span class="line">        <span class="keyword">if</span>(!cacheNames.isEmpty()) &#123;</span><br><span class="line">            builder.initialCacheNames(<span class="keyword">new</span> LinkedHashSet(cacheNames));</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> (RedisCacheManager)<span class="keyword">this</span>.customizerInvoker.customize(builder.build());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>系统会自动提供一个RedisCacheManager的Bean，这个RedisCacheManager间接实现了Spring中的Cache接口，有了这个Bean，我们就可以直接使用Spring中的缓存注解和接口了，而缓存数据则会被自动存储到Redis上。在单机的Redis中，这个Bean系统会自动提供，如果是Redis集群，这个Bean需要开发者来提供。</p>
-<h2 id="缓存使用："><a href="#缓存使用：" class="headerlink" title="缓存使用："></a>缓存使用：</h2><h3 id="CacheConfig"><a href="#CacheConfig" class="headerlink" title="@CacheConfig"></a>@CacheConfig</h3><p>这个注解在类上使用，用来描述该类中所有方法使用的缓存名称，当然也可以不使用该注解，直接在具体的缓存注解上配置名称，示例代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="meta">@CacheConfig(cacheNames = &quot;c1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="Cacheable"><a href="#Cacheable" class="headerlink" title="@Cacheable"></a>@Cacheable</h3><p>这个注解一般加在查询方法上，表示将一个方法的返回值缓存起来，默认情况下，缓存的key就是方法的参数，缓存的value就是方法的返回值，如果你调用这个方法，但是每次传的参数一模一样，它就不会调用此方法，直接返回缓存值。否则就会调用方法。示例代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Cacheable(key = &quot;#id&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">getUserById</span><span class="params">(Integer id,String username)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;getUserById&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> getUserFromDBById(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当有多个参数时，默认就使用多个参数来做key，如果只需要其中某一个参数做key，则可以在@Cacheable注解中，通过key属性来指定key，如上代码就表示只使用id作为缓存的key，如果对key有复杂的要求，可以自定义keyGenerator。当然，Spring Cache中提供了root对象，可以在不定义keyGenerator的情况下实现一些复杂的效果：</p>
-<h4 id="Cacheable-key-“-methodName”"><a href="#Cacheable-key-“-methodName”" class="headerlink" title="@Cacheable(key = “#methodName”)"></a>@Cacheable(key = “#methodName”)</h4><p><img src="https://www.itmengtao.cn/upload/2020/10/image-973e0f5b3ee74d54b11d896a5c2b7bde.png" alt="image.png"></p>
-<h4 id="CachePut"><a href="#CachePut" class="headerlink" title="@CachePut"></a>@CachePut</h4><p>这个注解一般加在更新方法上，当数据库中的数据更新后，缓存中的数据也要跟着更新，使用该注解，可以将方法的返回值自动更新到已经存在的key上，示例代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@CachePut(key = &quot;#user.id&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">updateUserById</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="CacheEvict"><a href="#CacheEvict" class="headerlink" title="@CacheEvict"></a>@CacheEvict</h4><p>这个注解一般加在删除方法上，当数据库中的数据删除后，相关的缓存数据也要自动清除，该注解在使用的时候也可以配置按照某种条件删除（condition属性）或者或者配置清除所有缓存（allEntries属性），示例代码如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@CacheEvict()</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteUserById</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//在这里执行删除操作， 删除是去数据库中删除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Redis</category>
-      </categories>
-      <tags>
-        <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring Cloud Alibaba 从入门到放弃</title>
     <url>/2020/08/16/Spring%20Cloud%20Alibaba%20%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-springcloudalibaba%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/</url>
     <content><![CDATA[<p>@<a href="Nacos">TOC</a></p>
@@ -3012,6 +2979,39 @@ select * from 表1 right outer join 表2 on 表1.字段=表2.字段;
       </categories>
       <tags>
         <tag>Spring Cloud</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring Cache + Redis</title>
+    <url>/2019/06/12/Spring%20Cache%20+%20Redis-Spring%20Cache%20+%20Redis/</url>
+    <content><![CDATA[<p>在Spring Boot中，使用Redis缓存，既可以使用RedisTemplate自己来实现，也可以使用使用这种方式，这种方式是Spring Cache提供的统一接口，实现既可以是Redis，也可以是Ehcache或者其他支持这种规范的缓存框架。从这个角度来说，Spring Cache和Redis、Ehcache的关系就像JDBC与各种数据库驱动的关系。今天整理一下 ，在Spring Boot中，使用Redis来作为Cache的实现，进而实现数据的缓存。</p>
+<h2 id="工程创建"><a href="#工程创建" class="headerlink" title="工程创建"></a>工程创建</h2><p>首先创建一个Spring Boot工程，注意创建的时候需要引入三个依赖，web、cache以及redis，如下图：</p>
+<p><img src="https://www.itmengtao.cn/upload/2020/10/image-6cb6b109118e4c04a56d78dabb0eae27.png" alt="image.png"></p>
+<p>依赖内容如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">      &lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-cache&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">          &lt;!-- Springboot <span class="number">2.1</span><span class="number">.5</span>之后远程访问Redis必须引入Spring security --&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt; </span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><p>application.properties中配置一下Redis的基本信息，另外，这里要用到Cache，因此还需要稍微配置一下Cache，如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">spring.redis.host=<span class="number">192.168</span><span class="number">.1</span><span class="number">.132</span></span><br><span class="line">spring.redis.port=<span class="number">6379</span></span><br><span class="line">spring.redis.database=<span class="number">0</span></span><br><span class="line">spring.redis.password=<span class="number">123456</span></span><br><span class="line"></span><br><span class="line">#缓存起名叫c1</span><br><span class="line">spring.cache.cache-names=c1</span><br></pre></td></tr></table></figure>
+<p>还需要在配置类上添加@EnableCaching注解，表示开启缓存： </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableCaching</span>  <span class="comment">//启用缓存</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheRedisApplication</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		SpringApplication.run(CacheRedisApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置之后，Spring Boot就会自动帮我们在后台配置一个RedisCacheManager，相关的配置是在org.springframework.boot.autoconfigure.cache.RedisCacheConfiguration类中完成的。部分源码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConditionalOnClass(RedisConnectionFactory.class)</span></span><br><span class="line"><span class="meta">@AutoConfigureAfter(RedisAutoConfiguration.class)</span></span><br><span class="line"><span class="meta">@ConditionalOnBean(RedisConnectionFactory.class)</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean(CacheManager.class)</span></span><br><span class="line"><span class="meta">@Conditional(CacheCondition.class)</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RedisCacheConfiguration</span> </span>&#123;</span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RedisCacheManager <span class="title">cacheManager</span><span class="params">(RedisConnectionFactory redisConnectionFactory, ResourceLoader resourceLoader)</span> </span>&#123;</span><br><span class="line">        RedisCacheManagerBuilder builder = RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(<span class="keyword">this</span>.determineConfiguration(resourceLoader.getClassLoader()));</span><br><span class="line">        List cacheNames = <span class="keyword">this</span>.cacheProperties.getCacheNames();</span><br><span class="line">        <span class="keyword">if</span>(!cacheNames.isEmpty()) &#123;</span><br><span class="line">            builder.initialCacheNames(<span class="keyword">new</span> LinkedHashSet(cacheNames));</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">return</span> (RedisCacheManager)<span class="keyword">this</span>.customizerInvoker.customize(builder.build());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>系统会自动提供一个RedisCacheManager的Bean，这个RedisCacheManager间接实现了Spring中的Cache接口，有了这个Bean，我们就可以直接使用Spring中的缓存注解和接口了，而缓存数据则会被自动存储到Redis上。在单机的Redis中，这个Bean系统会自动提供，如果是Redis集群，这个Bean需要开发者来提供。</p>
+<h2 id="缓存使用："><a href="#缓存使用：" class="headerlink" title="缓存使用："></a>缓存使用：</h2><h3 id="CacheConfig"><a href="#CacheConfig" class="headerlink" title="@CacheConfig"></a>@CacheConfig</h3><p>这个注解在类上使用，用来描述该类中所有方法使用的缓存名称，当然也可以不使用该注解，直接在具体的缓存注解上配置名称，示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="meta">@CacheConfig(cacheNames = &quot;c1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserService</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Cacheable"><a href="#Cacheable" class="headerlink" title="@Cacheable"></a>@Cacheable</h3><p>这个注解一般加在查询方法上，表示将一个方法的返回值缓存起来，默认情况下，缓存的key就是方法的参数，缓存的value就是方法的返回值，如果你调用这个方法，但是每次传的参数一模一样，它就不会调用此方法，直接返回缓存值。否则就会调用方法。示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Cacheable(key = &quot;#id&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">getUserById</span><span class="params">(Integer id,String username)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;getUserById&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> getUserFromDBById(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当有多个参数时，默认就使用多个参数来做key，如果只需要其中某一个参数做key，则可以在@Cacheable注解中，通过key属性来指定key，如上代码就表示只使用id作为缓存的key，如果对key有复杂的要求，可以自定义keyGenerator。当然，Spring Cache中提供了root对象，可以在不定义keyGenerator的情况下实现一些复杂的效果：</p>
+<h4 id="Cacheable-key-“-methodName”"><a href="#Cacheable-key-“-methodName”" class="headerlink" title="@Cacheable(key = “#methodName”)"></a>@Cacheable(key = “#methodName”)</h4><p><img src="https://www.itmengtao.cn/upload/2020/10/image-973e0f5b3ee74d54b11d896a5c2b7bde.png" alt="image.png"></p>
+<h4 id="CachePut"><a href="#CachePut" class="headerlink" title="@CachePut"></a>@CachePut</h4><p>这个注解一般加在更新方法上，当数据库中的数据更新后，缓存中的数据也要跟着更新，使用该注解，可以将方法的返回值自动更新到已经存在的key上，示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@CachePut(key = &quot;#user.id&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> User <span class="title">updateUserById</span><span class="params">(User user)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> user;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="CacheEvict"><a href="#CacheEvict" class="headerlink" title="@CacheEvict"></a>@CacheEvict</h4><p>这个注解一般加在删除方法上，当数据库中的数据删除后，相关的缓存数据也要自动清除，该注解在使用的时候也可以配置按照某种条件删除（condition属性）或者或者配置清除所有缓存（allEntries属性），示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@CacheEvict()</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">deleteUserById</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//在这里执行删除操作， 删除是去数据库中删除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
       </tags>
   </entry>
   <entry>
@@ -3890,7 +3890,7 @@ select * from 表1 right outer join 表2 on 表1.字段=表2.字段;
 
 <p>5.4 打开之后我们可以看到</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">https://www.simple.com &#123;</span><br><span class="line"> gzip</span><br><span class="line"> tls xxxx@xxx.xx</span><br><span class="line"> proxy / localhost:port &#123;</span><br><span class="line">  transparent</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>(1)请把 <a href="https://www.simple.com/">https://www.simple.com</a> 改为自己的域名。<br>(2)tls 后面的 <a href="mailto:&#x78;&#x78;&#x78;&#120;&#x40;&#x78;&#x78;&#120;&#46;&#x78;&#x78;">&#x78;&#x78;&#x78;&#120;&#x40;&#x78;&#x78;&#120;&#46;&#x78;&#x78;</a> 改为自己的邮箱地址，这是用于自动申请 SSL 证书用的。需要注意的是，不需要你自己配置 SSL 证书，而且会自动帮你续签。<br>(3)localhost:port 请将 port 修改为 Halo 的运行端口，默认为 8090。</p>
+<p>(1)请把 <a href="https://www.simple.com/">https://www.simple.com</a> 改为自己的域名。<br>(2)tls 后面的 <a href="mailto:&#x78;&#120;&#120;&#x78;&#64;&#x78;&#x78;&#120;&#x2e;&#120;&#120;">&#x78;&#120;&#120;&#x78;&#64;&#x78;&#x78;&#120;&#x2e;&#120;&#120;</a> 改为自己的邮箱地址，这是用于自动申请 SSL 证书用的。需要注意的是，不需要你自己配置 SSL 证书，而且会自动帮你续签。<br>(3)localhost:port 请将 port 修改为 Halo 的运行端口，默认为 8090。</p>
 <p>5.5 修改完成之后启动 Caddy 服务即可。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 开启自启 Caddy 服务</span><br><span class="line">systemctl enable caddy</span><br><span class="line"></span><br><span class="line"># 启动 Caddy</span><br><span class="line">service caddy start</span><br><span class="line"></span><br><span class="line"># 停止运行 Caddy</span><br><span class="line">service caddy stop</span><br><span class="line"></span><br><span class="line"># 重启 Caddy</span><br><span class="line">service caddy restart</span><br><span class="line"></span><br><span class="line"># 查看 Caddy 运行状态</span><br><span class="line">service caddy status</span><br></pre></td></tr></table></figure>
 <p>++注意:<br>如果 Caddy 启动出现诸如 [/usr/lib/systemd/system/caddy.service:23] Unknown lvalue ‘AmbientCapabilities’ in section ‘Service’ 这样的问题，请使用 yum update -y 更新系统。然后再使用 service caddy restart 重启，已知 CentOS 7.3 会出现该问题。++</p>
