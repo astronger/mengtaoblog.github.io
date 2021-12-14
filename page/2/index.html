@@ -305,6 +305,35 @@
 
 <div class="post-preview "
      style="background-image: url('post-default.jpg')">
+    <a href="/2020/08/13/Zuul  笔记补充-zuul笔记补充/">
+        <h2 class="post-title">
+            Zuul  笔记补充
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-13
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                @[TOC](Zuul 笔记补充)
+1. 服务网关由于每个微服务的地址都有可能发生变化，无法直接对外公布这些服务地址，基于安全以及高内聚低耦合等设计，我们有必要将内部系统与外部系统做一个切割。一个专门用来处理外部请求的组件就是服务网关。
+
+好处：
+客户端调用更加简单
+权限问题统一处理
+数据分割和..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview "
+     style="background-image: url('post-default.jpg')">
     <a href="/2020/08/12/服务监控-服务监控/">
         <h2 class="post-title">
             服务监控
@@ -464,32 +493,6 @@ public class HelloCommand extends HystrixCommand&lt;String&gt; &#123;    RestTem
             <p>
                 Hystrix 是 Netflix 针对微服务分布式系统采用的熔断保护中间件，相当于电路中的保险丝。
 在分布式环境中，许多服务依赖项中的一些必然会失败。Hystrix 是一个库，通过添加延迟容忍和容错逻辑，帮助你控制这些分布式服务之间的交互。Hystrix 通过隔离服务之间的访问点、停止级联失败..
-            </p>
-        </div>
-    </a>
-
-</div>
-
-<hr>
-
-
-
-<div class="post-preview "
-     style="background-image: url('post-default.jpg')">
-    <a href="/2020/07/02/Consul 的使用、集群注册与消费简单案例-consul的使用集群注册与消费简单案例/">
-        <h2 class="post-title">
-            Consul 的使用、集群注册与消费简单案例
-        </h2>
-        <p class="post-meta">
-            <i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-02
-        </p>
-        
-        <div class="post-content-preview">
-            <p>
-                1.Consul 使用首先创建一个服务提供者 consul-provider。新建一个 Spring Boot 项目，添加如下依赖：
-
-项目创建成功后，application.properties 添加如下配置： 
-spring.application.name=consul-providers..
             </p>
         </div>
     </a>
@@ -715,6 +718,11 @@ spring.application.name=consul-providers..
                     
                     <a href="/tags/#halo个人博客" title="halo个人博客"
                        rel="1">halo个人博客</a>
+                    
+                    
+                    
+                    <a href="/tags/#CentOS  | Git" title="CentOS  | Git"
+                       rel="1">CentOS  | Git</a>
                     
                     
                 </div>
